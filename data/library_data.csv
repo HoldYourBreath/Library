@@ -1,0 +1,5 @@
+ISBN,BookName,Author,Topic,Description,NumberOfBooks,BooksInLibrary,BooksRating
+'12','GoodBook','RobertCMartin','Programming','Book about programming',3,1,4
+'13',BadBook,'SomeRandomGuy','Programming','Book about programming',7,4,1
+'2342','PythonIsGreat','some programmer dude','Programming','Book about programming',30,7,5
+'6546','Comedy,'Eddie Murphy','Entertainment','Something fun',5,1,3
