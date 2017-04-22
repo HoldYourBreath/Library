@@ -1,36 +1,14 @@
-import random
-import csv
-import sys
 import os
 import pip
 import time
 print(pip.pep425tags.get_supported())
-from lxml import html
-from lxml import etree
-import requests
 import pandas as pd
-import scipy
-import datetime
-#import pandas.io.data as web
-import matplotlib.pyplot as plt
-import seaborn as sns
-#from matplotlib import style
-
-from matplotlib.pyplot import *
-#from matplotlib import pyplot as plt
-from pathlib import Path
-#style.use('ggplot')
-import numpy as np
-#pd.set_option('display.height', 1000)
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1500)
-import operator
-
 import tkinter
 from tkinter import *
 from tkinter import ttk
-from tkinter.ttk import *
 
 ########################
 #Read data from library_data.csv and loan_data.csv
@@ -58,7 +36,7 @@ else:
 library_data_file = pd.read_csv(target_file)
 loan_data_file = pd.read_csv(target_file2)
 
-
+#library_data.csv
 isbn = library_data_file.ISBN
 book_name = library_data_file.BookName
 author = library_data_file.Author
@@ -68,6 +46,10 @@ number_of_books = library_data_file.NumberOfBooks
 books_in_library = library_data_file.BooksInLibrary
 book_rating = library_data_file.BooksRating
 
+#loan_data.csv
+borrower = loan_data_file.Borrower
+date_when_borrowed = loan_data_file.DateWhenBorrowed
+date_returned = loan_data_file.DateReturned
 
 import tkinter as tk
 class Passwordchecker(tk.Frame):
@@ -76,11 +58,14 @@ class Passwordchecker(tk.Frame):
        self.parent = parent
        self.initialize_user_interface()
        self.LoadBookTable()
+       self.grid(sticky=(N, S, W, E))
+       self.parent.grid_rowconfigure(0, weight=1)
+       self.parent.grid_columnconfigure(0, weight=1)
 
    def initialize_user_interface(self):
        #self.parent.geometry("1000x1000")
-       self.parent.grid_rowconfigure(0, weight=1)
-       self.parent.grid_columnconfigure(0, weight=1)
+       #self.parent.grid_rowconfigure(0, weight=1)
+       #self.parent.grid_columnconfigure(0, weight=1)
        self.parent.title("Library application")
        self.parent.config(background="lavender")
 
@@ -103,10 +88,10 @@ class Passwordchecker(tk.Frame):
        #Loan book
        self.entry2=tk.Entry(self.parent)
        self.entry2.grid()
-       self.button2=tk.Button(self.parent,text="Loan", command=self.Search)
+       self.button2=tk.Button(self.parent,text="Loan", command=self.Loan)
        self.button2.grid(row=2, column=2)
        self.button2.grid()
-       self.button3=tk.Button(self.parent,text="Return", command=self.Search)
+       self.button3=tk.Button(self.parent,text="Return", command=self.Return)
        self.button3.grid(row=2, column=4)
        self.button3.grid()
        self.label2=tk.Label(self.parent,text="Loan or return a book, enter signum")
@@ -114,70 +99,48 @@ class Passwordchecker(tk.Frame):
        self.entry2.grid(row=2, column=1)
        self.label2.grid()
 
-
        # Set the treeview
-       self.tree = ttk.Treeview(self.parent, columns=('ISBN', 'Book Name','Author', 'Topic', 'Description', 'Number of books', 'Books available in Library', 'Rating'))
-       self.tree.heading('#0', text='ISBN')
-       self.tree.heading('#1', text='Book Name')
-       self.tree.heading('#2', text='Author')
-       self.tree.heading('#3', text='Topic')
-       self.tree.heading('#4', text='Description')
-       self.tree.heading('#5', text='Number of books')
-       self.tree.heading('#6', text='Books available in Library')
-       self.tree.heading('#7', text='Rating')
-       self.tree.column('#0', stretch=tkinter.YES)
-       self.tree.column('#1', stretch=tkinter.YES)
-       self.tree.column('#2', stretch=tkinter.YES)
-       self.tree.column('#3', stretch=tkinter.YES)
-       self.tree.column('#4', stretch=tkinter.YES)
-       self.tree.column('#5', stretch=tkinter.YES)
-       self.tree.column('#6', stretch=tkinter.YES)
-       self.tree.column('#7', stretch=tkinter.YES)
+       self.tree = ttk.Treeview(self.parent, columns=('Book Name','Author', 'Topic', 'Description', 'Number of books', 'Books available', 'Rating', 'ISBN'))
+       self.tree.heading('#0', text='Book Name')
+       self.tree.heading('#1', text='Author')
+       self.tree.heading('#2', text='Topic')
+       self.tree.heading('#3', text='Description')
+       self.tree.heading('#4', text='Number of books')
+       self.tree.heading('#5', text='Books available')
+       self.tree.heading('#6', text='Rating')
+       self.tree.heading('#07', text='ISBN')
+       self.tree.column('#0', stretch=tkinter.YES, anchor='center')
+       self.tree.column('#1', stretch=tkinter.YES, anchor='center')
+       self.tree.column('#2', stretch=tkinter.YES, anchor='center')
+       self.tree.column('#3', stretch=tkinter.YES, anchor='center')
+       self.tree.column('#4', stretch=tkinter.YES, anchor='center', width=100)
+       self.tree.column('#5', stretch=tkinter.YES, anchor='center', width=100)
+       self.tree.column('#6', stretch=tkinter.YES, anchor='center', width=100)
+       self.tree.column('#7', stretch=tkinter.YES, anchor='center')
        self.tree.grid(row=6, columnspan=5, sticky='nsew')
        self.tree.grid_columnconfigure(5, weight=1)
        self.treeview = self.tree
        # Initialize the counter
        self.i = 0
 
-       '''
-       #Review book
-       self.entry3=tk.Entry(self.parent)
-       self.entry3.grid_columnconfigure(0, weight=1)
-       self.entry3.grid()
-       self.button3=tk.Button(self.parent,text="Enter", command=self.Search)
-       self.button3.grid(row=8, column=0)
-       self.button3.grid_columnconfigure(0, weight=1)
-       self.button3.grid()
-       self.label3=tk.Label(self.parent,text="Enter a review")
-       self.label3.grid(row=6, column=0, sticky=tkinter.W)
-       self.label3.grid_columnconfigure(1, weight=1)
-       self.entry3.grid(row=7, column=0)
-       self.entry3.grid_columnconfigure(1, weight=1)
-       self.label3.grid()
-       
-       '''
+
    def LoadBookTable(self):
         for x in range(0, 3):
             self.tree.insert('', 'end',
-                                 text=isbn[x], values=(book_name[x], author[x], topic[x], description[x], number_of_books[x], books_in_library[x], book_rating[x]))
-
-   '''
-   isbn = library_data_file.ISBN
-   book_name = library_data_file.BookName
-   author = library_data_file.Author
-   topic = library_data_file.Topic
-   description = library_data_file.Description
-   number_of_books = library_data_file.NumberOfBooks
-   books_in_library = library_data_file.BooksInLibrary
-   book_rating = library_data_file.BooksRating
-   '''
+                                 text=book_name[x], values=(author[x], topic[x], description[x], number_of_books[x], books_in_library[x], book_rating[x], isbn[x]))
 
    def Search(self):
        donothing = 'Do nothing button'
        print(donothing)
 
+   def Loan(self):
+       print(time.ctime())
+       #if
+       #If there is entry in the database with the signum,
+       # then print("Please return your loaned book first")
 
-
+   def Return(self):
+       print(time.ctime())
 
 if __name__ == '__main__':
 

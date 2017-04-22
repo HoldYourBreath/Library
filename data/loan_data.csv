@@ -1,1 +1,4 @@
-BookName,Borrower,DateWhenBorrowed,DateReturn
+BookName,Borrower,DateWhenBorrowed,DateReturned
+GoodBook,ejanmak,today,notreturned
+BadBook,borje,yesterday,notreturned
+PythonIsGreat,hans,today,notreturned
