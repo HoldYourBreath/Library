@@ -9,6 +9,7 @@ pd.set_option('display.width', 1500)
 import tkinter
 from tkinter import *
 from tkinter import ttk
+import csv
 
 ########################
 #Read data from library_data.csv and loan_data.csv
@@ -135,12 +136,20 @@ class Passwordchecker(tk.Frame):
 
    def Loan(self):
        print(time.ctime())
-       #if
-       #If there is entry in the database with the signum,
-       # then print("Please return your loaned book first")
+       with open('data\loan_data.csv', 'rt') as f:
+           reader = csv.reader(f, delimiter=',')
+           for row in reader:
+               if self.entry2.get() == row[1]:
+                   print("Please return your loaned book first")
 
    def Return(self):
-       print(time.ctime())
+       with open('data\loan_data.csv', 'rt') as f:
+           reader = csv.reader(f, delimiter=',')
+           for row in reader:
+               if self.entry2.get() == row[1]:
+                   print("Your book has been returned")
+               else:
+                   print("You don't have any books loaned")
 
 if __name__ == '__main__':
 
