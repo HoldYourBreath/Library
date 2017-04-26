@@ -24,8 +24,8 @@ print(target_file)
 os.chdir(target_file)
 retval = os.getcwd()
 print(retval)
-target_file = os.path.join(retval, 'data\library_data.csv')
-target_file2 = os.path.join(retval, 'data\loan_data.csv')
+target_file = os.path.join(retval, r'data\library_data.csv')
+target_file2 = os.path.join(retval, r'data\loan_data.csv')
 print(target_file2)
 os.chdir(retval)
 if os.path.isfile(target_file) and os.access(target_file, os.R_OK):
@@ -143,29 +143,24 @@ class LibraryApplication(tk.Frame):
    def Search(self):
        donothing = 'Do nothing button'
        print(donothing)
-       with open('data\loan_data.csv', 'a', newline='') as fp:
-           a = csv.writer(fp, delimiter=',')
-           data = [['Pythfgfgdeat,hgfdgds,tgdgdddd,notreturned']]
-           a.writerows(data)
+
 
 
    def Loan(self):
-       print(time.ctime())
-       with open('data\loan_data.csv', 'rt') as f:
-           reader = csv.reader(f, delimiter=',')
-           for row in reader:
-               if self.entry2.get() == row[1]:
-                   print("Please return your loaned book first")
+       time_when_borrowed = time.ctime()
+       with open(r'data\loan_data.csv', 'a', newline='') as fp:
+           a = csv.writer(fp, delimiter=',')
+           data = [['BookBorrowed', self.entry2.get(), time_when_borrowed, 'notreturned']]
+           a.writerows(data)
 
    def Return(self):
-       with open('data\loan_data.csv', 'rt') as f:
+       with open(r'data\loan_data.csv', 'rt') as f:
            reader = csv.reader(f, delimiter=',')
            for row in reader:
                if self.entry2.get() == row[1]:
                    print("Your book has been returned")
                else:
                    print("You don't have any books loaned")
-
 
 
 '''
