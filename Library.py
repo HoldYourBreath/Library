@@ -10,6 +10,7 @@ import tkinter
 from tkinter import *
 from tkinter import ttk
 import csv
+import tkinter as tk
 
 ########################
 #Read data from library_data.csv and loan_data.csv
@@ -52,8 +53,10 @@ borrower = loan_data_file.Borrower
 date_when_borrowed = loan_data_file.DateWhenBorrowed
 date_returned = loan_data_file.DateReturned
 
-import tkinter as tk
-class Passwordchecker(tk.Frame):
+
+
+
+class LibraryApplication(tk.Frame):
    def __init__(self, parent):
        tk.Frame.__init__(self, parent)
        self.parent = parent
@@ -122,17 +125,29 @@ class Passwordchecker(tk.Frame):
        self.tree.grid_columnconfigure(5, weight=1)
        self.treeview = self.tree
        # Initialize the counter
-       self.i = 0
+       #self.i = 0
 
+       '''
+       def addToFile(file, what):
+          with open(file, 'a', newline='') as fp:
+              a = csv.writer(fp, delimiter=',')
+              #f = open(file, 'a').write(what)
+              a.writerows(what)
+       '''
 
    def LoadBookTable(self):
-        for x in range(0, 3):
+        for x in range(0, 4):
             self.tree.insert('', 'end',
                                  text=book_name[x], values=(author[x], topic[x], description[x], number_of_books[x], books_in_library[x], book_rating[x], isbn[x]))
 
    def Search(self):
        donothing = 'Do nothing button'
        print(donothing)
+       with open('data\loan_data.csv', 'a', newline='') as fp:
+           a = csv.writer(fp, delimiter=',')
+           data = [['Pythfgfgdeat,hgfdgds,tgdgdddd,notreturned']]
+           a.writerows(data)
+
 
    def Loan(self):
        print(time.ctime())
@@ -151,8 +166,17 @@ class Passwordchecker(tk.Frame):
                else:
                    print("You don't have any books loaned")
 
+
+
+'''
+with open('data\loan_data.csv', 'a', newline='') as fp:
+    a = csv.writer(fp, delimiter=',')
+    data = [['Pythfgfgdeat,hgfdgds,tgdgdddd,notreturned']]
+    a.writerows(data)
+'''
+
 if __name__ == '__main__':
 
    root = tk.Tk()
-   run = Passwordchecker(root)
+   run = LibraryApplication(root)
    root.mainloop()
