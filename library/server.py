@@ -56,11 +56,12 @@ def list_books():
     return ' '.join(books)
 
 
-@app.route('/books', methods=['PUT'])
-def get_books():
+@app.route('/books/<book_id>', methods=['PUT'])
+def get_books(book_id):
     isbn = flask.request.form['isbn']
     db = get_db()
-    db.execute('insert into books (isbn) values (?)', (int(isbn),))
+    db.execute('delete from books where tag=?', (int(book_id),))
+    db.execute('insert into books (tag, isbn) values (?, ?)', (int(book_id), int(isbn)))
     db.commit()
     return "ok"
 
@@ -68,6 +69,23 @@ def get_books():
 @app.route('/books/<isbn>', methods=['POST'])
 def get_single_book():
     return 'NOT IMPLEMENTED'
+
+
+def _get_book(book_id):
+    db = get_db()
+    curs = db.execute('select * from books where tag = ?', (book_id,))
+    if curs.rowcount == 0:
+        raise BookNotFound
+
+    book = curs.fetchone()
+
+    json_book = {
+            'tag': book.tag,
+            'isbn': book.isbn,
+            }
+
+    return json_book
+
 
 if __name__ == "__main__":
     app.config['DEBUG'] = True

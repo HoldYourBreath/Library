@@ -29,19 +29,33 @@ class RootTestCase(ServerTestCase):
 
 
 class BookTestCase(ServerTestCase):
-    def test_book_post(self):
-        rv = self.app.put('/books', data={'isbn': 1234})
+    def test_book_get(self):
+        rv = self.app.get('/books')
         self.assertEqual(rv.status_code, 200)
+
+    def test_book_put(self):
+        self._put_book(1, 1234)
         rv = self.app.get('/books')
         self.assertEqual(rv.data, '1234')
-        rv = self.app.put('/books', data={'isbn': 5678})
-        self.assertEqual(rv.status_code, 200)
+
+    def test_multiple_put(self):
+        self._put_book(1, 1234)
+        self._put_book(2, 5678)
 
         rv = self.app.get('/books')
         self.assertEqual(rv.data, '5678 1234')
 
-    def test_book_get(self):
+    def test_override_put(self):
+        self._put_book(1, 1234)
+        self._put_book(2, 5678)
+        self._put_book(2, 2345)
+
         rv = self.app.get('/books')
+        self.assertEqual(rv.data, '2345 1234')
+
+
+    def _put_book(self, book_id, isbn):
+        rv = self.app.put('/books/{}'.format(book_id), data={'isbn': isbn})
         self.assertEqual(rv.status_code, 200)
 
 
