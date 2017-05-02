@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import flask
+import json
 
 
 app = flask.Flask(__name__)
@@ -12,6 +13,10 @@ app.config.update(dict(
 ))
 
 books = []
+
+
+class BookNotFound(Exception):
+    pass
 
 
 def init_db():
@@ -50,10 +55,9 @@ def hello():
 @app.route('/books', methods=['GET'])
 def list_books():
     db = get_db()
-    curs = db.execute('select isbn from books order by id desc')
-    books = [str(row[0]) for row in curs.fetchall()]
-
-    return ' '.join(books)
+    curs = db.execute('select * from books order by id desc')
+    books = _get_books(curs.fetchall())
+    return json.dumps(books, indent=4)
 
 
 @app.route('/books/<book_id>', methods=['PUT'])
@@ -61,14 +65,15 @@ def get_books(book_id):
     isbn = flask.request.form['isbn']
     db = get_db()
     db.execute('delete from books where tag=?', (int(book_id),))
-    db.execute('insert into books (tag, isbn) values (?, ?)', (int(book_id), int(isbn)))
+    db.execute('insert into books (tag, isbn) values (?, ?)',
+               (int(book_id), int(isbn)))
     db.commit()
     return "ok"
 
 
-@app.route('/books/<isbn>', methods=['POST'])
-def get_single_book():
-    return 'NOT IMPLEMENTED'
+@app.route('/books/<book_id>', methods=['GET'])
+def get_single_book(book_id):
+    return json.dumps(_get_book(book_id), indent=4)
 
 
 def _get_book(book_id):
@@ -77,14 +82,19 @@ def _get_book(book_id):
     if curs.rowcount == 0:
         raise BookNotFound
 
-    book = curs.fetchone()
+    book = curs.fetchall()
 
-    json_book = {
-            'tag': book.tag,
-            'isbn': book.isbn,
-            }
+    return _get_books(book)
 
-    return json_book
+
+def _get_books(rows):
+    books = []
+    for book in rows:
+        json_book = {'tag': book['tag'],
+                     'isbn': book['isbn']}
+        books.append(json_book)
+
+    return books
 
 
 if __name__ == "__main__":
