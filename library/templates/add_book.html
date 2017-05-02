@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Add books</title>
+    </head>
+    <body>
+        <h1>Add book</h1>
+        Asset tag:<br>
+        <input type="text" id="tag"><br>
+        ISBN:<br>
+        <input type="text" id="isbn"><br>
+        <button type="button" onclick="add_book()">Add book</button>
+
+    </body>
+
+    <script>
+function add_book() {
+    console.log('Working');
+    var tag = document.getElementById('tag').value;
+    var isbn = document.getElementById('isbn').value;
+    var xhrReq = new XMLHttpRequest();
+    xhrReq.open('PUT', '/api/books/' + tag);
+    xhrReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhrReq.send("tag=" + tag + "&isbn=" + isbn);
+    console.log(xhrReq.getAllResponseHeaders());
+}
+    </script>
+
+</html>

@@ -1,18 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
-        <title>My Webpage</title>
+        <title>my webpage</title>
     </head>
     <body>
-        <ul id="navigation">
-            {% for item in navigation %}
-            <li><a href="{{ item.href }}">{{ item.caption }}</a></li>
-            {% endfor %}
-        </ul>
-
-        <h1>My Webpage</h1>
-        {{ a_variable }}
-
-        {# a comment #}
+        <h1>Books</h1>
+        {% for book in books %}
+        <li> {{ book['tag'] }}</li>
+        {% endfor %}
     </body>
 </html>

@@ -31,18 +31,22 @@ class RootTestCase(ServerTestCase):
 
 class BookTestCase(ServerTestCase):
     def test_book_get(self):
-        rv = self.app.get('/books')
+        rv = self.app.get('/api/books')
         self.assertEqual(rv.status_code, 200)
+
+    def test_book_get_unknown(self):
+        rv = self.app.get('/api/books/1')
+        self.assertEqual(rv.status_code, 404)
 
     def test_book_put(self):
         books = [{'tag': 1,
                   'isbn': 1234}]
         self._put_book(books[0])
-        rv = self.app.get('/books')
-        self.assertEqual(rv.data, json.dumps(books, indent=4))
+        rv = self.app.get('/api/books')
+        self.assertEqual(rv.data, json.dumps(books))
 
-        rv = self.app.get('/books/1')
-        self.assertEqual(rv.data, json.dumps(books, indent=4))
+        rv = self.app.get('/api/books/1')
+        self.assertEqual(rv.data, json.dumps(books[0]))
 
     def test_multiple_put(self):
         books = [{'tag': 2,
@@ -52,14 +56,14 @@ class BookTestCase(ServerTestCase):
         self._put_book(books[1])
         self._put_book(books[0])
 
-        rv = self.app.get('/books')
-        self.assertEqual(rv.data, json.dumps(books, indent=4))
+        rv = self.app.get('/api/books')
+        self.assertEqual(rv.data, json.dumps(books))
 
-        rv = self.app.get('/books/1')
-        self.assertEqual(rv.data, json.dumps([books[1]], indent=4))
+        rv = self.app.get('/api/books/1')
+        self.assertEqual(rv.data, json.dumps(books[1]))
 
-        rv = self.app.get('/books/2')
-        self.assertEqual(rv.data, json.dumps([books[0]], indent=4))
+        rv = self.app.get('/api/books/2')
+        self.assertEqual(rv.data, json.dumps(books[0]))
 
     def test_override_put(self):
         books = [{'tag': 2,
@@ -70,13 +74,13 @@ class BookTestCase(ServerTestCase):
         self._put_book({'tag': 2, 'isbn': 5678})
         self._put_book(books[0])
 
-        rv = self.app.get('/books')
-        self.assertEqual(rv.data, json.dumps(books, indent=4))
+        rv = self.app.get('/api/books')
+        self.assertEqual(rv.data, json.dumps(books))
 
     def _put_book(self, book):
         book_id = book['tag']
         isbn = book['isbn']
-        rv = self.app.put('/books/{}'.format(book_id), data={'isbn': isbn})
+        rv = self.app.put('/api/books/{}'.format(book_id), data={'isbn': isbn})
         self.assertEqual(rv.status_code, 200)
 
 

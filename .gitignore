@@ -1,4 +1,4 @@
 *.pyc
 .ropeproject
 *.swp
-
+library/library.db

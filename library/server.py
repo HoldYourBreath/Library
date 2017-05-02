@@ -48,19 +48,40 @@ def close_db(error):
 
 
 @app.route('/')
-def hello():
-    return flask.render_template('index.html', a_variable='testing')
+def root():
+    db = get_db()
+    curs = db.execute('select * from books order by id desc')
+    return flask.render_template('index.html',
+                                 books=_get_books(curs.fetchall()))
 
 
-@app.route('/books', methods=['GET'])
+@app.route('/add_book')
+def add_book_form():
+    return flask.render_template('add_book.html')
+
+
+@app.route('/init_db')
+def set_up_db():
+    init_db()
+    return 'OK'
+
+
+@app.route('/delete_db')
+def remove_db():
+    db = get_db()
+    db.execute('drop table books')
+    return 'OK'
+
+
+@app.route('/api/books', methods=['GET'])
 def list_books():
     db = get_db()
     curs = db.execute('select * from books order by id desc')
     books = _get_books(curs.fetchall())
-    return json.dumps(books, indent=4)
+    return json.dumps(books)
 
 
-@app.route('/books/<book_id>', methods=['PUT'])
+@app.route('/api/books/<book_id>', methods=['PUT'])
 def get_books(book_id):
     isbn = flask.request.form['isbn']
     db = get_db()
@@ -68,23 +89,26 @@ def get_books(book_id):
     db.execute('insert into books (tag, isbn) values (?, ?)',
                (int(book_id), int(isbn)))
     db.commit()
-    return "ok"
+    return json.dumps(_get_book(book_id))
 
 
-@app.route('/books/<book_id>', methods=['GET'])
+@app.route('/api/books/<book_id>', methods=['GET'])
 def get_single_book(book_id):
-    return json.dumps(_get_book(book_id), indent=4)
+    try:
+        return json.dumps(_get_book(book_id))
+    except BookNotFound:
+        return 'Not found', 404
 
 
 def _get_book(book_id):
     db = get_db()
     curs = db.execute('select * from books where tag = ?', (book_id,))
-    if curs.rowcount == 0:
-        raise BookNotFound
 
     book = curs.fetchall()
+    if len(book) == 0:
+        raise BookNotFound
 
-    return _get_books(book)
+    return _get_books(book)[0]
 
 
 def _get_books(rows):
