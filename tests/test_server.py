@@ -21,10 +21,14 @@ class ServerTestCase(unittest.TestCase):
         os.close(self.db_fd)
         os.unlink(server.app.config['DATABASE'])
 
+
+class RootTestCase(ServerTestCase):
     def test_root(self):
         rv = self.app.get('/')
         self.assertEqual(rv.status_code, 200)
 
+
+class BookTestCase(ServerTestCase):
     def test_book_post(self):
         rv = self.app.put('/books', data={'isbn': 1234})
         self.assertEqual(rv.status_code, 200)
