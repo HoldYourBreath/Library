@@ -5,6 +5,7 @@ import json
 
 # Local modules
 import library.server as server
+import library.database as database
 
 
 class ServerTestCase(unittest.TestCase):
@@ -15,7 +16,7 @@ class ServerTestCase(unittest.TestCase):
         server.app.config['TESTING'] = True
         self.app = server.app.test_client()
         with server.app.app_context():
-            server.init_db()
+            database.init()
 
     @classmethod
     def tearDown(self):

@@ -1,16 +1,8 @@
-import os
-import sqlite3
 import flask
 import json
 
-
-app = flask.Flask(__name__)
-app.config.from_object(__name__)  # load config from this file , flaskr.py
-
-# Load default config and override config from an environment variable
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'library.db'),
-))
+import database
+from app import app
 
 books = []
 
@@ -19,37 +11,9 @@ class BookNotFound(Exception):
     pass
 
 
-def init_db():
-    db = get_db()
-    with app.open_resource('schema.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-        db.commit()
-
-
-def connect_db():
-    """Connects to the specific database."""
-    db_path = app.config['DATABASE']
-    rv = sqlite3.connect(db_path)
-    rv.row_factory = sqlite3.Row
-    return rv
-
-
-def get_db():
-    if not hasattr(flask.g, 'sqlite_db'):
-        flask.g.sqlite_db = connect_db()
-    return flask.g.sqlite_db
-
-
-@app.teardown_appcontext
-def close_db(error):
-    """Closes the database again at the end of the request."""
-    if hasattr(flask.g, 'sqlite_db'):
-        flask.g.sqlite_db.close()
-
-
 @app.route('/')
 def root():
-    db = get_db()
+    db = database.get()
     curs = db.execute('select * from books order by id desc')
     return flask.render_template('index.html',
                                  books=_get_books(curs.fetchall()))
@@ -62,20 +26,20 @@ def add_book_form():
 
 @app.route('/init_db')
 def set_up_db():
-    init_db()
+    database.init()
     return 'OK'
 
 
 @app.route('/delete_db')
 def remove_db():
-    db = get_db()
+    db = database.get()
     db.execute('drop table books')
     return 'OK'
 
 
 @app.route('/api/books', methods=['GET'])
 def list_books():
-    db = get_db()
+    db = database.get()
     curs = db.execute('select * from books order by id desc')
     books = _get_books(curs.fetchall())
     return json.dumps(books)
@@ -84,7 +48,7 @@ def list_books():
 @app.route('/api/books/<book_id>', methods=['PUT'])
 def get_books(book_id):
     isbn = flask.request.form['isbn']
-    db = get_db()
+    db = database.get()
     db.execute('delete from books where tag=?', (int(book_id),))
     db.execute('insert into books (tag, isbn) values (?, ?)',
                (int(book_id), int(isbn)))
@@ -101,7 +65,7 @@ def get_single_book(book_id):
 
 
 def _get_book(book_id):
-    db = get_db()
+    db = database.get()
     curs = db.execute('select * from books where tag = ?', (book_id,))
 
     book = curs.fetchall()
