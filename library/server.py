@@ -4,6 +4,7 @@ import json
 import database
 from app import app
 import api
+import goodreads_interface
 
 @app.route('/')
 def root():
