@@ -6,6 +6,7 @@ import json
 # Local modules
 import library.server as server
 import library.database as database
+from library.config import config
 
 
 class UrllibStub():
@@ -34,15 +35,21 @@ class ServerTestCase(unittest.TestCase):
 
     @classmethod
     def setUp(self):
+        # Set up a temporary database
         self.db_fd, server.app.config['DATABASE'] = tempfile.mkstemp()
         server.app.config['TESTING'] = True
         self.app = server.app.test_client()
         with server.app.app_context():
             database.init()
 
+        # Set up a temporary config file
+        self.config_fd, temp_config = tempfile.mkstemp()
+        config.read(temp_config)
+
     @classmethod
     def tearDown(self):
         os.close(self.db_fd)
+        os.close(self.config_fd)
         os.unlink(server.app.config['DATABASE'])
 
 
@@ -110,23 +117,23 @@ class GoodreadTestCase(ServerTestCase):
 
     def test_get_book(self):
         import library.goodreads_interface as gi
-        isbn = {'isbn': 1234}
-        data = """<?xml version="1.0" encoding="UTF-8"?>
+        data = """\
+<?xml version="1.0" encoding="UTF-8"?>
 <GoodreadsResponse>
   <Request>
-    <authentication>true</authentication>
-      <key><![CDATA[PRIVATE]]></key>
-    <method><![CDATA[search_index]]></method>
+	<authentication>true</authentication>
+	  <key><![CDATA[PQkx0Upvp4Fyv9EtiB5Bg]]></key>
+	<method><![CDATA[search_index]]></method>
   </Request>
   <search>
   <query><![CDATA[9780134052502]]></query>
-    <results-start>1</results-start>
-    <results-end>1</results-end>
-    <total-results>1</total-results>
-    <source>Goodreads</source>
-    <query-time-seconds>0.01</query-time-seconds>
-    <results>
-        <work>
+	<results-start>1</results-start>
+	<results-end>1</results-end>
+	<total-results>1</total-results>
+	<source>Goodreads</source>
+	<query-time-seconds>0.01</query-time-seconds>
+	<results>
+		<work>
   <id type="integer">42757860</id>
   <books_count type="integer">6</books_count>
   <ratings_count type="integer">279</ratings_count>
@@ -136,24 +143,35 @@ class GoodreadTestCase(ServerTestCase):
   <original_publication_day type="integer">3</original_publication_day>
   <average_rating>4.32</average_rating>
   <best_book type="Book">
-    <id type="integer">23215733</id>
-    <title>The Software Craftsman: Professionalism, Pragmatism, Pride</title>
-    <author>
-      <id type="integer">7127583</id>
-      <name>Sandro Mancuso</name>
-    </author>
-    <image_url>https://images.gr-assets.com/books/1416778735m/23215733.jpg</image_url>
-    <small_image_url>https://images.gr-assets.com/books/1416778735s/23215733.jpg</small_image_url>
+	<id type="integer">23215733</id>
+	<title>The Software Craftsman: Professionalism, Pragmatism, Pride</title>
+	<author>
+	  <id type="integer">7127583</id>
+	  <name>Sandro Mancuso</name>
+	</author>
+	<image_url>https://images.gr-assets.com/books/1416778735m/23215733.jpg</image_url>
+	<small_image_url>https://images.gr-assets.com/books/1416778735s/23215733.jpg</small_image_url>
   </best_book>
 </work>
 
-    </results>
-</search>"""
-        print(data)
+	</results>
+</search>
+
+</GoodreadsResponse>\
+"""
         gi.urllib = UrllibStub(200, data)
 
+        config.add_section('Goodreads')
+        config.set('Goodreads', 'api_key', '123456789')
+
+        expected_response = {
+                'author': 'Sandro Mancuso',
+                'title': 'The Software Craftsman: Professionalism, Pragmatism, Pride',
+                'publication_date': '2014 12 3'
+                }
+
         rv = self.app.get('/api/books/goodread/1234')
-        self.assertEqual(rv.data, data)
+        self.assertEqual(rv.data, json.dumps(expected_response))
         self.assertEqual(rv.status_code, 200)
 
 
