@@ -2,3 +2,4 @@
 .ropeproject
 *.swp
 library/library.db
+library.cfg
