@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GoodreadsResponse>
+  <Request>
+    <authentication>true</authentication>
+      <key><![CDATA[PQkx0Upvp4Fyv9EtiB5Bg]]></key>
+    <method><![CDATA[search_index]]></method>
+  </Request>
+  <search>
+  <query><![CDATA[9780134052502]]></query>
+    <results-start>1</results-start>
+    <results-end>1</results-end>
+    <total-results>1</total-results>
+    <source>Goodreads</source>
+    <query-time-seconds>0.01</query-time-seconds>
+    <results>
+        <work>
+  <id type="integer">42757860</id>
+  <books_count type="integer">6</books_count>
+  <ratings_count type="integer">282</ratings_count>
+  <text_reviews_count type="integer">49</text_reviews_count>
+  <original_publication_year type="integer">2014</original_publication_year>
+  <original_publication_month type="integer">12</original_publication_month>
+  <original_publication_day type="integer">3</original_publication_day>
+  <average_rating>4.32</average_rating>
+  <best_book type="Book">
+    <id type="integer">23215733</id>
+    <title>The Software Craftsman: Professionalism, Pragmatism, Pride</title>
+    <author>
+      <id type="integer">7127583</id>
+      <name>Sandro Mancuso</name>
+    </author>
+    <image_url>https://images.gr-assets.com/books/1416778735m/23215733.jpg</image_url>
+    <small_image_url>https://images.gr-assets.com/books/1416778735s/23215733.jpg</small_image_url>
+  </best_book>
+</work>
+
+    </results>
+</search>
+
+</GoodreadsResponse>

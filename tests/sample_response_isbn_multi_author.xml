@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GoodreadsResponse>
+  <Request>
+    <authentication>true</authentication>
+      <key><![CDATA[PQkx0Upvp4Fyv9EtiB5Bg]]></key>
+    <method><![CDATA[search_index]]></method>
+  </Request>
+  <search>
+  <query><![CDATA[9780124199859]]></query>
+    <results-start>1</results-start>
+    <results-end>1</results-end>
+    <total-results>1</total-results>
+    <source>Goodreads</source>
+    <query-time-seconds>0.01</query-time-seconds>
+    <results>
+        <work>
+  <id type="integer">14812599</id>
+  <books_count type="integer">18</books_count>
+  <ratings_count type="integer">61</ratings_count>
+  <text_reviews_count type="integer">1</text_reviews_count>
+  <original_publication_year type="integer">2007</original_publication_year>
+  <original_publication_month type="integer">7</original_publication_month>
+  <original_publication_day type="integer">17</original_publication_day>
+  <average_rating>4.25</average_rating>
+  <best_book type="Book">
+    <id type="integer">18180458</id>
+    <title>4g: Lte/Lte-Advanced for Mobile Broadband</title>
+    <author>
+      <id type="integer">631325</id>
+      <name>Erik Dahlman</name>
+    </author>
+    <image_url>https://images.gr-assets.com/books/1379896243m/18180458.jpg</image_url>
+    <small_image_url>https://images.gr-assets.com/books/1379896243s/18180458.jpg</small_image_url>
+  </best_book>
+</work>
+
+    </results>
+</search>
+
+</GoodreadsResponse>

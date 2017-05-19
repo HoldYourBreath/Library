@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GoodreadsResponse>
+  <Request>
+    <authentication>true</authentication>
+      <key><![CDATA[PQkx0Upvp4Fyv9EtiB5Bg]]></key>
+    <method><![CDATA[book_show]]></method>
+  </Request>
+  <book>
+  <id>23215733</id>
+  <title><![CDATA[The Software Craftsman: Professionalism, Pragmatism, Pride]]></title>
+  <isbn><![CDATA[0134052501]]></isbn>
+  <isbn13><![CDATA[9780134052502]]></isbn13>
+  <asin><![CDATA[]]></asin>
+  <kindle_asin><![CDATA[]]></kindle_asin>
+  <marketplace_id><![CDATA[]]></marketplace_id>
+  <country_code><![CDATA[SE]]></country_code>
+  <image_url>https://images.gr-assets.com/books/1416778735m/23215733.jpg</image_url>
+  <small_image_url>https://images.gr-assets.com/books/1416778735s/23215733.jpg</small_image_url>
+  <publication_year>2014</publication_year>
+  <publication_month>12</publication_month>
+  <publication_day>4</publication_day>
+  <publisher>Prentice Hall</publisher>
+  <language_code></language_code>
+  <is_ebook>false</is_ebook>
+  <description><![CDATA[<b>Be a Better Developer and Deliver Better Code</b> Despite advanced tools and methodologies, software projects continue to fail. Why? Too many organizations still view software development as just another production line. Too many developers feel that way, too and they behave accordingly. In <b> <i>The Software Craftsman: Professionalism, Pragmatism, Pride, </i> </b>Sandro Mancuso offers a better and more fulfilling path. If you want to develop software with pride and professionalism; love what you do and do it with excellence; and build a career with autonomy, mastery, and purpose, it starts with the recognition that you are a craftsman. Once you embrace this powerful mindset, you can achieve unprecedented levels of technical excellence and customer satisfaction. Mancuso helped found the world s largest organization of software craftsmen; now, he shares what he s learned through inspiring examples and pragmatic advice you can use in your company, your projects, and your career. You will learn<br />Why agile processes aren t enough and why craftsmanship is crucial to making them work How craftsmanship helps you build software right and helps clients in ways that go beyond code How and when to say No and how to provide creative alternatives when you do Why bad code happens to good developers and how to stop creating and justifying it How to make working with legacy code less painful and more productive How to be pragmatic not dogmatic about your practices and tools How to lead software craftsmen and attract them to your organization What to avoid when advertising positions, interviewing candidates, and hiring developers How developers and their managers can create a true culture of learning How to drive true technical change and overcome deep patterns of skepticism <b>Sandro Mancuso</b> has coded for startups, software houses, product companies, international consultancies, and investment banks. In October 2013, he cofounded Codurance, a consultancy based on Software Craftsmanship principles and values. His involvement with Software Craftsmanship began in 2010, when he founded the London Software Craftsmanship Community (LSCC), now the world s largest and most active Software Craftsmanship community, with more than two thousand craftsmen. For the past four years, he has inspired and helped developers to organize Software Craftsmanship communities throughout Europe, the United States, and the rest of the world."]]></description>
+  <work>
+  <id type="integer">42757860</id>
+  <books_count type="integer">6</books_count>
+  <best_book_id type="integer">18054154</best_book_id>
+  <reviews_count type="integer">803</reviews_count>
+  <ratings_sum type="integer">1219</ratings_sum>
+  <ratings_count type="integer">282</ratings_count>
+  <text_reviews_count type="integer">49</text_reviews_count>
+  <original_publication_year type="integer">2014</original_publication_year>
+  <original_publication_month type="integer">12</original_publication_month>
+  <original_publication_day type="integer">3</original_publication_day>
+  <original_title nil="true"/>
+  <original_language_id type="integer" nil="true"/>
+  <media_type nil="true"/>
+  <rating_dist>5:149|4:92|3:25|2:15|1:1|total:282</rating_dist>
+  <desc_user_id type="integer">-51</desc_user_id>
+  <default_chaptering_book_id type="integer" nil="true"/>
+  <default_description_language_code nil="true"/>
+</work>
+  <average_rating>4.32</average_rating>
+  <num_pages><![CDATA[288]]></num_pages>
+  <format><![CDATA[Paperback]]></format>
+  <edition_information><![CDATA[]]></edition_information>
+  <ratings_count><![CDATA[137]]></ratings_count>
+  <text_reviews_count><![CDATA[22]]></text_reviews_count>
+  <url><![CDATA[https://www.goodreads.com/book/show/23215733-the-software-craftsman]]></url>
+  <link><![CDATA[https://www.goodreads.com/book/show/23215733-the-software-craftsman]]></link>
+  <authors>
+<author>
+<id>7127583</id>
+<name>Sandro Mancuso</name>
+<role></role>
+<image_url nophoto='false'>
+<![CDATA[https://images.gr-assets.com/authors/1442891388p5/7127583.jpg]]>
+</image_url>
+<small_image_url nophoto='false'>
+<![CDATA[https://images.gr-assets.com/authors/1442891388p2/7127583.jpg]]>
+</small_image_url>
+<link><![CDATA[https://www.goodreads.com/author/show/7127583.Sandro_Mancuso]]></link>
+<average_rating>4.32</average_rating>
+<ratings_count>282</ratings_count>
+<text_reviews_count>49</text_reviews_count>
+</author>
+</authors>
+
+    <reviews_widget>
+      <![CDATA[
+        <style>
+  #goodreads-widget {
+    font-family: georgia, serif;
+    padding: 18px 0;
+    width:565px;
+  }
+  #goodreads-widget h1 {
+    font-weight:normal;
+    font-size: 16px;
+    border-bottom: 1px solid #BBB596;
+    margin-bottom: 0;
+  }
+  #goodreads-widget a {
+    text-decoration: none;
+    color:#660;
+  }
+  iframe{
+    background-color: #fff;
+  }
+  #goodreads-widget a:hover { text-decoration: underline; }
+  #goodreads-widget a:active {
+    color:#660;
+  }
+  #gr_footer {
+    width: 100%;
+    border-top: 1px solid #BBB596;
+    text-align: right;
+  }
+  #goodreads-widget .gr_branding{
+    color: #382110;
+    font-size: 11px;
+    text-decoration: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+</style>
+<div id="goodreads-widget">
+  <div id="gr_header"><h1><a href="https://www.goodreads.com/book/show/23215733-the-software-craftsman">The Software Craftsman Reviews</a></h1></div>
+  <iframe id="the_iframe" src="https://www.goodreads.com/api/reviews_widget_iframe?did=DEVELOPER_ID&amp;format=html&amp;isbn=0134052501&amp;links=660&amp;min_rating=&amp;review_back=fff&amp;stars=000&amp;text=000" width="565" height="400" frameborder="0"></iframe>
+  <div id="gr_footer">
+    <a class="gr_branding" target="_blank" href="https://www.goodreads.com/book/show/23215733-the-software-craftsman?utm_medium=api&amp;utm_source=reviews_widget">Reviews from Goodreads.com</a>
+  </div>
+</div>
+
+      ]]>
+    </reviews_widget>
+  <popular_shelves>
+      <shelf name="to-read" count="433"/>
+      <shelf name="currently-reading" count="41"/>
+      <shelf name="programming" count="22"/>
+      <shelf name="software-development" count="6"/>
+      <shelf name="it" count="6"/>
+      <shelf name="software-engineering" count="5"/>
+      <shelf name="non-fiction" count="5"/>
+      <shelf name="tech" count="5"/>
+      <shelf name="agile" count="5"/>
+      <shelf name="computer-science" count="4"/>
+      <shelf name="technical" count="4"/>
+      <shelf name="owned" count="4"/>
+      <shelf name="technology" count="4"/>
+      <shelf name="coding" count="4"/>
+      <shelf name="work" count="3"/>
+      <shelf name="professional-reading" count="2"/>
+      <shelf name="software" count="2"/>
+      <shelf name="favorites" count="2"/>
+      <shelf name="self-learning" count="2"/>
+      <shelf name="dev" count="2"/>
+      <shelf name="craftsmanship" count="2"/>
+      <shelf name="have" count="1"/>
+      <shelf name="to-read-technical" count="1"/>
+      <shelf name="art-du-code" count="1"/>
+      <shelf name="agile-ideas-to-read" count="1"/>
+      <shelf name="technical-want" count="1"/>
+      <shelf name="self-improvement" count="1"/>
+      <shelf name="soon-to-read" count="1"/>
+      <shelf name="must-for-developers" count="1"/>
+      <shelf name="safari" count="1"/>
+      <shelf name="education" count="1"/>
+      <shelf name="technology-info" count="1"/>
+      <shelf name="code-design-principles" count="1"/>
+      <shelf name="software-developer" count="1"/>
+      <shelf name="swe" count="1"/>
+      <shelf name="techniczne" count="1"/>
+      <shelf name="cs" count="1"/>
+      <shelf name="multiple-references" count="1"/>
+      <shelf name="general-tech" count="1"/>
+      <shelf name="dev-stuff" count="1"/>
+      <shelf name="technical-books" count="1"/>
+      <shelf name="pega-library" count="1"/>
+      <shelf name="agile-software-development" count="1"/>
+      <shelf name="compsci-tech" count="1"/>
+      <shelf name="interrupted" count="1"/>
+      <shelf name="someday" count="1"/>
+      <shelf name="top-priority" count="1"/>
+      <shelf name="self-help" count="1"/>
+      <shelf name="medium-interest" count="1"/>
+      <shelf name="english-books" count="1"/>
+      <shelf name="computer" count="1"/>
+      <shelf name="tech-books" count="1"/>
+      <shelf name="novoda-new-starts-reading" count="1"/>
+      <shelf name="tech-in-shelf" count="1"/>
+      <shelf name="mycsbooklist" count="1"/>
+      <shelf name="development" count="1"/>
+      <shelf name="software-craftsmanship" count="1"/>
+      <shelf name="software-architecture" count="1"/>
+      <shelf name="programing" count="1"/>
+      <shelf name="to-read-long-list" count="1"/>
+      <shelf name="bookshelf" count="1"/>
+      <shelf name="software-general" count="1"/>
+      <shelf name="informatics" count="1"/>
+      <shelf name="professional" count="1"/>
+      <shelf name="specialized" count="1"/>
+      <shelf name="maybe-read" count="1"/>
+      <shelf name="moje-knjige" count="1"/>
+      <shelf name="not-at-library" count="1"/>
+      <shelf name="professional-development" count="1"/>
+      <shelf name="next" count="1"/>
+      <shelf name="information-technology" count="1"/>
+      <shelf name="2016-tech" count="1"/>
+      <shelf name="technical-books-for-programmers" count="1"/>
+      <shelf name="programmer" count="1"/>
+      <shelf name="craftmanchip" count="1"/>
+      <shelf name="elearning" count="1"/>
+      <shelf name="sw" count="1"/>
+      <shelf name="computing-science" count="1"/>
+      <shelf name="thinking-fast-and-slow" count="1"/>
+      <shelf name="owned-and-unread" count="1"/>
+      <shelf name="e-book" count="1"/>
+      <shelf name="have-softcopy" count="1"/>
+      <shelf name="ready-to-read-on-kindle" count="1"/>
+      <shelf name="programming-development" count="1"/>
+      <shelf name="business-management" count="1"/>
+      <shelf name="business-economy" count="1"/>
+      <shelf name="finished" count="1"/>
+      <shelf name="to-check" count="-1"/>
+  </popular_shelves>
+  <book_links>
+    <book_link>
+  <id>8</id>
+  <name>Libraries</name>
+  <link>https://www.goodreads.com/book_link/follow/8</link>
+</book_link>
+
+  </book_links>
+  <buy_links>
+    <buy_link>
+<id>1</id>
+<name>Amazon</name>
+<link>https://www.goodreads.com/book_link/follow/1</link>
+</buy_link>
+<buy_link>
+<id>10</id>
+<name>Audible</name>
+<link>https://www.goodreads.com/book_link/follow/10</link>
+</buy_link>
+<buy_link>
+<id>3</id>
+<name>Barnes &amp; Noble</name>
+<link>https://www.goodreads.com/book_link/follow/3</link>
+</buy_link>
+<buy_link>
+<id>1027</id>
+<name>Kobo</name>
+<link>https://www.goodreads.com/book_link/follow/1027</link>
+</buy_link>
+<buy_link>
+<id>2102</id>
+<name>Apple iBooks</name>
+<link>https://www.goodreads.com/book_link/follow/2102</link>
+</buy_link>
+<buy_link>
+<id>8036</id>
+<name>Google Play</name>
+<link>https://www.goodreads.com/book_link/follow/8036</link>
+</buy_link>
+<buy_link>
+<id>4</id>
+<name>Abebooks</name>
+<link>https://www.goodreads.com/book_link/follow/4</link>
+</buy_link>
+<buy_link>
+<id>882</id>
+<name>Book Depository</name>
+<link>https://www.goodreads.com/book_link/follow/882</link>
+</buy_link>
+<buy_link>
+<id>9</id>
+<name>Indigo</name>
+<link>https://www.goodreads.com/book_link/follow/9</link>
+</buy_link>
+<buy_link>
+<id>2</id>
+<name>Half.com</name>
+<link>https://www.goodreads.com/book_link/follow/2</link>
+</buy_link>
+<buy_link>
+<id>5</id>
+<name>Alibris</name>
+<link>https://www.goodreads.com/book_link/follow/5</link>
+</buy_link>
+<buy_link>
+<id>107</id>
+<name>Better World Books</name>
+<link>https://www.goodreads.com/book_link/follow/107</link>
+</buy_link>
+<buy_link>
+<id>7</id>
+<name>IndieBound</name>
+<link>https://www.goodreads.com/book_link/follow/7</link>
+</buy_link>
+
+  </buy_links>
+  <series_works>
+    
+  </series_works>
+  <similar_books>
+          <book>
+<id>5608045</id>
+<title><![CDATA[Apprenticeship Patterns: Guidance for the Aspiring Software Craftsman]]></title>
+<title_without_series><![CDATA[Apprenticeship Patterns: Guidance for the Aspiring Software Craftsman]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/5608045-apprenticeship-patterns]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1328834807s/5608045.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1328834807m/5608045.jpg]]></image_url>
+<num_pages>176</num_pages>
+<work>
+<id>5779422</id>
+</work>
+<isbn>0596518382</isbn>
+<isbn13>9780596518387</isbn13>
+<average_rating>4.10</average_rating>
+<ratings_count>567</ratings_count>
+<publication_year>2009</publication_year>
+<publication_month>10</publication_month>
+<publication_day>22</publication_day>
+<authors>
+<author>
+<id>2499590</id>
+<name>Dave Hoover</name>
+<link><![CDATA[https://www.goodreads.com/author/show/2499590.Dave_Hoover]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>21841698</id>
+<title><![CDATA[Understanding the Four Rules of Simple Design]]></title>
+<title_without_series><![CDATA[Understanding the Four Rules of Simple Design]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/21841698-understanding-the-four-rules-of-simple-design]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1396526955s/21841698.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1396526955m/21841698.jpg]]></image_url>
+<num_pages>83</num_pages>
+<work>
+<id>41109509</id>
+</work>
+<isbn></isbn>
+<isbn13></isbn13>
+<average_rating>4.08</average_rating>
+<ratings_count>156</ratings_count>
+<publication_year>2014</publication_year>
+<publication_month>4</publication_month>
+<publication_day></publication_day>
+<authors>
+<author>
+<id>8119340</id>
+<name>Corey Haines</name>
+<link><![CDATA[https://www.goodreads.com/author/show/8119340.Corey_Haines]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>179204</id>
+<title><![CDATA[Object Design: Roles, Responsibilities, and Collaborations]]></title>
+<title_without_series><![CDATA[Object Design: Roles, Responsibilities, and Collaborations]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/179204.Object_Design]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1372040740s/179204.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1372040740m/179204.jpg]]></image_url>
+<num_pages>416</num_pages>
+<work>
+<id>173129</id>
+</work>
+<isbn>0201379430</isbn>
+<isbn13>0785342379433</isbn13>
+<average_rating>3.60</average_rating>
+<ratings_count>67</ratings_count>
+<publication_year>2002</publication_year>
+<publication_month>11</publication_month>
+<publication_day>18</publication_day>
+<authors>
+<author>
+<id>104401</id>
+<name>Rebecca Wirfs-Brock</name>
+<link><![CDATA[https://www.goodreads.com/author/show/104401.Rebecca_Wirfs_Brock]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>15756865</id>
+<title><![CDATA[Implementing Domain-Driven Design]]></title>
+<title_without_series><![CDATA[Implementing Domain-Driven Design]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/15756865-implementing-domain-driven-design]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1342552108s/15756865.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1342552108m/15756865.jpg]]></image_url>
+<num_pages>656</num_pages>
+<work>
+<id>21454662</id>
+</work>
+<isbn>0321834577</isbn>
+<isbn13>9780321834577</isbn13>
+<average_rating>4.08</average_rating>
+<ratings_count>423</ratings_count>
+<publication_year>2013</publication_year>
+<publication_month>2</publication_month>
+<publication_day>16</publication_day>
+<authors>
+<author>
+<id>6444097</id>
+<name>Vaughn Vernon</name>
+<link><![CDATA[https://www.goodreads.com/author/show/6444097.Vaughn_Vernon]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>84983</id>
+<title><![CDATA[Agile Principles, Patterns, and Practices in C#]]></title>
+<title_without_series><![CDATA[Agile Principles, Patterns, and Practices in C#]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/84983.Agile_Principles_Patterns_and_Practices_in_C_]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>732</num_pages>
+<work>
+<id>82009</id>
+</work>
+<isbn>0131857258</isbn>
+<isbn13>9780131857254</isbn13>
+<average_rating>4.30</average_rating>
+<ratings_count>479</ratings_count>
+<publication_year>2006</publication_year>
+<publication_month>7</publication_month>
+<publication_day>30</publication_day>
+<authors>
+<author>
+<id>45372</id>
+<name>Robert C. Martin</name>
+<link><![CDATA[https://www.goodreads.com/author/show/45372.Robert_C_Martin]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>44919</id>
+<title><![CDATA[Working Effectively with Legacy Code]]></title>
+<title_without_series><![CDATA[Working Effectively with Legacy Code]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/44919.Working_Effectively_with_Legacy_Code]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>456</num_pages>
+<work>
+<id>44241</id>
+</work>
+<isbn>0131177052</isbn>
+<isbn13>0076092025986</isbn13>
+<average_rating>4.14</average_rating>
+<ratings_count>2477</ratings_count>
+<publication_year>2004</publication_year>
+<publication_month>9</publication_month>
+<publication_day>1</publication_day>
+<authors>
+<author>
+<id>25201</id>
+<name>Michael C. Feathers</name>
+<link><![CDATA[https://www.goodreads.com/author/show/25201.Michael_C_Feathers]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>23016056</id>
+<title><![CDATA[The Nature of Software Development]]></title>
+<title_without_series><![CDATA[The Nature of Software Development]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/23016056-the-nature-of-software-development]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1459593978s/23016056.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1459593978m/23016056.jpg]]></image_url>
+<num_pages></num_pages>
+<work>
+<id>42582037</id>
+</work>
+<isbn></isbn>
+<isbn13></isbn13>
+<average_rating>4.17</average_rating>
+<ratings_count>169</ratings_count>
+<publication_year></publication_year>
+<publication_month></publication_month>
+<publication_day></publication_day>
+<authors>
+<author>
+<id>26021</id>
+<name>Ron Jeffries</name>
+<link><![CDATA[https://www.goodreads.com/author/show/26021.Ron_Jeffries]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>67833</id>
+<title><![CDATA[Extreme Programming Explained: Embrace Change (The XP Series)]]></title>
+<title_without_series><![CDATA[Extreme Programming Explained: Embrace Change]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/67833.Extreme_Programming_Explained]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages></num_pages>
+<work>
+<id>65781</id>
+</work>
+<isbn>0321278658</isbn>
+<isbn13>9780321278654</isbn13>
+<average_rating>4.04</average_rating>
+<ratings_count>2096</ratings_count>
+<publication_year></publication_year>
+<publication_month></publication_month>
+<publication_day></publication_day>
+<authors>
+<author>
+<id>25211</id>
+<name>Kent Beck</name>
+<link><![CDATA[https://www.goodreads.com/author/show/25211.Kent_Beck]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>4268826</id>
+<title><![CDATA[Growing Object-Oriented Software, Guided by Tests]]></title>
+<title_without_series><![CDATA[Growing Object-Oriented Software, Guided by Tests]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/4268826-growing-object-oriented-software-guided-by-tests]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>345</num_pages>
+<work>
+<id>4316345</id>
+</work>
+<isbn>0321503627</isbn>
+<isbn13>9780321503626</isbn13>
+<average_rating>4.18</average_rating>
+<ratings_count>1519</ratings_count>
+<publication_year>2009</publication_year>
+<publication_month>10</publication_month>
+<publication_day>1</publication_day>
+<authors>
+<author>
+<id>9824504</id>
+<name>Steve  Freeman</name>
+<link><![CDATA[https://www.goodreads.com/author/show/9824504.Steve_Freeman]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>85041</id>
+<title><![CDATA[Refactoring to Patterns (Addison Wesley Signature Series)]]></title>
+<title_without_series>Refactoring to Patterns</title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/85041.Refactoring_to_Patterns]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages></num_pages>
+<work>
+<id>82065</id>
+</work>
+<isbn>0321213351</isbn>
+<isbn13>0785342213355</isbn13>
+<average_rating>4.00</average_rating>
+<ratings_count>958</ratings_count>
+<publication_year></publication_year>
+<publication_month></publication_month>
+<publication_day></publication_day>
+<authors>
+<author>
+<id>48660</id>
+<name>Joshua Kerievsky</name>
+<link><![CDATA[https://www.goodreads.com/author/show/48660.Joshua_Kerievsky]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>8686650</id>
+<title><![CDATA[Continuous Delivery: Reliable Software Releases Through Build, Test, and Deployment Automation]]></title>
+<title_without_series><![CDATA[Continuous Delivery: Reliable Software Releases Through Build, Test, and Deployment Automation]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/8686650-continuous-delivery]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>463</num_pages>
+<work>
+<id>13558958</id>
+</work>
+<isbn>0321601912</isbn>
+<isbn13>9780321601919</isbn13>
+<average_rating>4.16</average_rating>
+<ratings_count>1851</ratings_count>
+<publication_year>2010</publication_year>
+<publication_month>8</publication_month>
+<publication_day>5</publication_day>
+<authors>
+<author>
+<id>4149510</id>
+<name>Jez Humble</name>
+<link><![CDATA[https://www.goodreads.com/author/show/4149510.Jez_Humble]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>8266727</id>
+<title><![CDATA[REST in Practice: Hypermedia and Systems Architecture]]></title>
+<title_without_series><![CDATA[REST in Practice: Hypermedia and Systems Architecture]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/8266727-rest-in-practice]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1328835011s/8266727.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1328835011m/8266727.jpg]]></image_url>
+<num_pages>448</num_pages>
+<work>
+<id>13114790</id>
+</work>
+<isbn>0596805829</isbn>
+<isbn13>9780596805821</isbn13>
+<average_rating>3.86</average_rating>
+<ratings_count>331</ratings_count>
+<publication_year>2010</publication_year>
+<publication_month>9</publication_month>
+<publication_day>24</publication_day>
+<authors>
+<author>
+<id>1384158</id>
+<name>Jim Webber</name>
+<link><![CDATA[https://www.goodreads.com/author/show/1384158.Jim_Webber]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>1035377</id>
+<title><![CDATA[Software Craftsmanship: The New Imperative]]></title>
+<title_without_series><![CDATA[Software Craftsmanship: The New Imperative]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/1035377.Software_Craftsmanship]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>182</num_pages>
+<work>
+<id>1021708</id>
+</work>
+<isbn>0201733862</isbn>
+<isbn13>9780201733860</isbn13>
+<average_rating>3.88</average_rating>
+<ratings_count>163</ratings_count>
+<publication_year>2001</publication_year>
+<publication_month>9</publication_month>
+<publication_day>2</publication_day>
+<authors>
+<author>
+<id>516389</id>
+<name>Pete McBreen</name>
+<link><![CDATA[https://www.goodreads.com/author/show/516389.Pete_McBreen]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>7003902</id>
+<title><![CDATA[97 Things Every Programmer Should Know: Collective Wisdom from the Experts]]></title>
+<title_without_series><![CDATA[97 Things Every Programmer Should Know: Collective Wisdom from the Experts]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/7003902-97-things-every-programmer-should-know]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1328833164s/7003902.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1328833164m/7003902.jpg]]></image_url>
+<num_pages>258</num_pages>
+<work>
+<id>7248011</id>
+</work>
+<isbn>0596809484</isbn>
+<isbn13>9780596809485</isbn13>
+<average_rating>3.64</average_rating>
+<ratings_count>1154</ratings_count>
+<publication_year>2010</publication_year>
+<publication_month>2</publication_month>
+<publication_day>19</publication_day>
+<authors>
+<author>
+<id>45368</id>
+<name>Kevlin Henney</name>
+<link><![CDATA[https://www.goodreads.com/author/show/45368.Kevlin_Henney]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>85012</id>
+<title><![CDATA[Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions]]></title>
+<title_without_series><![CDATA[Enterprise Integration Patterns: Designing, Building, and Deploying Messaging Solutions]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/85012.Enterprise_Integration_Patterns]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>736</num_pages>
+<work>
+<id>82036</id>
+</work>
+<isbn>0321200683</isbn>
+<isbn13>0785342200683</isbn13>
+<average_rating>4.06</average_rating>
+<ratings_count>925</ratings_count>
+<publication_year>2003</publication_year>
+<publication_month>10</publication_month>
+<publication_day>20</publication_day>
+<authors>
+<author>
+<id>48627</id>
+<name>Gregor Hohpe</name>
+<link><![CDATA[https://www.goodreads.com/author/show/48627.Gregor_Hohpe]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>4373732</id>
+<title><![CDATA[Secrets of the JavaScript Ninja]]></title>
+<title_without_series><![CDATA[Secrets of the JavaScript Ninja]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/4373732-secrets-of-the-javascript-ninja]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1361224545s/4373732.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1361224545m/4373732.jpg]]></image_url>
+<num_pages>370</num_pages>
+<work>
+<id>4421745</id>
+</work>
+<isbn>193398869X</isbn>
+<isbn13>9781933988696</isbn13>
+<average_rating>4.15</average_rating>
+<ratings_count>743</ratings_count>
+<publication_year>2013</publication_year>
+<publication_month>1</publication_month>
+<publication_day>14</publication_day>
+<authors>
+<author>
+<id>355208</id>
+<name>John Resig</name>
+<link><![CDATA[https://www.goodreads.com/author/show/355208.John_Resig]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>6443938</id>
+<title><![CDATA[Bridging the Communication Gap: Specification by Example and Agile Acceptance Testing]]></title>
+<title_without_series><![CDATA[Bridging the Communication Gap: Specification by Example and Agile Acceptance Testing]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/6443938-bridging-the-communication-gap]]></link>
+<small_image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png]]></small_image_url>
+<image_url><![CDATA[https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png]]></image_url>
+<num_pages>284</num_pages>
+<work>
+<id>6633949</id>
+</work>
+<isbn>0955683610</isbn>
+<isbn13>9780955683619</isbn13>
+<average_rating>4.05</average_rating>
+<ratings_count>171</ratings_count>
+<publication_year>2009</publication_year>
+<publication_month>1</publication_month>
+<publication_day>5</publication_day>
+<authors>
+<author>
+<id>1407215</id>
+<name>Gojko Adzic</name>
+<link><![CDATA[https://www.goodreads.com/author/show/1407215.Gojko_Adzic]]></link>
+</author>
+</authors>
+</book>
+
+          <book>
+<id>1069827</id>
+<title><![CDATA[Release It!: Design and Deploy Production-Ready Software (Pragmatic Programmers)]]></title>
+<title_without_series><![CDATA[Release It!: Design and Deploy Production-Ready Software]]></title_without_series>
+<link><![CDATA[https://www.goodreads.com/book/show/1069827.Release_It_]]></link>
+<small_image_url><![CDATA[https://images.gr-assets.com/books/1328765022s/1069827.jpg]]></small_image_url>
+<image_url><![CDATA[https://images.gr-assets.com/books/1328765022m/1069827.jpg]]></image_url>
+<num_pages>326</num_pages>
+<work>
+<id>1056502</id>
+</work>
+<isbn>0978739213</isbn>
+<isbn13>9780978739218</isbn13>
+<average_rating>4.18</average_rating>
+<ratings_count>1440</ratings_count>
+<publication_year>2007</publication_year>
+<publication_month>4</publication_month>
+<publication_day>6</publication_day>
+<authors>
+<author>
+<id>6089</id>
+<name>Michael T. Nygard</name>
+<link><![CDATA[https://www.goodreads.com/author/show/6089.Michael_T_Nygard]]></link>
+</author>
+</authors>
+</book>
+
+  </similar_books>
+</book>
+
+</GoodreadsResponse>
