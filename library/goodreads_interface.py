@@ -26,13 +26,13 @@ def lookup_goodreads_id(isbn):
     dom = minidom.parseString(raw)
     for el in dom.getElementsByTagName('best_book')[0].childNodes:
         if el.nodeName == 'id':
-            return el.firstChild
+            return el.firstChild.nodeValue
 
     raise LookupError("Can't find a book id for ISBN: {}".format(isbn))
 
 
 def fetch_goodreads_book(book_id):
-    url = GOODREAD_ISBN_SEARCH_URL.replace("{KEY}", config.get('Goodreads', 'api_key'))
+    url = GOODREAD_BOOK_URL.replace("{KEY}", config.get('Goodreads', 'api_key'))
     url = url.replace("{BOOK_ID}", str(book_id))
     response = urllib.urlopen(url)
 
