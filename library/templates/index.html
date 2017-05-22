@@ -5,8 +5,15 @@
     </head>
     <body>
         <h1>Books</h1>
+        <ul>
         {% for book in books %}
-        <li> {{ book['tag'] }}</li>
+        <li>{{ book['title'] }}</li>
+        <ul>
+            <li>{{ book['isbn'] }}</li>
+            <li>{{ book['authors'][0] }}</li>
+            <li>{{ book['description'] }}</li>
+        </ul>
         {% endfor %}
+        </ul>
     </body>
 </html>

@@ -28,7 +28,8 @@ def set_up_db():
 @app.route('/delete_db')
 def remove_db():
     db = database.get()
-    db.execute('drop table books')
+    db.execute('drop table if exists books')
+    db.execute('drop table if exists authors')
     return 'OK'
 
 

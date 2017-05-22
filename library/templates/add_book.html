@@ -9,6 +9,12 @@
         <input type="text" id="tag"><br>
         ISBN:<br>
         <input type="text" id="isbn"><br>
+        Title:<br>
+        <input type="text" id="title"><br>
+        Author:<br>
+        <input type="text" id="author"><br>
+        Description:<br>
+        <input type="text" id="description"><br>
         <button type="button" onclick="add_book()">Add book</button>
 
     </body>
@@ -18,10 +24,18 @@ function add_book() {
     console.log('Working');
     var tag = document.getElementById('tag').value;
     var isbn = document.getElementById('isbn').value;
+    var title = document.getElementById('title').value;
+    var author = document.getElementById('author').value;
+    var description = document.getElementById('description').value;
+
+    var data = {isbn: isbn,
+                title: title,
+                authors: [author],
+                description: description}
     var xhrReq = new XMLHttpRequest();
     xhrReq.open('PUT', '/api/books/' + tag);
-    xhrReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhrReq.send("tag=" + tag + "&isbn=" + isbn);
+    xhrReq.setRequestHeader("Content-type", "application/json");
+    xhrReq.send(JSON.stringify(data));
     console.log(xhrReq.getAllResponseHeaders());
 }
     </script>
