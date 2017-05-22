@@ -22,6 +22,18 @@ def list_books():
 @app.route('/api/books/<book_id>', methods=['PUT'])
 def put_book(book_id):
     book = flask.request.json
+    if 'isbn' not in book:
+        return 'No ISBN present', 400
+
+    if 'title' not in book:
+        book['title'] = ''
+
+    if 'authors' not in book:
+        book['authors'] = []
+
+    if 'description' not in book:
+        book['description'] = ''
+
     db = database.get()
     db.execute('delete from books where tag=?', (int(book_id),))
     db.execute('insert into books (tag, isbn, title, description) values (?, ?, ?, ?)',

@@ -32,7 +32,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.data, json.dumps(books))
 
         rv = self.app.get('/api/books/1')
-        self.assertEqual(rv.data, json.dumps(books[0]))
+        self._compare_book(json.loads(rv.data), books[0])
 
     def test_multiple_put(self):
         books = [book2, book1]
@@ -43,10 +43,10 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.data, json.dumps(books))
 
         rv = self.app.get('/api/books/1')
-        self.assertEqual(rv.data, json.dumps(books[1]))
+        self._compare_book(json.loads(rv.data), books[1])
 
         rv = self.app.get('/api/books/2')
-        self.assertEqual(rv.data, json.dumps(books[0]))
+        self._compare_book(json.loads(rv.data), books[0])
 
     def test_override_put(self):
         books = [book2, book1]
@@ -60,6 +60,26 @@ class BookTestCase(ServerTestCase):
         rv = self.app.get('/api/books')
         self.assertEqual(rv.data, json.dumps(books))
 
+    def test_put_empty_book(self):
+        rv = self.app.put('/api/books/1',
+                          data=json.dumps({}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 400)
+
+    def test_put_only_tag(self):
+        book = {'tag': 1,
+                'isbn': 1,
+                'title': '',
+                'authors': [],
+                'description': ''}
+
+        rv = self.app.put('/api/books/1',
+                          data=json.dumps({'isbn': 1}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+        self._compare_book(json.loads(rv.data), book)
+        self.assertEqual(rv.data, json.dumps(book))
+
     def _put_book(self, book):
         book_id = book['tag']
         temp_book = copy.copy(book)
@@ -68,6 +88,12 @@ class BookTestCase(ServerTestCase):
                           data=json.dumps(temp_book),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
+
+    def _compare_book(self, lv, rv):
+        self.assertEqual(lv['tag'], rv['tag'])
+        self.assertEqual(lv['isbn'], rv['isbn'])
+        self.assertEqual(lv['authors'], rv['authors'])
+        self.assertEqual(lv['description'], rv['description'])
 
 
 if __name__ == '__main__':
