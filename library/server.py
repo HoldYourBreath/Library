@@ -9,7 +9,7 @@ import goodreads_interface
 @app.route('/')
 def root():
     db = database.get()
-    curs = db.execute('select * from books order by id desc')
+    curs = db.execute('select * from books order by book_id desc')
     return flask.render_template('index.html',
                                  books=api._get_books(curs.fetchall()))
 
