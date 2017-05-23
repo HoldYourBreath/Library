@@ -93,6 +93,28 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(rv.data), book)
         self.assertEqual(rv.data, json.dumps(book))
 
+    def test_put_invalid_tag(self):
+        # Try to PUT a new book with invalid id
+        rv = self.app.put('/api/books/123jaasdasd',
+                          data=json.dumps({'isbn': 1}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 405)
+
+    def test_put_invalid_isbn(self):
+        # Try to PUT a new book with invalid ISBN
+        rv = self.app.put('/api/books/1',
+                          data=json.dumps({'isbn': 'asdasd'}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 400)
+
+    def test_put_invalid_page_number(self):
+        # Try to PUT a new book with invalid page number
+        rv = self.app.put('/api/books/1',
+                          data=json.dumps({'isbn': '123',
+                                           'pages': '12asd21'}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 400)
+
     def _put_book(self, book):
         book_id = book['tag']
         temp_book = copy.copy(book)

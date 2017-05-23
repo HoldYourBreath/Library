@@ -19,9 +19,11 @@ def list_books():
     return json.dumps(books)
 
 
-@app.route('/api/books/<book_id>', methods=['PUT'])
+@app.route('/api/books/<int:book_id>', methods=['PUT'])
 def put_book(book_id):
     book = flask.request.json
+
+    # Check some prerequesite
     if 'isbn' not in book:
         return 'No ISBN present', 400
 
@@ -46,6 +48,13 @@ def put_book(book_id):
 
     if 'publication_date' not in book:
         book['publication_date'] = ''
+
+    # Check integer parameter constraints
+    try:
+        int(book['isbn'])
+        int(book['pages'])
+    except ValueError:
+        return 'Non number in parameter where number is expected', 400
 
     # First delete any previous record, then add a new
     db = database.get()
