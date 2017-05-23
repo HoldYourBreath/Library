@@ -19,7 +19,7 @@ def get_book(isbn):
 def lookup_goodreads_id(isbn):
     url = GOODREAD_ISBN_SEARCH_URL.replace("{KEY}", config.get('Goodreads', 'api_key'))
     url = url.replace("{ISBN}", str(isbn))
-    response = urllib.urlopen(url)
+    response = urllib.request.urlopen(url)
 
     raw = response.read()
 
@@ -34,7 +34,7 @@ def lookup_goodreads_id(isbn):
 def fetch_goodreads_book(book_id):
     url = GOODREAD_BOOK_URL.replace("{KEY}", config.get('Goodreads', 'api_key'))
     url = url.replace("{BOOK_ID}", str(book_id))
-    response = urllib.urlopen(url)
+    response = urllib.request.urlopen(url)
 
     raw = response.read()
     return minidom.parseString(raw)

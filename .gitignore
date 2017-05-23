@@ -1,6 +1,8 @@
 *.pyc
 .ropeproject
 *.swp
+.idea/*
+/library/static/node_modules/*
 library/library.db
 library.cfg
 .coverage

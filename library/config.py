@@ -1,5 +1,6 @@
 import os
-import ConfigParser
+import configparser
+
 
 class ConfigError(IOError):
     pass
@@ -7,5 +8,5 @@ class ConfigError(IOError):
 if not os.path.isfile('library.cfg'):
     raise ConfigError("Config file not found!")
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('library.cfg')
