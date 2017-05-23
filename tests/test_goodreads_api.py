@@ -51,12 +51,13 @@ class GoodreadsTestCase(ServerTestCase):
         config.config.add_section('Goodreads')
         config.config.set('Goodreads', 'api_key', '123456789')
 
-        self.dir = os.path.dirname(__file__)
+        self.sample_dir = os.path.join(os.path.dirname(__file__),
+                                       "goodreads_sample_data")
 
 
     def test_get_book(self):
-        isbn_data = open(os.path.join(self.dir, "sample_response_isbn.xml")).read()
-        book_data = open(os.path.join(self.dir, "sample_response_book_id.xml")).read()
+        isbn_data = open(os.path.join(self.sample_dir, "sample_response_isbn.xml")).read()
+        book_data = open(os.path.join(self.sample_dir, "sample_response_book_id.xml")).read()
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
@@ -128,8 +129,8 @@ class GoodreadsTestCase(ServerTestCase):
         self.verify_response(response, expected_response)
 
     def test_multi_author(self):
-        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_multi_author.xml")).read()
-        book_data = open(os.path.join(self.dir, "sample_response_book_id_multi_author.xml")).read()
+        isbn_data = open(os.path.join(self.sample_dir, "sample_response_isbn_multi_author.xml")).read()
+        book_data = open(os.path.join(self.sample_dir, "sample_response_book_id_multi_author.xml")).read()
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
@@ -148,8 +149,8 @@ class GoodreadsTestCase(ServerTestCase):
         self.verify_response(response, expected_response)
 
     def test_no_author(self):
-        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_author.xml")).read()
-        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_author.xml")).read()
+        isbn_data = open(os.path.join(self.sample_dir, "sample_response_isbn_no_author.xml")).read()
+        book_data = open(os.path.join(self.sample_dir, "sample_response_book_id_no_author.xml")).read()
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
@@ -168,8 +169,8 @@ class GoodreadsTestCase(ServerTestCase):
         self.verify_response(response, expected_response)
 
     def test_no_title(self):
-        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_title.xml")).read()
-        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_title.xml")).read()
+        isbn_data = open(os.path.join(self.sample_dir, "sample_response_isbn_no_title.xml")).read()
+        book_data = open(os.path.join(self.sample_dir, "sample_response_book_id_no_title.xml")).read()
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
@@ -188,8 +189,8 @@ class GoodreadsTestCase(ServerTestCase):
         self.verify_response(response, expected_response)
 
     def test_no_title(self):
-        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_publication_date.xml")).read()
-        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_publication_date.xml")).read()
+        isbn_data = open(os.path.join(self.sample_dir, "sample_response_isbn_no_publication_date.xml")).read()
+        book_data = open(os.path.join(self.sample_dir, "sample_response_book_id_no_publication_date.xml")).read()
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
@@ -208,8 +209,8 @@ class GoodreadsTestCase(ServerTestCase):
         self.verify_response(response, expected_response)
 
     def test_no_page_num(self):
-        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_page_num.xml")).read()
-        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_page_num.xml")).read()
+        isbn_data = open(os.path.join(self.sample_dir, "sample_response_isbn_no_page_num.xml")).read()
+        book_data = open(os.path.join(self.sample_dir, "sample_response_book_id_no_page_num.xml")).read()
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
