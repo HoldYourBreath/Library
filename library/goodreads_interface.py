@@ -9,7 +9,7 @@ from config import config
 GOODREAD_ISBN_SEARCH_URL = "https://www.goodreads.com/search/index.xml?key={KEY}&q={ISBN}"
 GOODREAD_BOOK_URL = "https://www.goodreads.com/book/show/{BOOK_ID}?key={KEY}"
 
-@app.route('/api/books/goodread/<isbn>')
+@app.route('/api/books/goodreads/<isbn>')
 def get_book(isbn):
     book_id = lookup_goodreads_id(isbn)
     book = fetch_goodreads_book(book_id)
@@ -39,19 +39,23 @@ def fetch_goodreads_book(book_id):
     raw = response.read()
     return minidom.parseString(raw)
 
-    raise LookupError("Can't find a book id for book_id: {}".format(book_id))
-
 
 def get_json_response(book):
-    response = {
-            'author': get_authors(book),
-            'title': get_title(book),
-            'publication_date': get_publication_date(book),
-            'num_pages': get_num_pages(book),
-            'description': get_description(book)
-            }
+    json_response = {
+        'author': get_authors(book),
+        'title': get_title(book),
+        'publication_date': get_publication_date(book),
+        'num_pages': get_num_pages(book),
+        'description': get_description(book)
+    }
 
-    return json.dumps(response)
+    response = app.response_class(
+        response=json.dumps(json_response),
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
 
 
 def get_authors(book):

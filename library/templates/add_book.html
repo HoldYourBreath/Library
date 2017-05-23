@@ -5,21 +5,47 @@
     </head>
     <body>
         <h1>Add book</h1>
+        ISBN:<br>
+        <input type="text" id="isbn" onkeypress="isbnKeyPressed(event)">
+        <button type="fetch data" onclick="fetch_book()">Add book</button><br>
         Asset tag:<br>
         <input type="text" id="tag"><br>
-        ISBN:<br>
-        <input type="text" id="isbn"><br>
         Title:<br>
         <input type="text" id="title"><br>
         Author:<br>
         <input type="text" id="author"><br>
         Description:<br>
-        <input type="text" id="description"><br>
+        <textarea id="description" rows=10 cols=80></textarea><br>
+
         <button type="button" onclick="add_book()">Add book</button>
 
     </body>
 
     <script>
+function isbnKeyPressed(event) {
+    if (event.key == "Enter") {
+        fetch_book();
+    }
+}
+function fetch_book() {
+    var isbn = document.getElementById('isbn').value;
+    var xhrReq = new XMLHttpRequest();
+    xhrReq.open('GET', '/api/books/goodreads/' + isbn, false);
+    xhrReq.setRequestHeader("Content-type", "application/json");
+    xhrReq.send(JSON.stringify({isbn: isbn}));
+    console.log(xhrReq.getAllResponseHeaders());
+    console.log(xhrReq.responseType);
+    console.log(xhrReq.response);
+    response = JSON.parse(xhrReq.response);
+    console.log(JSON.parse(xhrReq.response));
+
+
+    document.getElementById('title').value = response.title;
+    document.getElementById('author').value = response.author[0];
+    document.getElementById('description').value = response.description;
+
+}
+
 function add_book() {
     console.log('Working');
     var tag = document.getElementById('tag').value;

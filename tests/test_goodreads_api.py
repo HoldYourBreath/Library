@@ -121,7 +121,7 @@ class GoodreadsTestCase(ServerTestCase):
                 'and the rest of the world."'
                 }
 
-        rv = self.app.get('/api/books/goodread/1234')
+        rv = self.app.get('/api/books/goodreads/1234')
         response = json.loads(rv.data)
 
         self.assertEqual(rv.status_code, 200)
@@ -141,7 +141,7 @@ class GoodreadsTestCase(ServerTestCase):
                 'description': ''
                 }
 
-        rv = self.app.get('/api/books/goodread/1234')
+        rv = self.app.get('/api/books/goodreads/1234')
         response = json.loads(rv.data)
 
         self.assertEqual(rv.status_code, 200)
