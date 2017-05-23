@@ -147,6 +147,86 @@ class GoodreadsTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
 
+    def test_no_author(self):
+        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_author.xml")).read()
+        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_author.xml")).read()
+        self.response_queue.put(Response(200, isbn_data))
+        self.response_queue.put(Response(200, book_data))
+
+        expected_response = {
+                'author': [],
+                'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
+                'publication_date': '2013 12 20',
+                'num_pages': 544,
+                'description': ''
+                }
+
+        rv = self.app.get('/api/books/goodreads/1234')
+        response = json.loads(rv.data)
+
+        self.assertEqual(rv.status_code, 200)
+        self.verify_response(response, expected_response)
+
+    def test_no_title(self):
+        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_title.xml")).read()
+        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_title.xml")).read()
+        self.response_queue.put(Response(200, isbn_data))
+        self.response_queue.put(Response(200, book_data))
+
+        expected_response = {
+                'author': [],
+                'title': '',
+                'publication_date': '2013 12 20',
+                'num_pages': 544,
+                'description': ''
+                }
+
+        rv = self.app.get('/api/books/goodreads/1234')
+        response = json.loads(rv.data)
+
+        self.assertEqual(rv.status_code, 200)
+        self.verify_response(response, expected_response)
+
+    def test_no_title(self):
+        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_publication_date.xml")).read()
+        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_publication_date.xml")).read()
+        self.response_queue.put(Response(200, isbn_data))
+        self.response_queue.put(Response(200, book_data))
+
+        expected_response = {
+                'author': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
+                'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
+                'publication_date': '',
+                'num_pages': 544,
+                'description': ''
+                }
+
+        rv = self.app.get('/api/books/goodreads/1234')
+        response = json.loads(rv.data)
+
+        self.assertEqual(rv.status_code, 200)
+        self.verify_response(response, expected_response)
+
+    def test_no_page_num(self):
+        isbn_data = open(os.path.join(self.dir, "sample_response_isbn_no_page_num.xml")).read()
+        book_data = open(os.path.join(self.dir, "sample_response_book_id_no_page_num.xml")).read()
+        self.response_queue.put(Response(200, isbn_data))
+        self.response_queue.put(Response(200, book_data))
+
+        expected_response = {
+                'author': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
+                'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
+                'publication_date': '',
+                'num_pages': 0,
+                'description': ''
+                }
+
+        rv = self.app.get('/api/books/goodreads/1234')
+        response = json.loads(rv.data)
+
+        self.assertEqual(rv.status_code, 200)
+        self.verify_response(response, expected_response)
+
     def verify_response(self, response, expected_response):
         self.assertEqual(response['author'], expected_response['author'])
         self.assertEqual(response['title'], expected_response['title'])

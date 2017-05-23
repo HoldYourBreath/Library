@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GoodreadsResponse>
+  <Request>
+    <authentication>true</authentication>
+      <key><![CDATA[PQkx0Upvp4Fyv9EtiB5Bg]]></key>
+    <method><![CDATA[book_show]]></method>
+  </Request>
+  <book>
+  <id>18180458</id>
+  <title><![CDATA[4g: Lte/Lte-Advanced for Mobile Broadband]]></title>
+  <isbn><![CDATA[0124199852]]></isbn>
+  <isbn13><![CDATA[9780124199859]]></isbn13>
+  <asin><![CDATA[]]></asin>
+  <kindle_asin><![CDATA[]]></kindle_asin>
+  <marketplace_id><![CDATA[]]></marketplace_id>
+  <country_code><![CDATA[SE]]></country_code>
+  <image_url>https://images.gr-assets.com/books/1379896243m/18180458.jpg</image_url>
+  <small_image_url>https://images.gr-assets.com/books/1379896243s/18180458.jpg</small_image_url>
+  <publication_year></publication_year>
+  <publication_month></publication_month>
+  <publication_day></publication_day>
+  <publisher>Academic Press</publisher>
+  <language_code></language_code>
+  <is_ebook>false</is_ebook>
+  <description></description>
+  <work>
+  <id type="integer">14812599</id>
+  <books_count type="integer">18</books_count>
+  <best_book_id type="integer">9919885</best_book_id>
+  <reviews_count type="integer">232</reviews_count>
+  <ratings_sum type="integer">259</ratings_sum>
+  <ratings_count type="integer">61</ratings_count>
+  <text_reviews_count type="integer">1</text_reviews_count>
+  <original_publication_year type="integer">2007</original_publication_year>
+  <original_publication_month type="integer">7</original_publication_month>
+  <original_publication_day type="integer">17</original_publication_day>
+  <original_title nil="true"/>
+  <original_language_id type="integer" nil="true"/>
+  <media_type nil="true"/>
+  <rating_dist>5:28|4:21|3:11|2:1|1:0|total:61</rating_dist>
+  <desc_user_id type="integer">-110</desc_user_id>
+  <default_chaptering_book_id type="integer" nil="true"/>
+  <default_description_language_code nil="true"/>
+</work>
+  <average_rating>4.25</average_rating>
+  <num_pages><![CDATA[544]]></num_pages>
+  <format><![CDATA[Hardcover]]></format>
+  <edition_information><![CDATA[]]></edition_information>
+  <ratings_count><![CDATA[2]]></ratings_count>
+  <text_reviews_count><![CDATA[0]]></text_reviews_count>
+  <url><![CDATA[https://www.goodreads.com/book/show/18180458-4g]]></url>
+  <link><![CDATA[https://www.goodreads.com/book/show/18180458-4g]]></link>
+  <authors>
+<author>
+<id>631325</id>
+<name>Erik Dahlman</name>
+<role></role>
+<image_url nophoto='true'>
+<![CDATA[https://s.gr-assets.com/assets/nophoto/user/u_200x266-e183445fd1a1b5cc7075bb1cf7043306.png]]>
+</image_url>
+<small_image_url nophoto='true'>
+<![CDATA[https://s.gr-assets.com/assets/nophoto/user/u_50x66-632230dc9882b4352d753eedf9396530.png]]>
+</small_image_url>
+<link><![CDATA[https://www.goodreads.com/author/show/631325.Erik_Dahlman]]></link>
+<average_rating>4.30</average_rating>
+<ratings_count>70</ratings_count>
+<text_reviews_count>1</text_reviews_count>
+</author>
+<author>
+<id>631322</id>
+<name>Stefan Parkvall</name>
+<role></role>
+<image_url nophoto='true'>
+<![CDATA[https://s.gr-assets.com/assets/nophoto/user/u_200x266-e183445fd1a1b5cc7075bb1cf7043306.png]]>
+</image_url>
+<small_image_url nophoto='true'>
+<![CDATA[https://s.gr-assets.com/assets/nophoto/user/u_50x66-632230dc9882b4352d753eedf9396530.png]]>
+</small_image_url>
+<link><![CDATA[https://www.goodreads.com/author/show/631322.Stefan_Parkvall]]></link>
+<average_rating>4.26</average_rating>
+<ratings_count>61</ratings_count>
+<text_reviews_count>1</text_reviews_count>
+</author>
+<author>
+<id>631323</id>
+<name>Johan Skold</name>
+<role></role>
+<image_url nophoto='true'>
+<![CDATA[https://s.gr-assets.com/assets/nophoto/user/u_200x266-e183445fd1a1b5cc7075bb1cf7043306.png]]>
+</image_url>
+<small_image_url nophoto='true'>
+<![CDATA[https://s.gr-assets.com/assets/nophoto/user/u_50x66-632230dc9882b4352d753eedf9396530.png]]>
+</small_image_url>
+<link><![CDATA[https://www.goodreads.com/author/show/631323.Johan_Skold]]></link>
+<average_rating>4.29</average_rating>
+<ratings_count>65</ratings_count>
+<text_reviews_count>1</text_reviews_count>
+</author>
+</authors>
+
+    <reviews_widget>
+      <![CDATA[
+        <style>
+  #goodreads-widget {
+    font-family: georgia, serif;
+    padding: 18px 0;
+    width:565px;
+  }
+  #goodreads-widget h1 {
+    font-weight:normal;
+    font-size: 16px;
+    border-bottom: 1px solid #BBB596;
+    margin-bottom: 0;
+  }
+  #goodreads-widget a {
+    text-decoration: none;
+    color:#660;
+  }
+  iframe{
+    background-color: #fff;
+  }
+  #goodreads-widget a:hover { text-decoration: underline; }
+  #goodreads-widget a:active {
+    color:#660;
+  }
+  #gr_footer {
+    width: 100%;
+    border-top: 1px solid #BBB596;
+    text-align: right;
+  }
+  #goodreads-widget .gr_branding{
+    color: #382110;
+    font-size: 11px;
+    text-decoration: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+</style>
+<div id="goodreads-widget">
+  <div id="gr_header"><h1><a href="https://www.goodreads.com/book/show/18180458-4g">4g Reviews</a></h1></div>
+  <iframe id="the_iframe" src="https://www.goodreads.com/api/reviews_widget_iframe?did=DEVELOPER_ID&amp;format=html&amp;isbn=0124199852&amp;links=660&amp;min_rating=&amp;review_back=fff&amp;stars=000&amp;text=000" width="565" height="400" frameborder="0"></iframe>
+  <div id="gr_footer">
+    <a class="gr_branding" target="_blank" href="https://www.goodreads.com/book/show/18180458-4g?utm_medium=api&amp;utm_source=reviews_widget">Reviews from Goodreads.com</a>
+  </div>
+</div>
+
+      ]]>
+    </reviews_widget>
+  <popular_shelves>
+      <shelf name="to-read" count="23"/>
+      <shelf name="wireless" count="3"/>
+      <shelf name="lte" count="3"/>
+      <shelf name="business-and-work" count="2"/>
+      <shelf name="network" count="2"/>
+      <shelf name="technical" count="2"/>
+      <shelf name="1_telecommunications" count="1"/>
+      <shelf name="read-2009" count="1"/>
+      <shelf name="engineering" count="1"/>
+      <shelf name="next-set" count="1"/>
+      <shelf name="4g-references" count="1"/>
+      <shelf name="telecommunications" count="1"/>
+      <shelf name="cellular" count="1"/>
+      <shelf name="website" count="1"/>
+      <shelf name="telecom" count="1"/>
+      <shelf name="tech" count="1"/>
+      <shelf name="currently-reading" count="-2"/>
+  </popular_shelves>
+  <book_links>
+    <book_link>
+  <id>8</id>
+  <name>Libraries</name>
+  <link>https://www.goodreads.com/book_link/follow/8</link>
+</book_link>
+
+  </book_links>
+  <buy_links>
+    <buy_link>
+<id>1</id>
+<name>Amazon</name>
+<link>https://www.goodreads.com/book_link/follow/1</link>
+</buy_link>
+<buy_link>
+<id>10</id>
+<name>Audible</name>
+<link>https://www.goodreads.com/book_link/follow/10</link>
+</buy_link>
+<buy_link>
+<id>3</id>
+<name>Barnes &amp; Noble</name>
+<link>https://www.goodreads.com/book_link/follow/3</link>
+</buy_link>
+<buy_link>
+<id>1027</id>
+<name>Kobo</name>
+<link>https://www.goodreads.com/book_link/follow/1027</link>
+</buy_link>
+<buy_link>
+<id>2102</id>
+<name>Apple iBooks</name>
+<link>https://www.goodreads.com/book_link/follow/2102</link>
+</buy_link>
+<buy_link>
+<id>8036</id>
+<name>Google Play</name>
+<link>https://www.goodreads.com/book_link/follow/8036</link>
+</buy_link>
+<buy_link>
+<id>4</id>
+<name>Abebooks</name>
+<link>https://www.goodreads.com/book_link/follow/4</link>
+</buy_link>
+<buy_link>
+<id>882</id>
+<name>Book Depository</name>
+<link>https://www.goodreads.com/book_link/follow/882</link>
+</buy_link>
+<buy_link>
+<id>9</id>
+<name>Indigo</name>
+<link>https://www.goodreads.com/book_link/follow/9</link>
+</buy_link>
+<buy_link>
+<id>2</id>
+<name>Half.com</name>
+<link>https://www.goodreads.com/book_link/follow/2</link>
+</buy_link>
+<buy_link>
+<id>5</id>
+<name>Alibris</name>
+<link>https://www.goodreads.com/book_link/follow/5</link>
+</buy_link>
+<buy_link>
+<id>107</id>
+<name>Better World Books</name>
+<link>https://www.goodreads.com/book_link/follow/107</link>
+</buy_link>
+<buy_link>
+<id>7</id>
+<name>IndieBound</name>
+<link>https://www.goodreads.com/book_link/follow/7</link>
+</buy_link>
+
+  </buy_links>
+  <series_works>
+    
+  </series_works>
+</book>
+
+</GoodreadsResponse>
