@@ -25,6 +25,7 @@ def put_book(book_id):
     if 'isbn' not in book:
         return 'No ISBN present', 400
 
+    # Check if parameters are missing and if so, assign default
     if 'title' not in book:
         book['title'] = ''
 
@@ -34,12 +35,32 @@ def put_book(book_id):
     if 'description' not in book:
         book['description'] = ''
 
+    if 'pages' not in book:
+        book['pages'] = 0
+
+    if 'publisher' not in book:
+        book['publisher'] = ''
+
+    if 'format' not in book:
+        book['format'] = ''
+
+    if 'publication_date' not in book:
+        book['publication_date'] = ''
+
+    # First delete any previous record, then add a new
     db = database.get()
     db.execute('delete from books where tag=?', (int(book_id),))
-    db.execute('insert into books (tag, isbn, title, description) values (?, ?, ?, ?)',
+    db.execute('insert into books' \
+               '(tag, isbn, title, pages, publisher, format,' \
+               'publication_date, description)' \
+               'values (?, ?, ?, ?, ?, ?, ?, ?)',
                (int(book_id),
                 int(book['isbn']),
                 book['title'],
+                book['pages'],
+                book['publisher'],
+                book['format'],
+                book['publication_date'],
                 book['description']))
     db.commit()
     _add_authors(book_id, book['authors'])
@@ -72,6 +93,10 @@ def _get_books(rows):
                      'isbn': book['isbn'],
                      'title': book['title'],
                      'authors': _get_authors(book['book_id']),
+                     'pages': book['pages'],
+                     'format': book['format'],
+                     'publisher': book['publisher'],
+                     'publication_date': book['publication_date'],
                      'description': book['description']}
         books.append(json_book)
 

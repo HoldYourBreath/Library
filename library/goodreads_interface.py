@@ -46,6 +46,8 @@ def get_json_response(book):
         'title': get_title(book),
         'publication_date': get_publication_date(book),
         'num_pages': get_num_pages(book),
+        'format': get_format(book),
+        'publisher': get_publisher(book),
         'description': get_description(book)
     }
 
@@ -104,3 +106,19 @@ def get_num_pages(book):
 
     # In the case of no page num, return 0 pages
     return 0
+
+
+def get_publisher(book):
+    if book.getElementsByTagName('publisher')[0].hasChildNodes():
+        return book.getElementsByTagName('publisher')[0].childNodes[0].nodeValue
+
+    # In the case of no publisher, return empty string
+    return ''
+
+
+def get_format(book):
+    if book.getElementsByTagName('format')[0].hasChildNodes():
+        return book.getElementsByTagName('format')[0].childNodes[0].nodeValue
+
+    # In the case of no format, return empty string
+    return ''

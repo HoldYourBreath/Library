@@ -67,6 +67,8 @@ class GoodreadsTestCase(ServerTestCase):
                      'Pragmatism, Pride',
             'publication_date': '2014 12 04',
             'num_pages': 288,
+            'publisher': 'Prentice Hall',
+            'format': 'Paperback',
             'description':
                 '<b>Be a Better Developer and Deliv'\
                 'er Better Code</b> Despite advanced tools and '\
@@ -139,6 +141,8 @@ class GoodreadsTestCase(ServerTestCase):
                 'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
                 'publication_date': '2013 12 20',
                 'num_pages': 544,
+                'publisher': 'Academic Press',
+                'format': 'Hardcover',
                 'description': ''
                 }
 
@@ -159,6 +163,8 @@ class GoodreadsTestCase(ServerTestCase):
                 'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
                 'publication_date': '2013 12 20',
                 'num_pages': 544,
+                'publisher': 'Academic Press',
+                'format': 'Hardcover',
                 'description': ''
                 }
 
@@ -179,6 +185,8 @@ class GoodreadsTestCase(ServerTestCase):
                 'title': '',
                 'publication_date': '2013 12 20',
                 'num_pages': 544,
+                'publisher': 'Academic Press',
+                'format': 'Hardcover',
                 'description': ''
                 }
 
@@ -198,6 +206,8 @@ class GoodreadsTestCase(ServerTestCase):
                 'author': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
                 'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
                 'publication_date': '',
+                'publisher': 'Academic Press',
+                'format': 'Hardcover',
                 'num_pages': 544,
                 'description': ''
                 }
@@ -219,6 +229,8 @@ class GoodreadsTestCase(ServerTestCase):
                 'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
                 'publication_date': '',
                 'num_pages': 0,
+                'publisher': 'Academic Press',
+                'format': 'Hardcover',
                 'description': ''
                 }
 
@@ -232,4 +244,6 @@ class GoodreadsTestCase(ServerTestCase):
         self.assertEqual(response['author'], expected_response['author'])
         self.assertEqual(response['title'], expected_response['title'])
         self.assertEqual(response['publication_date'], expected_response['publication_date'])
+        self.assertEqual(response['format'], expected_response['format'])
+        self.assertEqual(response['publisher'], expected_response['publisher'])
         self.assertEqual(response['description'], expected_response['description'])

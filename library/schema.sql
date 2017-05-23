@@ -9,6 +9,9 @@ create table books (
     title TEXT,
     description TEXT,
     publication_date TEXT,
+    pages INTEGER,
+    format TEXT,
+    publisher TEXT,
     thumbnail BLOB
 );
 
