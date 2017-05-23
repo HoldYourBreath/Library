@@ -1,7 +1,6 @@
 import os
 import unittest
 import tempfile
-import json
 import ConfigParser
 
 # Local modules
@@ -31,6 +30,18 @@ class ServerTestCase(unittest.TestCase):
 class RootTestCase(ServerTestCase):
     def test_root(self):
         rv = self.app.get('/')
+        self.assertEqual(rv.status_code, 200)
+
+    def test_add_book(self):
+        rv = self.app.get('/add_book')
+        self.assertEqual(rv.status_code, 200)
+
+    def test_add_delete_db(self):
+        rv = self.app.get('/delete_db')
+        self.assertEqual(rv.status_code, 200)
+
+    def test_add_init_db(self):
+        rv = self.app.get('/init_db')
         self.assertEqual(rv.status_code, 200)
 
 

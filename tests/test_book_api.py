@@ -24,6 +24,7 @@ book2 = {'tag': 2,
          'publication_date': '2016 12 31',
          'description': 'Another book'}
 
+
 class BookTestCase(ServerTestCase):
     def test_book_get(self):
         rv = self.app.get('/api/books')
