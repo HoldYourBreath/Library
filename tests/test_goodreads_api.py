@@ -1,5 +1,6 @@
 import os
 import json
+import codecs
 from queue import Queue, Empty
 
 # Local modules
@@ -128,8 +129,7 @@ class GoodreadsTestCase(ServerTestCase):
                 'and the rest of the world."'
                 }
 
-        rv = self.app.get('/api/books/goodreads/1234')
-        response = json.loads(rv.data)
+        rv, response = self.get_book(1234)
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
@@ -150,8 +150,7 @@ class GoodreadsTestCase(ServerTestCase):
             'description': ''
         }
 
-        rv = self.app.get('/api/books/goodreads/1234')
-        response = json.loads(rv.data)
+        rv, response = self.get_book(1234)
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
@@ -172,8 +171,7 @@ class GoodreadsTestCase(ServerTestCase):
             'description': ''
         }
 
-        rv = self.app.get('/api/books/goodreads/1234')
-        response = json.loads(rv.data)
+        rv, response = self.get_book(1234)
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
@@ -194,8 +192,7 @@ class GoodreadsTestCase(ServerTestCase):
             'description': ''
         }
 
-        rv = self.app.get('/api/books/goodreads/1234')
-        response = json.loads(rv.data)
+        rv, response = self.get_book(1234)
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
@@ -216,8 +213,7 @@ class GoodreadsTestCase(ServerTestCase):
             'description': ''
         }
 
-        rv = self.app.get('/api/books/goodreads/1234')
-        response = json.loads(rv.data)
+        rv, response = self.get_book(1234)
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
@@ -238,8 +234,7 @@ class GoodreadsTestCase(ServerTestCase):
             'description': ''
         }
 
-        rv = self.app.get('/api/books/goodreads/1234')
-        response = json.loads(rv.data)
+        rv, response = self.get_book(1234)
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
@@ -257,3 +252,12 @@ class GoodreadsTestCase(ServerTestCase):
 
         for key in test_keys:
             self.assertEqual(lv[key], rv[key])
+
+    def get_book(self, book_id):
+        rv = self.app.get('/api/books/goodreads/{}'.format(book_id))
+
+        # Make sure to convert from bytes to UTF-8
+        response = json.loads(codecs.decode(rv.data))
+
+        return rv, response
+

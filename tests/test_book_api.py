@@ -1,6 +1,7 @@
 import unittest
 import json
 import copy
+import codecs
 
 from .test_server import ServerTestCase
 
@@ -39,10 +40,12 @@ class BookTestCase(ServerTestCase):
         self._put_book(books[0])
 
         rv = self.app.get('/api/books/1')
-        self._compare_book(json.loads(rv.data), books[0])
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), books[0])
 
         rv = self.app.get('/api/books')
-        self.assertEqual(json.loads(rv.data), books)
+        response = codecs.decode(rv.data)
+        self.assertEqual(json.loads(response), books)
 
     def test_multiple_put(self):
         books = [book2, book1]
@@ -50,13 +53,16 @@ class BookTestCase(ServerTestCase):
         self._put_book(books[0])
 
         rv = self.app.get('/api/books/1')
-        self._compare_book(json.loads(rv.data), books[1])
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), books[1])
 
         rv = self.app.get('/api/books/2')
-        self._compare_book(json.loads(rv.data), books[0])
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), books[0])
 
         rv = self.app.get('/api/books')
-        self.assertEqual(json.loads(rv.data), books)
+        response = codecs.decode(rv.data)
+        self.assertEqual(json.loads(response), books)
 
     def test_override_put(self):
         books = [book2, book1]
@@ -68,7 +74,8 @@ class BookTestCase(ServerTestCase):
         self._put_book(books[0])
 
         rv = self.app.get('/api/books')
-        self.assertEqual(json.loads(rv.data), books)
+        response = codecs.decode(rv.data)
+        self.assertEqual(json.loads(response), books)
 
     def test_put_empty_book(self):
         rv = self.app.put('/api/books/1',
@@ -90,9 +97,10 @@ class BookTestCase(ServerTestCase):
         rv = self.app.put('/api/books/1',
                           data=json.dumps({'isbn': 1}),
                           content_type='application/json')
+        response = codecs.decode(rv.data)
         self.assertEqual(rv.status_code, 200)
-        self._compare_book(json.loads(rv.data), book)
-        self.assertEqual(json.loads(rv.data), book)
+        self._compare_book(json.loads(response), book)
+        self.assertEqual(json.loads(response), book)
 
     def test_put_invalid_tag(self):
         # Try to PUT a new book with invalid id
