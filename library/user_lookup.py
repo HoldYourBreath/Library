@@ -1,7 +1,8 @@
 import urllib
 from flask import json, jsonify
-from config import config
-from app import app
+
+from library.config import config
+from library.app import app
 
 
 @app.route('/api/user/<int:user_id>', methods=['GET'])
