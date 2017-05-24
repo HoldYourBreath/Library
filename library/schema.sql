@@ -17,7 +17,16 @@ create table books (
 
 create table authors (
     author_id INTEGER primary key autoincrement,
-    book_id INTEGER,
-    name TEXT,
+    book_id INTEGER not null,
+    name TEXT not null,
     FOREIGN KEY(book_id) REFERENCES books(book_id)
 );
+
+create table loans (
+    loan_id INTEGER primary key autoincremenet,
+    book_id INTEGER not null,
+    employee_number INTEGER not null,
+    loan_date INTEGER not null,
+    return_date INTEGER,
+    FOREIGN KEY(book_id) REFERENCES books(book_id)
+)
