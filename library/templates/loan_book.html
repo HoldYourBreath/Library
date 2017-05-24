@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+    {% include 'header.html' %}
+    <body>
+        <div class="container">
+            <h1>Checkout book</h1>
+            <ul>
+            {% for book in books %}
+            <li>{{ book['title'] }}</li>
+            <ul>
+                <li>{{ book['isbn'] }}</li>
+                <li>{{ book['authors'][0] }}</li>
+                <li>{{ book['description'] }}</li>
+            </ul>
+            {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>

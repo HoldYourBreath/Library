@@ -7,6 +7,7 @@ from library.app import app
 import library.api as api
 import library.goodreads_interface as goodreads_interface
 import library.user_lookup
+import library.api_loan
 
 
 @app.route('/')
@@ -38,6 +39,12 @@ def remove_db():
     return 'OK'
 
 
+@app.route('/loan_book')
+def render_loan_book():
+    return flask.render_template('loan_book.html',
+                                 header_title="Loan book!")
+
+
 @app.route('/static/<path:path>')
 def serve_static(path):
     print("path: {}".format(path))
@@ -46,7 +53,7 @@ def serve_static(path):
 
 def run():
     app.config['DEBUG'] = True
-    app.run()
+    app.run(host='0.0.0.0')
 
 
 if __name__ == "__main__":

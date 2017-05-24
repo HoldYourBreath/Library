@@ -1,5 +1,5 @@
 import flask
-import json
+from flask import json, jsonify
 
 import library.database as database
 from library.app import app
@@ -81,7 +81,9 @@ def get_single_book(book_id):
     try:
         return json.dumps(_get_book(book_id))
     except BookNotFound:
-        return 'Not found', 404
+        response = jsonify({"msg": "Book with id {} not found".format(book_id)})
+        response.status_code = 404
+        return response
 
 
 def _get_book(book_id):
