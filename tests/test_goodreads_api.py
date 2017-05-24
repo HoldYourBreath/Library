@@ -1,9 +1,9 @@
 import os
 import json
-from Queue import Queue, Empty
+from queue import Queue, Empty
 
 # Local modules
-from test_server import ServerTestCase
+from .test_server import ServerTestCase
 import library.config as config
 
 
@@ -15,28 +15,34 @@ class Response():
 
 class UrllibStub():
 
+    class Request():
+
+        class Response():
+
+            def __init__(self, code, data):
+                self.code = code
+                self.data = data
+
+            def getcode(self):
+                return self.code
+
+            def read(self):
+                return self.data
+
+        def __init__(self, responses):
+            self.responses = responses
+
+        def urlopen(self, url):
+            try:
+                response = self.responses.get(False)
+            except Empty:
+                raise Empty("Unexpected URL fetch. Test stub queue empty")
+
+            return self.Response(response.code, response.data)
+
     def __init__(self, responses):
-        self.responses = responses
+        self.request = self.Request(responses)
 
-    class Response():
-
-        def __init__(self, code, data):
-            self.code = code
-            self.data = data
-
-        def getcode(self):
-            return self.code
-
-        def read(self):
-            return self.data
-
-    def urlopen(self, url):
-        try:
-            response = self.responses.get(False)
-        except Empty:
-            raise Empty("Unexpected URL fetch. Test stub queue empty")
-
-        return self.Response(response.code, response.data)
 
 
 class GoodreadsTestCase(ServerTestCase):

@@ -1,8 +1,8 @@
 import flask
 import json
 
-import database
-from app import app
+import library.database as database
+from library.app import app
 
 books = []
 
@@ -76,7 +76,7 @@ def put_book(book_id):
     return json.dumps(_get_book(book_id))
 
 
-@app.route('/api/books/<book_id>', methods=['GET'])
+@app.route('/api/books/<int:book_id>', methods=['GET'])
 def get_single_book(book_id):
     try:
         return json.dumps(_get_book(book_id))

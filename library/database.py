@@ -1,7 +1,7 @@
 import flask
 import sqlite3
 
-from app import app
+from library.app import app
 
 
 def init():

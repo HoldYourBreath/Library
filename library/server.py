@@ -2,11 +2,11 @@ import flask
 from flask import send_from_directory
 import json
 
-import database
-from app import app
-import api
-import user_lookup
-import goodreads_interface
+import library.database as database
+from library.app import app
+import library.api as api
+import library.goodreads_interface as goodreads_interface
+import library.user_lookup
 
 
 @app.route('/')
@@ -44,6 +44,10 @@ def serve_static(path):
     return send_from_directory('static', path)
 
 
-if __name__ == "__main__":
+def run():
     app.config['DEBUG'] = True
     app.run()
+
+
+if __name__ == "__main__":
+    run()

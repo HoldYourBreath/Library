@@ -1,7 +1,7 @@
 import os
 import unittest
 import tempfile
-import ConfigParser
+import configparser
 
 # Local modules
 import library.server as server
@@ -20,7 +20,7 @@ class ServerTestCase(unittest.TestCase):
             database.init()
 
         # Set up a temporary config file
-        config.config = ConfigParser.ConfigParser()
+        config.config = configparser.ConfigParser()
 
     def tearDown(self):
         os.close(self.db_fd)

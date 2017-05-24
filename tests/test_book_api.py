@@ -2,7 +2,7 @@ import unittest
 import json
 import copy
 
-from test_server import ServerTestCase
+from .test_server import ServerTestCase
 
 book1 = {'tag': 1,
          'isbn': 1234,
@@ -42,7 +42,7 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(rv.data), books[0])
 
         rv = self.app.get('/api/books')
-        self.assertEqual(rv.data, json.dumps(books))
+        self.assertEqual(json.loads(rv.data), books)
 
     def test_multiple_put(self):
         books = [book2, book1]
@@ -56,7 +56,7 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(rv.data), books[0])
 
         rv = self.app.get('/api/books')
-        self.assertEqual(rv.data, json.dumps(books))
+        self.assertEqual(json.loads(rv.data), books)
 
     def test_override_put(self):
         books = [book2, book1]
@@ -68,7 +68,7 @@ class BookTestCase(ServerTestCase):
         self._put_book(books[0])
 
         rv = self.app.get('/api/books')
-        self.assertEqual(rv.data, json.dumps(books))
+        self.assertEqual(json.loads(rv.data), books)
 
     def test_put_empty_book(self):
         rv = self.app.put('/api/books/1',
@@ -92,14 +92,14 @@ class BookTestCase(ServerTestCase):
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
         self._compare_book(json.loads(rv.data), book)
-        self.assertEqual(rv.data, json.dumps(book))
+        self.assertEqual(json.loads(rv.data), book)
 
     def test_put_invalid_tag(self):
         # Try to PUT a new book with invalid id
         rv = self.app.put('/api/books/123jaasdasd',
                           data=json.dumps({'isbn': 1}),
                           content_type='application/json')
-        self.assertEqual(rv.status_code, 405)
+        self.assertEqual(rv.status_code, 404)
 
     def test_put_invalid_isbn(self):
         # Try to PUT a new book with invalid ISBN

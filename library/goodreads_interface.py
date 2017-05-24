@@ -3,8 +3,8 @@ import urllib
 import json
 import xml.dom.minidom as minidom
 
-from app import app
-from config import config
+from library.app import app
+from library.config import config
 
 GOODREAD_ISBN_SEARCH_URL = "https://www.goodreads.com/search/index.xml?key={KEY}&q={ISBN}"
 GOODREAD_BOOK_URL = "https://www.goodreads.com/book/show/{BOOK_ID}?key={KEY}"
