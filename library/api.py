@@ -16,7 +16,7 @@ def list_books():
     db = database.get()
     curs = db.execute('select * from books order by book_id desc')
     books = _get_books(curs.fetchall())
-    return json.dumps(books)
+    return jsonify(books)
 
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
@@ -73,7 +73,7 @@ def put_book(book_id):
                 book['description']))
     db.commit()
     _add_authors(book_id, book['authors'])
-    return json.dumps(_get_book(book_id))
+    return jsonify(_get_book(book_id))
 
 
 @app.route('/api/books/<int:book_id>', methods=['GET'])
