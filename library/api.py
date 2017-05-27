@@ -4,8 +4,6 @@ from flask import json, jsonify
 import library.database as database
 from library.app import app
 
-books = []
-
 
 class BookNotFound(Exception):
     pass
@@ -18,6 +16,25 @@ def list_books():
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
+@app.route('/api/books_on_loan', methods=['GET'])
+def list_books_on_loan():
+    """
+    List all books that are out on loan
+    """
+    db_instance = database.get()
+    curs = db_instance.execute('select * from books where loaned_out = 1 order by book_id desc')
+    books = _get_books(curs.fetchall())
+    return jsonify(books)
+
+@app.route('/api/books_available', methods=['GET'])
+def list_available_books():
+    """
+    List all books that are out on loan
+    """
+    db_instance = database.get()
+    curs = db_instance.execute('select * from books where loaned_out = 0 order by book_id desc')
+    books = _get_books(curs.fetchall())
+    return jsonify(books)
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def put_book(book_id):
@@ -103,6 +120,7 @@ def _get_books(rows):
         json_book = {'tag': book['tag'],
                      'isbn': book['isbn'],
                      'title': book['title'],
+                     'loaned_out': book['loaned_out'],
                      'authors': _get_authors(book['book_id']),
                      'pages': book['pages'],
                      'format': book['format'],

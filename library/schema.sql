@@ -12,7 +12,11 @@ create table books (
     pages INTEGER,
     format TEXT,
     publisher TEXT,
-    thumbnail BLOB
+    thumbnail BLOB,
+    loaned_out INTEGER not null DEFAULT 0,
+    loaned_by INTEGER,
+    loan_date INTEGER,
+    return_date INTEGER
 );
 
 create table authors (
