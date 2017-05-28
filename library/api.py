@@ -16,15 +16,19 @@ def list_books():
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
+
 @app.route('/api/books_on_loan', methods=['GET'])
 def list_books_on_loan():
     """
     List all books that are out on loan
     """
     db_instance = database.get()
-    curs = db_instance.execute('select * from books where loaned_out = 1 order by book_id desc')
+    curs = db_instance.execute(
+        'select * from books where loaned_out = 1 '
+        'order by book_id desc')
     books = _get_books(curs.fetchall())
     return jsonify(books)
+
 
 @app.route('/api/books_available', methods=['GET'])
 def list_available_books():
@@ -32,9 +36,12 @@ def list_available_books():
     List all books that are out on loan
     """
     db_instance = database.get()
-    curs = db_instance.execute('select * from books where loaned_out = 0 order by book_id desc')
+    curs = db_instance.execute(
+        'select * from books where loaned_out = 0 '
+        'order by book_id desc')
     books = _get_books(curs.fetchall())
     return jsonify(books)
+
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def put_book(book_id):
@@ -76,9 +83,9 @@ def put_book(book_id):
     # First delete any previous record, then add a new
     db = database.get()
     db.execute('delete from books where tag=?', (int(book_id),))
-    db.execute('insert into books' \
-               '(tag, isbn, title, pages, publisher, format,' \
-               'publication_date, description)' \
+    db.execute('insert into books'
+               '(tag, isbn, title, pages, publisher, format,'
+               'publication_date, description)'
                'values (?, ?, ?, ?, ?, ?, ?, ?)',
                (int(book_id),
                 int(book['isbn']),
@@ -98,14 +105,16 @@ def get_single_book(book_id):
     try:
         return json.dumps(_get_book(book_id))
     except BookNotFound:
-        response = jsonify({"msg": "Book with id {} not found".format(book_id)})
+        response = jsonify(
+            {"msg": "Book with id {} not found".format(book_id)})
         response.status_code = 404
         return response
 
 
 def _get_book(book_id):
     db = database.get()
-    curs = db.execute('select * from books where tag = ?', (book_id,))
+    curs = db.execute('select * from books where tag = ?',
+                      (book_id,))
 
     book = curs.fetchall()
     if len(book) == 0:
@@ -131,20 +140,25 @@ def _get_books(rows):
 
     return books
 
+
 def _add_authors(book_id, authors):
     db = database.get()
-    curs = db.execute('select * from books where tag = ?', (book_id,))
+    curs = db.execute('select * from books where tag = ?',
+                      (book_id,))
     book = curs.fetchone()
 
     for author in authors:
-        curs = db.execute('insert into authors (book_id, name) values (?, ?)',
-                          (book['book_id'], author))
+        curs = db.execute(
+            'insert into authors (book_id, name) values (?, ?)',
+            (book['book_id'], author))
 
     db.commit()
 
+
 def _get_authors(book_id):
     db = database.get()
-    curs = db.execute('select * from authors where book_id = ?', (book_id,))
+    curs = db.execute('select * from authors where book_id = ?',
+                      (book_id,))
 
     authors = []
     for author in curs.fetchall():

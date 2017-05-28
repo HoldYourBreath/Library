@@ -45,7 +45,6 @@ class UrllibStub():
         self.request = self.Request(responses)
 
 
-
 class GoodreadsTestCase(ServerTestCase):
 
     def setUp(self):
@@ -260,4 +259,3 @@ class GoodreadsTestCase(ServerTestCase):
         response = json.loads(codecs.decode(rv.data))
 
         return rv, response
-
