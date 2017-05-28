@@ -45,7 +45,7 @@ def list_available_books():
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def put_book(book_id):
-    book = flask.request.json
+    book = flask.request.get_json()
 
     # Check some prerequesite
     if 'isbn' not in book:
@@ -103,7 +103,7 @@ def put_book(book_id):
 @app.route('/api/books/<int:book_id>', methods=['GET'])
 def get_single_book(book_id):
     try:
-        return json.dumps(_get_book(book_id))
+        return jsonify(_get_book(book_id))
     except BookNotFound:
         response = jsonify(
             {"msg": "Book with id {} not found".format(book_id)})

@@ -1,3 +1,4 @@
+from flask import jsonify
 import urllib
 import json
 import xml.dom.minidom as minidom
@@ -55,11 +56,9 @@ def get_json_response(book):
         'description': get_description(book)
     }
 
-    response = app.response_class(
-        response=json.dumps(json_response),
-        status=200,
-        mimetype='application/json'
-    )
+    response = jsonify(json_response)
+    response.code = 200
+    response.mimetype = 'application/json'
 
     return response
 
