@@ -10,7 +10,6 @@ book1 = {'tag': 1,
          'title': 'The book',
          'authors': ['Bob Author'],
          'pages': 500,
-         'loaned_out': 0,
          'format': 'Slippery back',
          'publisher': 'Crazy dude publishing',
          'publication_date': '1820 01 02',
@@ -21,7 +20,6 @@ book2 = {'tag': 2,
          'title': 'Great book',
          'authors': ['Jane Author'],
          'pages': 123,
-         'loaned_out': 0,
          'format': 'Sturdy thing',
          'publisher': 'Sane gal publishing',
          'publication_date': '2016 12 31',
@@ -47,7 +45,7 @@ class BookTestCase(ServerTestCase):
 
         rv = self.app.get('/api/books')
         response = codecs.decode(rv.data)
-        self.assertEqual(json.loads(response), books)
+        self._compare_book(json.loads(response)[0], books[0])
 
     def test_multiple_put(self):
         books = [book2, book1]
@@ -64,7 +62,7 @@ class BookTestCase(ServerTestCase):
 
         rv = self.app.get('/api/books')
         response = codecs.decode(rv.data)
-        self.assertEqual(json.loads(response), books)
+        self.assertEqual(len(json.loads(response)), 2)
 
     def test_override_put(self):
         books = [book2, book1]
@@ -77,7 +75,7 @@ class BookTestCase(ServerTestCase):
 
         rv = self.app.get('/api/books')
         response = codecs.decode(rv.data)
-        self.assertEqual(json.loads(response), books)
+        self.assertEqual(len(json.loads(response)), 2)
 
     def test_put_empty_book(self):
         rv = self.app.put('/api/books/1',
@@ -100,7 +98,6 @@ class BookTestCase(ServerTestCase):
                           data=json.dumps({'isbn': 1}),
                           content_type='application/json')
         response = codecs.decode(rv.data)
-        book['loaned_out'] = 0
         self.assertEqual(rv.status_code, 200)
         self._compare_book(json.loads(response), book)
         self.assertEqual(json.loads(response), book)
@@ -132,7 +129,8 @@ class BookTestCase(ServerTestCase):
         Make a loan for book #1 by user id 1234.
         """
         self._put_book(book1)
-        rv = self.app.get('/api/loan/1/1234',
+        rv = self.app.put('/api/loan/1',
+                          data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
 
@@ -140,7 +138,8 @@ class BookTestCase(ServerTestCase):
         """
         Make a loan for a tag that does not exist.
         """
-        rv = self.app.get('/api/loan/111/1234',
+        rv = self.app.put('/api/loan/111',
+                          data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 404)
 
@@ -149,10 +148,12 @@ class BookTestCase(ServerTestCase):
         Make a loan for the same book twice.
         """
         self._put_book(book1)
-        rv = self.app.get('/api/loan/1/1234',
+        rv = self.app.put('/api/loan/1',
+                          data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
-        rv = self.app.get('/api/loan/1/1234',
+        rv = self.app.put('/api/loan/1',
+                          data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 500)
 
@@ -162,14 +163,10 @@ class BookTestCase(ServerTestCase):
         """
         self._put_book(book1)
         self._put_book(book2)
-        rv = self.app.get('/api/loan/1/1234',
+        rv = self.app.put('/api/loan/1',
+                          data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
-        rv = self.app.get('/api/books_available',
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-        response = codecs.decode(rv.data)
-        self.assertEqual(len(json.loads(response)), 1)
         rv = self.app.get('/api/books_on_loan',
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)

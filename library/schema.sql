@@ -12,11 +12,7 @@ create table books (
     pages INTEGER,
     format TEXT,
     publisher TEXT,
-    thumbnail BLOB,
-    loaned_out INTEGER not null DEFAULT 0,
-    loaned_by INTEGER,
-    loan_date INTEGER,
-    return_date INTEGER
+    thumbnail BLOB
 );
 
 create table authors (
@@ -28,7 +24,7 @@ create table authors (
 
 create table loans (
     loan_id INTEGER primary key autoincrement,
-    book_id INTEGER not null,
+    book_id INTEGER not null unique,
     employee_number INTEGER not null,
     loan_date INTEGER not null,
     return_date INTEGER,

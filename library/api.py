@@ -11,21 +11,30 @@ class BookNotFound(Exception):
 
 @app.route('/api/books', methods=['GET'])
 def list_books():
-    db = database.get()
-    curs = db.execute('select * from books order by book_id desc')
+    db_instance = database.get()
+    curs = db_instance.execute('SELECT * '\
+                               'FROM books LEFT OUTER JOIN loans using (book_id)'\
+                               'ORDER by book_id DESC')
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
-
+@app.route('/api/books/details', methods=['GET'])
+def list_books_with_loan_status():
+    db = database.get()
+    curs = db.execute('SELECT * '\
+                      'FROM books LEFT OUTER JOIN loans using (book_id)'\
+                      'ORDER by book_id DESC')
+    books = _get_books(curs.fetchall())
+    return jsonify(books)
 @app.route('/api/books_on_loan', methods=['GET'])
 def list_books_on_loan():
     """
     List all books that are out on loan
     """
     db_instance = database.get()
-    curs = db_instance.execute(
-        'select * from books where loaned_out = 1 '
-        'order by book_id desc')
+    curs = db_instance.execute('SELECT * from books '\
+                               'JOIN loans USING (book_id) ' \
+                               'ORDER BY book_id DESC')
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
@@ -33,12 +42,13 @@ def list_books_on_loan():
 @app.route('/api/books_available', methods=['GET'])
 def list_available_books():
     """
-    List all books that are out on loan
+    List all books that are not out on loan
     """
     db_instance = database.get()
-    curs = db_instance.execute(
-        'select * from books where loaned_out = 0 '
-        'order by book_id desc')
+    curs = db_instance.execute('SELECT * '\
+                               'FROM books LEFT OUTER JOIN loans using (book_id) '\
+                               'WHERE loan_date IS NULL '\
+                               'ORDER by book_id DESC')
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
@@ -129,15 +139,19 @@ def _get_books(rows):
         json_book = {'tag': book['tag'],
                      'isbn': book['isbn'],
                      'title': book['title'],
-                     'loaned_out': book['loaned_out'],
                      'authors': _get_authors(book['book_id']),
                      'pages': book['pages'],
                      'format': book['format'],
                      'publisher': book['publisher'],
                      'publication_date': book['publication_date'],
                      'description': book['description']}
+        try:
+            json_book['return_date'] = book['return_date']
+            json_book['loan_date'] = book['loan_date']
+            json_book['employee_number'] = book['employee_number']
+        except IndexError:
+            pass
         books.append(json_book)
-
     return books
 
 
