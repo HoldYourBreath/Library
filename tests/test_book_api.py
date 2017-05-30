@@ -148,14 +148,8 @@ class BookTestCase(ServerTestCase):
         Make a loan for the same book twice.
         """
         self._put_book(book1)
-        rv = self.app.put('/api/loan/1',
-                          data=json.dumps({'employee_num': 123}),
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-        rv = self.app.put('/api/loan/1',
-                          data=json.dumps({'employee_num': 123}),
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 500)
+        self.assertEqual(self._loan_book(1, 123).status_code, 200)
+        self.assertEqual(self._loan_book(1, 123).status_code, 500)
 
     def test_list_books_by_loan_status(self):
         """
@@ -163,13 +157,32 @@ class BookTestCase(ServerTestCase):
         """
         self._put_book(book1)
         self._put_book(book2)
-        rv = self.app.put('/api/loan/1',
-                          data=json.dumps({'employee_num': 123}),
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
+
+        self.assertEqual(self._loan_book(1, 123).status_code, 200)
         rv = self.app.get('/api/books_on_loan',
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 1)
+
+    def test_make_a_loan_and_return_book(self):
+        """
+        Make a loan and return the book. Check the correct
+        number of books and loans.
+        """
+        book_tag = 1
+        self._put_book(book1)
+        self.assertEqual(self._loan_book(book_tag, 123).status_code, 200)
+
+        self.assertEqual(len(self._get_loans()), 1)
+
+        rv = self.app.delete('/api/loan/{}'.format(book_tag),
+                             content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+        self.assertEqual(len(self._get_loans()), 0)
+
+        rv = self.app.get('/api/books')
         response = codecs.decode(rv.data)
         self.assertEqual(len(json.loads(response)), 1)
 
@@ -181,6 +194,17 @@ class BookTestCase(ServerTestCase):
                           data=json.dumps(temp_book),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
+
+    def _get_loans(self):
+        rv = self.app.get('/api/loans',
+                          content_type='application/json')
+        response = codecs.decode(rv.data)
+        return json.loads(response)
+
+    def _loan_book(self, book_tag, employee_num):
+        return self.app.put('/api/loan/{}'.format(book_tag),
+                            data=json.dumps({'employee_num': employee_num}),
+                            content_type='application/json')
 
     def _compare_book(self, lv, rv):
         self.assertEqual(lv['tag'], rv['tag'])

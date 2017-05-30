@@ -23,8 +23,7 @@ create table authors (
 );
 
 create table loans (
-    loan_id INTEGER primary key autoincrement,
-    book_id INTEGER not null unique,
+    book_id INTEGER primary key,
     employee_number INTEGER not null,
     loan_date INTEGER not null,
     return_date INTEGER,

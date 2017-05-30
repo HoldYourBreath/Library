@@ -16,7 +16,8 @@ def _serialize_loan(item):
         "return_date": item["return_date"]
     }
 
-@app.route('/api/loan/', methods=['GET'])
+
+@app.route('/api/loans', methods=['GET'])
 def get_all_loans():
     """
     """
@@ -24,6 +25,7 @@ def get_all_loans():
     curs = db_instance.execute('select * from loans order by return_date desc')
     loans = curs.fetchall()
     items = [_serialize_loan(loan) for loan in loans]
+    print(items)
     return jsonify(items)
 
 
@@ -44,25 +46,45 @@ def loan_book(book_tag):
     loan_date = datetime.now()
     return_date = datetime.now() + timedelta(days=BOOK_LOAN_IN_DAYS)
     db_instance = database.get()
-    curs = db_instance.execute('select book_id from books where tag = ?', (book_tag,))
+    curs = db_instance.execute('SELECT book_id FROM books where tag = ?',
+                               (book_tag,))
     book = curs.fetchone()
     if not book:
-        response = jsonify({"msg": "No book found with tag {0}".format(book_tag)})
+        response = jsonify(
+            {"msg": "No book found with tag {0}".format(book_tag)})
         response.status_code = 404
         return response
     try:
-        db_instance.execute('insert into loans' \
-                            '(book_id, employee_number, loan_date, return_date) ' \
-                            'values (?, ?, ?, ?)',
-                            (int(book['book_id']),
-                             int(put_data['employee_num']),
-                             int(loan_date.timestamp()),
-                             int(return_date.timestamp())
-                            ))
+        db_instance.execute(
+            'INSERT INTO loans'
+            '(book_id, employee_number, loan_date, return_date) '
+            'VALUES (?, ?, ?, ?)',
+            (int(book['book_id']),
+             int(put_data['employee_num']),
+             int(loan_date.timestamp()),
+             int(return_date.timestamp())
+             )
+        )
         db_instance.commit()
         response = jsonify({"msg": "OK"})
         response.status_code = 200
     except sqlite3.IntegrityError:
-        response = jsonify({"msg": "Book already checked out {0}".format(book_tag)})
+        response = jsonify({"msg": "Book already checked "
+                                   "out {0}".format(book_tag)})
         response.status_code = 500
+    return response
+
+
+@app.route('/api/loan/<int:book_tag>', methods=['DELETE'])
+def delete_loan(book_tag):
+    """
+    Delete the the "loans" row when a book has been returned.
+    """
+    db_instance = database.get()
+    db_instance.execute('DELETE FROM loans WHERE EXISTS '
+                        '(SELECT book_id FROM books WHERE tag = ?)',
+                        (int(book_tag),))
+    db_instance.commit()
+    response = jsonify({"msg": "OK"})
+    response.status_code = 200
     return response
