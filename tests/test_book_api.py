@@ -176,6 +176,14 @@ class BookTestCase(ServerTestCase):
 
         self.assertEqual(len(self._get_loans()), 1)
 
+
+        rv = self.app.delete('/api/loan/{}'.format(1),
+                             content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.delete('/api/loan/{}'.format(book_tag),
+                             content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
         rv = self.app.delete('/api/loan/{}'.format(book_tag),
                              content_type='application/json')
         self.assertEqual(rv.status_code, 200)

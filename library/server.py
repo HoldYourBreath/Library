@@ -15,6 +15,7 @@ def root():
     db = database.get()
     curs = db.execute('select * from books order by book_id desc')
     return flask.render_template('index.html',
+                                 page='books',
                                  header_title="We got books!",
                                  books=api._get_books(curs.fetchall()))
 
@@ -22,6 +23,7 @@ def root():
 @app.route('/add_book')
 def add_book_form():
     return flask.render_template('add_book.html',
+                                 page='add_book',
                                  header_title="Add book!")
 
 
