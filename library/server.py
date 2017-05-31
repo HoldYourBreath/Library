@@ -8,6 +8,7 @@ import library.api as api
 import library.goodreads_interface as goodreads_interface
 import library.user_lookup
 import library.api_loan
+import library.ldap as ldap
 
 
 @app.route('/')
@@ -45,6 +46,22 @@ def remove_db():
 def render_loan_book():
     return flask.render_template('loan_book.html',
                                  header_title="Loan book!")
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'POST':
+        user = flask.request.form['signum']
+        password = flask.request.form['password']
+        if ldap.authenticate(user, password):
+            flask.session['session_id'] = '123'
+            flask.session['user'] = user
+            return flask.redirect('/')
+        else:
+            return "NOK"
+
+    return flask.render_template('login.html',
+                                 header_title='login')
 
 
 @app.route('/static/<path:path>')

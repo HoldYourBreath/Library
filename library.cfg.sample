@@ -1,2 +1,10 @@
+[flask]
+secret_key=INSERT_VERY_SECRET_KEY
+
 [Goodreads]
 api_key=INSERT_PRIVATE_API_KEY
+
+[ldap]
+server=ldap.example.com
+port=636
+user_dn=

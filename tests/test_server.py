@@ -44,6 +44,18 @@ class RootTestCase(ServerTestCase):
         rv = self.app.get('/init_db')
         self.assertEqual(rv.status_code, 200)
 
+    def test_login(self):
+        server.ldap.authenticate = lambda usr, passw: True
+
+        rv = self.app.get('/login')
+        self.assertEqual(rv.status_code, 200)
+
+        rv = self.app.post('/login', data=dict(
+            signum='test',
+            password='test'), follow_redirects=True)
+
+        self.assertEqual(rv.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()
