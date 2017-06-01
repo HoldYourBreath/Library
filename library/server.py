@@ -9,6 +9,7 @@ import library.goodreads_interface as goodreads_interface
 import library.user_lookup
 import library.api_loan
 import library.ldap as ldap
+import library.api_location as api_location
 
 
 @app.route('/')
@@ -25,6 +26,7 @@ def root():
 def add_book_form():
     return flask.render_template('add_book.html',
                                  page='add_book',
+                                 rooms=api_location.get_rooms(),
                                  header_title="Add book!")
 
 
@@ -37,8 +39,11 @@ def set_up_db():
 @app.route('/delete_db')
 def remove_db():
     db = database.get()
-    db.execute('drop table if exists books')
-    db.execute('drop table if exists authors')
+    db.execute('DROP TABLE IF EXISTS books')
+    db.execute('DROP TABLE IF EXISTS authors')
+    db.execute('DROP TABLE IF EXISTS sites')
+    db.execute('DROP TABLE IF EXISTS rooms')
+    db.execute('DROP TABLE IF EXISTS loans')
     return 'OK'
 
 

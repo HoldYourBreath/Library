@@ -1,6 +1,8 @@
 drop table if exists books;
 drop table if exists authors;
 drop table if exists loans;
+drop table if exists sites;
+drop table if exists rooms;
 
 create table books (
     book_id INTEGER primary key autoincrement,
@@ -12,7 +14,9 @@ create table books (
     pages INTEGER,
     format TEXT,
     publisher TEXT,
-    thumbnail BLOB
+    room_id INTEGER not null,
+    thumbnail BLOB,
+    FOREIGN KEY(room_id) REFERENCES rooms(room_id)
 );
 
 create table authors (
@@ -22,8 +26,21 @@ create table authors (
     FOREIGN KEY(book_id) REFERENCES books(book_id)
 );
 
+create table sites (
+    site_id INTEGER primary key autoincrement,
+    site_name TEXT not null unique
+);
+
+create table rooms (
+    room_id INTEGER primary key autoincrement,
+    site_id INTEGER not null,
+    room_name TEXT not null unique,
+    FOREIGN KEY(site_id) REFERENCES sites(site_id)
+);
+
 create table loans (
-    book_id INTEGER primary key,
+    loan_id INTEGER primary key autoincrement,
+    book_id INTEGER not null,
     employee_number INTEGER not null,
     loan_date INTEGER not null,
     return_date INTEGER,

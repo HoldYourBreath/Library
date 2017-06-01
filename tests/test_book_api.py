@@ -10,6 +10,7 @@ book1 = {'tag': 1,
          'title': 'The book',
          'authors': ['Bob Author'],
          'pages': 500,
+         'room_id': 1,
          'format': 'Slippery back',
          'publisher': 'Crazy dude publishing',
          'publication_date': '1820 01 02',
@@ -20,6 +21,7 @@ book2 = {'tag': 2,
          'title': 'Great book',
          'authors': ['Jane Author'],
          'pages': 123,
+         'room_id': 1,
          'format': 'Sturdy thing',
          'publisher': 'Sane gal publishing',
          'publication_date': '2016 12 31',
@@ -83,10 +85,11 @@ class BookTestCase(ServerTestCase):
                           content_type='application/json')
         self.assertEqual(rv.status_code, 400)
 
-    def test_put_only_tag(self):
+    def test_put_only_isbn_and_room(self):
         book = {'tag': 1,
                 'isbn': 1,
                 'title': '',
+                'room_id': 1,
                 'authors': [],
                 'pages': 0,
                 'format': '',
@@ -95,12 +98,11 @@ class BookTestCase(ServerTestCase):
                 'description': ''}
 
         rv = self.app.put('/api/books/1',
-                          data=json.dumps({'isbn': 1}),
+                          data=json.dumps({'isbn': 1, 'room_id': 1}),
                           content_type='application/json')
         response = codecs.decode(rv.data)
         self.assertEqual(rv.status_code, 200)
         self._compare_book(json.loads(response), book)
-        self.assertEqual(json.loads(response), book)
 
     def test_put_invalid_tag(self):
         # Try to PUT a new book with invalid id
@@ -142,14 +144,6 @@ class BookTestCase(ServerTestCase):
                           data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 404)
-
-    def test_make_a_loan_for_the_same_book_twice(self):
-        """
-        Make a loan for the same book twice.
-        """
-        self._put_book(book1)
-        self.assertEqual(self._loan_book(1, 123).status_code, 200)
-        self.assertEqual(self._loan_book(1, 123).status_code, 500)
 
     def test_list_books_by_loan_status(self):
         """
@@ -218,6 +212,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(lv['isbn'], rv['isbn'])
         self.assertEqual(lv['authors'], rv['authors'])
         self.assertEqual(lv['pages'], rv['pages'])
+        self.assertEqual(lv['room_id'], rv['room_id'])
         self.assertEqual(lv['publisher'], rv['publisher'])
         self.assertEqual(lv['format'], rv['format'])
         self.assertEqual(lv['publication_date'], rv['publication_date'])

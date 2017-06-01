@@ -1,4 +1,5 @@
 import os
+import json
 import unittest
 import tempfile
 import configparser
@@ -11,7 +12,8 @@ import library.config as config
 
 
 class ServerTestCase(unittest.TestCase):
-
+    """
+    """
     def setUp(self):
         # Set up a temporary database
         self.db_fd, server.app.config['DATABASE'] = tempfile.mkstemp()
@@ -22,6 +24,20 @@ class ServerTestCase(unittest.TestCase):
 
         # Set up a temporary config file
         config.config = configparser.ConfigParser()
+        self._post_new_site()
+
+    def _post_new_site(self):
+        rv = self.app.post('/api/sites',
+                           data=json.dumps({"name": "DefaultSite"}),
+                           content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+    def _post_new_room(self):
+        rv = self.app.post(
+            '/api/rooms',
+            data=json.dumps({"name": "DefaultRoom", "site_id": 1}),
+            content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
 
     def tearDown(self):
         os.close(self.db_fd)

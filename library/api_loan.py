@@ -25,7 +25,6 @@ def get_all_loans():
     curs = db_instance.execute('select * from loans order by return_date desc')
     loans = curs.fetchall()
     items = [_serialize_loan(loan) for loan in loans]
-    print(items)
     return jsonify(items)
 
 
@@ -78,7 +77,7 @@ def loan_book(book_tag):
 @app.route('/api/loan/<int:book_tag>', methods=['DELETE'])
 def delete_loan(book_tag):
     """
-    Delete the the "loans" row when a book has been returned.
+    Set the return date to null to return a book.
     """
     db_instance = database.get()
     db_instance.execute('DELETE FROM loans WHERE EXISTS '

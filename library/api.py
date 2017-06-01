@@ -90,11 +90,12 @@ def put_book(book_id):
     db = database.get()
     db.execute('delete from books where tag=?', (int(book_id),))
     db.execute('insert into books'
-               '(tag, isbn, title, pages, publisher, format,'
+               '(tag, isbn, room_id, title, pages, publisher, format,'
                'publication_date, description)'
-               'values (?, ?, ?, ?, ?, ?, ?, ?)',
+               'values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                (int(book_id),
                 int(book['isbn']),
+                int(book['room_id']),
                 book['title'],
                 book['pages'],
                 book['publisher'],
@@ -136,6 +137,7 @@ def _get_books(rows):
                      'isbn': book['isbn'],
                      'title': book['title'],
                      'authors': _get_authors(book['book_id']),
+                     'room_id': book['room_id'],
                      'pages': book['pages'],
                      'format': book['format'],
                      'publisher': book['publisher'],
