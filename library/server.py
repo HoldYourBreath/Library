@@ -58,7 +58,8 @@ def login():
             flask.session['user'] = user
             return flask.redirect('/')
         else:
-            return "NOK"
+            return flask.render_template('login.html',
+                                         header_title='login')
 
     return flask.render_template('login.html',
                                  header_title='login')
