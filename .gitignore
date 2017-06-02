@@ -7,3 +7,4 @@ library/library.db
 library.cfg
 .coverage
 htmlcov/
+env/
