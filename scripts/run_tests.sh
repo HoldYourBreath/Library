@@ -5,7 +5,7 @@ set -e
 
 # Setup the environment
 echo -n "Setup python virtual environment.."
-source bootstrap.sh >/dev/null
+source scripts/bootstrap.sh >/dev/null
 echo "Done"
 
 # Run tests
