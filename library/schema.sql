@@ -3,6 +3,8 @@ drop table if exists authors;
 drop table if exists loans;
 drop table if exists sites;
 drop table if exists rooms;
+drop table if exists admins;
+drop table if exists sessions;
 
 create table books (
     book_id INTEGER primary key autoincrement,
