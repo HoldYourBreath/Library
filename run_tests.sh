@@ -9,7 +9,7 @@ source bootstrap.sh >/dev/null
 echo "Done"
 
 # Run tests
-echo "Run tests"
+echo -n "Run tests"
 python3 -m unittest discover
 
 # Run PEP8 conformance

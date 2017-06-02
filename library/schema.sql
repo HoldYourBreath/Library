@@ -46,3 +46,17 @@ create table loans (
     return_date INTEGER,
     FOREIGN KEY(book_id) REFERENCES books(book_id)
 );
+
+create table sessions (
+    session_id INTEGER primary key autoincrement,
+    login_date INTEGER not null,
+    logout_date INTEGER not null,
+    last_activity INTEGER not null,
+    admin_level INTEGER not null
+);
+
+create table admins (
+    admin_id INTEGER primary key autoincrement,
+    signum TEXT not null unique,
+    admin_level INTEGER not null
+);
