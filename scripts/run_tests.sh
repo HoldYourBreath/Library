@@ -19,7 +19,7 @@ echo "Done"
 
 echo -n "Run coverage"
 # Get coverage
-python3 -m coverage run -m unittest discover
+python3 -m coverage run --rcfile=scripts/.coveragerc -m unittest discover
 echo "Generate coverage report"
 python3 -m coverage html
 python3 -m coverage report -m
