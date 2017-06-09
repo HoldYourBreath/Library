@@ -63,7 +63,6 @@ def login():
             flask.session['id'] = uuid.uuid4().int
             flask.session['user'] = user
 
-
             return flask.redirect('/')
         else:
             return flask.render_template('login.html',
