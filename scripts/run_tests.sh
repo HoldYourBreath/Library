@@ -24,5 +24,17 @@ echo "Generate coverage report"
 python3 -m coverage html
 python3 -m coverage report -m
 
-echo "All done.. Open htmlcov/index.html for more statistics"
+# Don't fail on errors
+set +e
 
+echo -n "Search for uncommited changes in the index.."
+git diff-index --quiet HEAD --
+if [ $? != 0 ]; then
+    echo "Warning!"
+    echo "!!!!!!!!!! You have uncommited changes in the index !!!!!!!!!!"
+    exit 1
+fi
+
+echo "Done"
+
+echo "All done.. Open htmlcov/index.html for more statistics"
