@@ -1,6 +1,7 @@
 import flask
 from flask import send_from_directory
 import json
+import uuid
 
 import library.database as database
 from library.app import app
@@ -59,15 +60,27 @@ def login():
         user = flask.request.form['signum']
         password = flask.request.form['password']
         if ldap.authenticate(user, password):
-            flask.session['session_id'] = '123'
+            flask.session['id'] = uuid.uuid4().int
             flask.session['user'] = user
+
+
             return flask.redirect('/')
         else:
             return flask.render_template('login.html',
+                                         page='login',
                                          header_title='login')
 
     return flask.render_template('login.html',
+                                 page='login',
                                  header_title='login')
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    flask.session.clear()
+    return flask.render_template('logout.html',
+                                 page='logout',
+                                 header_title='logout')
 
 
 @app.route('/static/<path:path>')
