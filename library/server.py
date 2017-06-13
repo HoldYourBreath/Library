@@ -2,6 +2,7 @@ import flask
 from flask import send_from_directory
 import json
 import uuid
+from datetime import datetime
 
 import library.database as database
 from library.app import app
@@ -45,6 +46,7 @@ def remove_db():
     db.execute('DROP TABLE IF EXISTS sites')
     db.execute('DROP TABLE IF EXISTS rooms')
     db.execute('DROP TABLE IF EXISTS loans')
+    db.commit()
     return 'OK'
 
 
@@ -60,8 +62,18 @@ def login():
         user = flask.request.form['signum']
         password = flask.request.form['password']
         if ldap.authenticate(user, password):
-            flask.session['id'] = uuid.uuid4().int
+            login_time = datetime.now()
+            flask.session['id'] = str(uuid.uuid4())
             flask.session['user'] = user
+            db = database.get()
+            db.execute('INSERT INTO sessions'
+                       '(session_id, user_id, login_time, last_activity)'
+                       'values (?, ?, ?, ?)',
+                       (flask.session['id'],
+                        flask.session['user'],
+                        login_time,
+                        login_time))
+            db.commit()
 
             return flask.redirect('/')
         else:
