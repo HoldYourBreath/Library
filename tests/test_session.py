@@ -1,11 +1,9 @@
-import unittest
-import json
-import copy
-import codecs
+import flask
 from ldap3.core.exceptions import LDAPBindError
 
 from .test_server import ServerTestCase
-import library.server as server
+from library.app import app
+import library.session as session
 
 
 class SessionTestCase(ServerTestCase):
@@ -27,18 +25,22 @@ class SessionTestCase(ServerTestCase):
                 return self.return_value
 
         self.ldap_stub = LdapStub()
-        server.ldap = self.ldap_stub
+        session.ldap = self.ldap_stub
 
     def test_login(self):
         rv = self.app.get('/login')
         self.assertEqual(rv.status_code, 200)
 
-        rv = self.app.post('/login', data=dict(
-            signum='test',
-            password='testpass'))
+        with app.test_client() as c:
+            rv = c.post('/login', data=dict(
+                signum='test',
+                password='testpass'))
 
-        self.assertEqual(self.ldap_stub.user, 'test')
-        self.assertEqual(self.ldap_stub.password, 'testpass')
+            self.assertEqual(self.ldap_stub.user, 'test')
+            self.assertEqual(self.ldap_stub.password, 'testpass')
+
+            self.assertIn('id', flask.session)
+            self.assertIn(flask.session['user'], 'test')
 
         # Make sure we are redirected
         self.assertEqual(rv.status_code, 302)
@@ -46,17 +48,30 @@ class SessionTestCase(ServerTestCase):
 
     def test_login_fail(self):
         self.ldap_stub.return_value = False
-        rv = self.app.post('/login', data=dict(
-            signum='test',
-            password='testpass'))
+        with app.test_client() as c:
+            rv = c.post('/login', data=dict(
+                signum='test',
+                password='testpass'))
 
-        self.assertEqual(self.ldap_stub.user, 'test')
-        self.assertEqual(self.ldap_stub.password, 'testpass')
-        self.assertEqual(rv.status_code, 200)
+            self.assertEqual(self.ldap_stub.user, 'test')
+            self.assertEqual(self.ldap_stub.password, 'testpass')
+            self.assertEqual(rv.status_code, 200)
+
+            self.assertNotIn('id', flask.session)
+            self.assertNotIn('user', flask.session)
 
     def test_login_fatal(self):
         self.ldap_stub.raise_error = LDAPBindError
         with self.assertRaises(LDAPBindError):
-            rv = self.app.post('/login', data=dict(
+            self.app.post('/login', data=dict(
                 signum='test',
                 password='testpass'))
+
+    def test_logout(self):
+        with app.test_client() as c:
+            c.post('/login', data=dict(
+                signum='test',
+                password='testpass'))
+            c.get('/logout')
+            self.assertNotIn('id', flask.session)
+            self.assertNotIn('user', flask.session)
