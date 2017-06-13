@@ -1,10 +1,33 @@
 import flask
 import uuid
+import functools
 from datetime import datetime
 
 from library.app import app
 import library.database as database
 import library.ldap as ldap
+
+
+def validate_user():
+    if 'id' in flask.session:
+        db = database.get()
+        curs = db.execute('select * from sessions where session_id = (?)',
+                          (flask.session['id'],))
+        if len(curs.fetchall()) > 0:
+            return True
+
+    return False
+
+
+def login_required(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        if not validate_user():
+            return flask.redirect(
+                flask.url_for('login', next=flask.request.path))
+        return f(*args, **kwargs)
+
+    return wrapper
 
 
 @app.route('/login', methods=['GET', 'POST'])

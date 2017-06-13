@@ -7,6 +7,18 @@ import library.session as session
 
 
 class SessionTestCase(ServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        @app.route('/testing_decorator_fail')
+        @session.login_required
+        def testing_decorator_fail():
+            raise Exception("This should not be executed")
+
+        @app.route('/testing_decorator_pass')
+        @session.login_required
+        def testing_decorator_pass():
+            return 'ok'
+
     def setUp(self):
         ServerTestCase.setUp(self)
 
@@ -75,3 +87,42 @@ class SessionTestCase(ServerTestCase):
             c.get('/logout')
             self.assertNotIn('id', flask.session)
             self.assertNotIn('user', flask.session)
+
+    def test_login_decorator_pass(self):
+        with app.test_client() as c:
+            c.post('/login', data=dict(
+                signum='test',
+                password='testpass'))
+            rv = c.get('/testing_decorator_pass')
+
+            # Make sure we are redirected
+            self.assertEqual(rv.status_code, 200)
+            self.assertEqual(rv.data, b'ok')
+
+    def test_login_decorator_fail(self):
+        with app.test_client() as c:
+            rv = c.get('/testing_decorator_fail')
+
+            # Make sure we are redirected
+            self.assertEqual(rv.status_code, 302)
+            self.assertEqual(
+                rv.location,
+                'http://localhost/login?next=%2Ftesting_decorator_fail')
+
+    def test_login_decorator_fail_wrong_user(self):
+        with app.test_client() as c:
+            c.post('/login', data=dict(
+                signum='test',
+                password='testpass'))
+
+            # Reset session['id'] to something else
+            with c.session_transaction() as sess:
+                sess['id'] = '12389234nfdsfd'
+
+            rv = c.get('/testing_decorator_fail')
+
+            # Make sure we are redirected
+            self.assertEqual(rv.status_code, 302)
+            self.assertEqual(
+                rv.location,
+                'http://localhost/login?next=%2Ftesting_decorator_fail')
