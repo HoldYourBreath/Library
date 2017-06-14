@@ -146,7 +146,8 @@ class GoodreadsTestCase(ServerTestCase):
             'num_pages': 544,
             'publisher': 'Academic Press',
             'format': 'Hardcover',
-            'description': ''
+            'description': '',
+            'thumbnail': ''
         }
 
         rv, response = self.get_book(1234)
@@ -167,7 +168,8 @@ class GoodreadsTestCase(ServerTestCase):
             'num_pages': 544,
             'publisher': 'Academic Press',
             'format': 'Hardcover',
-            'description': ''
+            'description': '',
+            'thumbnail': ''
         }
 
         rv, response = self.get_book(1234)
@@ -188,7 +190,8 @@ class GoodreadsTestCase(ServerTestCase):
             'num_pages': 544,
             'publisher': 'Academic Press',
             'format': 'Hardcover',
-            'description': ''
+            'description': '',
+            'thumbnail': ''
         }
 
         rv, response = self.get_book(1234)
@@ -209,7 +212,8 @@ class GoodreadsTestCase(ServerTestCase):
             'publisher': 'Academic Press',
             'format': 'Hardcover',
             'num_pages': 544,
-            'description': ''
+            'description': '',
+            'thumbnail': ''
         }
 
         rv, response = self.get_book(1234)
@@ -230,7 +234,8 @@ class GoodreadsTestCase(ServerTestCase):
             'num_pages': 0,
             'publisher': 'Academic Press',
             'format': 'Hardcover',
-            'description': ''
+            'description': '',
+            'thumbnail': ''
         }
 
         rv, response = self.get_book(1234)
@@ -247,7 +252,7 @@ class GoodreadsTestCase(ServerTestCase):
 
     def verify_response(self, lv, rv):
         test_keys = ('author', 'title', 'publication_date', 'num_pages',
-                     'format', 'publisher', 'description')
+                     'format', 'publisher', 'description', 'thumbnail')
 
         for key in test_keys:
             self.assertEqual(lv[key], rv[key])

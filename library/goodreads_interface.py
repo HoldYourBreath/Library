@@ -53,7 +53,8 @@ def get_json_response(book):
         'num_pages': get_num_pages(book),
         'format': get_format(book),
         'publisher': get_publisher(book),
-        'description': get_description(book)
+        'description': get_description(book),
+        'thumbnail': get_thumbnail(book)
     }
 
     response = jsonify(json_response)
@@ -125,6 +126,13 @@ def get_publisher(book):
     # In the case of no publisher, return empty string
     return ''
 
+def get_thumbnail(book):
+    if book.getElementsByTagName('thumbnail')[0].hasChildNodes():
+        return book.getElementsByTagName('thumbnail')[0] \
+            .childNodes[0].nodeValue
+
+    # In the case of no thumbnail, return empty string
+    return ''
 
 def get_format(book):
     if book.getElementsByTagName('format')[0].hasChildNodes():

@@ -67,6 +67,9 @@ def put_book(book_id):
     if 'description' not in book:
         book['description'] = ''
 
+    if 'thumbnail' not in book:
+        book['thumbnail'] = ''
+
     if 'pages' not in book:
         book['pages'] = 0
 
@@ -91,8 +94,8 @@ def put_book(book_id):
     db.execute('delete from books where tag=?', (int(book_id),))
     db.execute('insert into books'
                '(tag, isbn, room_id, title, pages, publisher, format,'
-               'publication_date, description)'
-               'values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+               'publication_date, description, thumbnail)'
+               'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                (int(book_id),
                 int(book['isbn']),
                 int(book['room_id']),
@@ -101,7 +104,9 @@ def put_book(book_id):
                 book['publisher'],
                 book['format'],
                 book['publication_date'],
-                book['description']))
+                book['description'],
+                book['thumbnail']
+                ))
     db.commit()
     _add_authors(book_id, book['authors'])
     return jsonify(_get_book(book_id))
@@ -142,7 +147,8 @@ def _get_books(rows):
                      'format': book['format'],
                      'publisher': book['publisher'],
                      'publication_date': book['publication_date'],
-                     'description': book['description']}
+                     'description': book['description'],
+                     'thumbnail': book['thumbnail']}
         try:
             json_book['return_date'] = book['return_date']
             json_book['loan_date'] = book['loan_date']

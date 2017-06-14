@@ -14,7 +14,8 @@ book1 = {'tag': 1,
          'format': 'Slippery back',
          'publisher': 'Crazy dude publishing',
          'publication_date': '1820 01 02',
-         'description': 'a book'}
+         'description': 'a book',
+         'thumbnail': 'a thumbnail'}
 
 book2 = {'tag': 2,
          'isbn': 1235,
@@ -25,7 +26,8 @@ book2 = {'tag': 2,
          'format': 'Sturdy thing',
          'publisher': 'Sane gal publishing',
          'publication_date': '2016 12 31',
-         'description': 'Another book'}
+         'description': 'Another book',
+         'thumbnail': 'another thumbnail'}
 
 
 class BookTestCase(ServerTestCase):
@@ -95,7 +97,8 @@ class BookTestCase(ServerTestCase):
                 'format': '',
                 'publisher': '',
                 'publication_date': '',
-                'description': ''}
+                'description': '',
+                'thumbnail': ''}
 
         rv = self.app.put('/api/books/1',
                           data=json.dumps({'isbn': 1, 'room_id': 1}),
@@ -217,6 +220,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(lv['format'], rv['format'])
         self.assertEqual(lv['publication_date'], rv['publication_date'])
         self.assertEqual(lv['description'], rv['description'])
+        self.assertEqual(lv['thumbnail'], rv['thumbnail'])
 
 
 if __name__ == '__main__':
