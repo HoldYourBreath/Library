@@ -50,7 +50,8 @@ create table loans (
 );
 
 create table sessions (
-    session_id TEXT primary key,
+    session_id INTEGER primary key autoincrement,
+    secret TEXT not null,
     user_id TEXT not null,
     login_time TIMESTAMP not null,
     last_activity TIMESTAMP not null

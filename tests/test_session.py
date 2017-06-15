@@ -52,11 +52,10 @@ class SessionTestCase(ServerTestCase):
             self.assertEqual(self.ldap_stub.password, 'testpass')
 
             self.assertIn('id', flask.session)
+            self.assertIn('secret', flask.session)
             self.assertIn(flask.session['user'], 'test')
 
-        # Make sure we are redirected
-        self.assertEqual(rv.status_code, 302)
-        self.assertEqual(rv.location, 'http://localhost/')
+        self.verify_redirect(rv, 'http://localhost/')
 
     def test_login_fail(self):
         self.ldap_stub.return_value = False
@@ -69,7 +68,7 @@ class SessionTestCase(ServerTestCase):
             self.assertEqual(self.ldap_stub.password, 'testpass')
             self.assertEqual(rv.status_code, 200)
 
-            self.assertNotIn('id', flask.session)
+            self.assertNotIn('secret', flask.session)
             self.assertNotIn('user', flask.session)
 
     def test_login_fatal(self):
@@ -85,7 +84,7 @@ class SessionTestCase(ServerTestCase):
                 signum='test',
                 password='testpass'))
             c.get('/logout')
-            self.assertNotIn('id', flask.session)
+            self.assertNotIn('secret', flask.session)
             self.assertNotIn('user', flask.session)
 
     def test_login_decorator_pass(self):
@@ -95,7 +94,6 @@ class SessionTestCase(ServerTestCase):
                 password='testpass'))
             rv = c.get('/testing_decorator_pass')
 
-            # Make sure we are redirected
             self.assertEqual(rv.status_code, 200)
             self.assertEqual(rv.data, b'ok')
 
@@ -103,11 +101,7 @@ class SessionTestCase(ServerTestCase):
         with app.test_client() as c:
             rv = c.get('/testing_decorator_fail')
 
-            # Make sure we are redirected
-            self.assertEqual(rv.status_code, 302)
-            self.assertEqual(
-                rv.location,
-                'http://localhost/login?next=%2Ftesting_decorator_fail')
+            self.verify_redirect(rv, 'http://localhost/login?next=%2Ftesting_decorator_fail')
 
     def test_login_decorator_fail_wrong_user(self):
         with app.test_client() as c:
@@ -117,12 +111,28 @@ class SessionTestCase(ServerTestCase):
 
             # Reset session['id'] to something else
             with c.session_transaction() as sess:
-                sess['id'] = '12389234nfdsfd'
+                sess['id'] = '12389'
 
             rv = c.get('/testing_decorator_fail')
 
+            self.verify_redirect(rv, 'http://localhost/login?next=%2Ftesting_decorator_fail')
+
+    def test_login_decorator_fail_wrong_secret(self):
+        with app.test_client() as c:
+            c.post('/login', data=dict(
+                signum='test',
+                password='testpass'))
+
+            # Reset session['id'] to something else
+            with c.session_transaction() as sess:
+                sess['secret'] = 'a'
+
+            rv = c.get('/testing_decorator_fail')
+
+            self.verify_redirect(rv, 'http://localhost/login?next=%2Ftesting_decorator_fail')
+
+    def verify_redirect(self, result, location):
             # Make sure we are redirected
-            self.assertEqual(rv.status_code, 302)
-            self.assertEqual(
-                rv.location,
-                'http://localhost/login?next=%2Ftesting_decorator_fail')
+            self.assertEqual(result.status_code, 302)
+            self.assertEqual(result.location, location)
+
