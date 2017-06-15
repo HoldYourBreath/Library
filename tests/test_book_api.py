@@ -80,7 +80,6 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self.assertEqual(len(json.loads(response)), 2)
 
-
     def test_override_put(self):
         books = [book2, book1]
 
@@ -251,8 +250,6 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(len(json.loads(response)), 3)
         self._compare_book(json.loads(response)[0], great_book1)
         self._compare_book(json.loads(response)[1], great_book2)
-
-
 
     def _put_book(self, book):
         book_id = book['tag']

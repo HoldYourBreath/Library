@@ -125,7 +125,9 @@ class GoodreadsTestCase(ServerTestCase):
                 ' For the past four years, he has inspired and helped '
                 'developers to organize Software Craftsmanship '
                 'communities throughout Europe, the United States, '
-                'and the rest of the world."'
+                'and the rest of the world."',
+                'thumbnail': 'https://images.gr-assets.com/books/'
+                             '1416778735s/23215733.jpg'
                 }
 
         rv, response = self.get_book(1234)
@@ -147,7 +149,8 @@ class GoodreadsTestCase(ServerTestCase):
             'publisher': 'Academic Press',
             'format': 'Hardcover',
             'description': '',
-            'thumbnail': ''
+            'thumbnail': 'https://images.gr-assets.com/books/'
+                         '1379896243s/18180458.jpg'
         }
 
         rv, response = self.get_book(1234)
@@ -169,7 +172,8 @@ class GoodreadsTestCase(ServerTestCase):
             'publisher': 'Academic Press',
             'format': 'Hardcover',
             'description': '',
-            'thumbnail': ''
+            'thumbnail': 'https://images.gr-assets.com/books/'
+                         '1379896243s/18180458.jpg'
         }
 
         rv, response = self.get_book(1234)
@@ -191,7 +195,8 @@ class GoodreadsTestCase(ServerTestCase):
             'publisher': 'Academic Press',
             'format': 'Hardcover',
             'description': '',
-            'thumbnail': ''
+            'thumbnail': 'https://images.gr-assets.com/books/'
+                         '1379896243s/18180458.jpg'
         }
 
         rv, response = self.get_book(1234)
@@ -213,7 +218,8 @@ class GoodreadsTestCase(ServerTestCase):
             'format': 'Hardcover',
             'num_pages': 544,
             'description': '',
-            'thumbnail': ''
+            'thumbnail': 'https://images.gr-assets.com/books/'
+                         '1379896243s/18180458.jpg'
         }
 
         rv, response = self.get_book(1234)
@@ -235,7 +241,8 @@ class GoodreadsTestCase(ServerTestCase):
             'publisher': 'Academic Press',
             'format': 'Hardcover',
             'description': '',
-            'thumbnail': ''
+            'thumbnail': 'https://images.gr-assets.com/books/'
+                         '1379896243s/18180458.jpg'
         }
 
         rv, response = self.get_book(1234)

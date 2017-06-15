@@ -126,13 +126,15 @@ def get_publisher(book):
     # In the case of no publisher, return empty string
     return ''
 
+
 def get_thumbnail(book):
-    if book.getElementsByTagName('thumbnail')[0].hasChildNodes():
-        return book.getElementsByTagName('thumbnail')[0] \
+    if book.getElementsByTagName('small_image_url')[0].hasChildNodes():
+        return book.getElementsByTagName('small_image_url')[0] \
             .childNodes[0].nodeValue
 
     # In the case of no thumbnail, return empty string
     return ''
+
 
 def get_format(book):
     if book.getElementsByTagName('format')[0].hasChildNodes():

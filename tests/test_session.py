@@ -101,7 +101,8 @@ class SessionTestCase(ServerTestCase):
         with app.test_client() as c:
             rv = c.get('/testing_decorator_fail')
 
-            self.verify_redirect(rv, 'http://localhost/login?next=%2Ftesting_decorator_fail')
+            self.verify_redirect(rv, 'http://localhost/login?'
+                                     'next=%2Ftesting_decorator_fail')
 
     def test_login_decorator_fail_wrong_user(self):
         with app.test_client() as c:
@@ -115,7 +116,8 @@ class SessionTestCase(ServerTestCase):
 
             rv = c.get('/testing_decorator_fail')
 
-            self.verify_redirect(rv, 'http://localhost/login?next=%2Ftesting_decorator_fail')
+            self.verify_redirect(rv, 'http://localhost/login?'
+                                     'next=%2Ftesting_decorator_fail')
 
     def test_login_decorator_fail_wrong_secret(self):
         with app.test_client() as c:
@@ -129,10 +131,10 @@ class SessionTestCase(ServerTestCase):
 
             rv = c.get('/testing_decorator_fail')
 
-            self.verify_redirect(rv, 'http://localhost/login?next=%2Ftesting_decorator_fail')
+            self.verify_redirect(rv, 'http://localhost/login?'
+                                     'next=%2Ftesting_decorator_fail')
 
     def verify_redirect(self, result, location):
             # Make sure we are redirected
             self.assertEqual(result.status_code, 302)
             self.assertEqual(result.location, location)
-

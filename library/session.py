@@ -14,7 +14,8 @@ def validate_user():
         curs = db.execute('select * from sessions where session_id = (?)',
                           (flask.session['id'],))
         sessions = curs.fetchall()
-        if len(sessions) > 0 and sessions[0]['secret'] == flask.session['secret']:
+        if len(sessions) > 0 and \
+           sessions[0]['secret'] == flask.session['secret']:
             return True
 
     return False
@@ -42,7 +43,8 @@ def login():
             flask.session['user'] = user
             db = database.get()
             cursor = db.cursor()
-            cursor.execute('INSERT INTO sessions'
+            cursor.execute(
+                       'INSERT INTO sessions'
                        '(secret, user_id, login_time, last_activity)'
                        'values (?, ?, ?, ?)',
                        (flask.session['secret'],
