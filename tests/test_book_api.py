@@ -64,9 +64,22 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), books[0])
 
+        # Test adding another copy of an existing book
+        same_book = copy.copy(book1)
+        same_book['tag'] = 3
+        self._put_book(same_book)
+
+        rv = self.app.get('/api/books/3')
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), same_book)
+
+        # Test that the number of unique books are 2, not 3.
+        # Multiple books of same kind of book should not be listed
+        # more than once
         rv = self.app.get('/api/books')
         response = codecs.decode(rv.data)
         self.assertEqual(len(json.loads(response)), 2)
+
 
     def test_override_put(self):
         books = [book2, book1]
@@ -190,6 +203,56 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self.assertEqual(len(json.loads(response)), 1)
 
+
+    def test_find_isbn(self):
+        book = copy.copy(book1)
+        book['tag'] = 12345
+        book['isbn'] = 9
+        self._put_book(book)
+        self._put_book(book1)
+        self._put_book(book2)
+        rv = self.app.get('/api/books?isbn=9')
+
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 1)
+        self._compare_book(json.loads(response)[0], book)
+
+    def test_find_title(self):
+        great_book1 = copy.copy(book1)
+        great_book1['tag'] = 12345
+        great_book1['title'] = 'Great Book'
+        self._put_book(great_book1)
+
+        # Put another book with similar title
+        great_book2 = copy.copy(book1)
+        great_book2['tag'] = 12346
+        great_book2['title'] = 'Great Poems'
+        self._put_book(great_book2)
+
+        # Put some books for noise
+        self._put_book(book1)
+        self._put_book(book2)
+
+        # Search for Great Book. Should get 1 book
+        rv = self.app.get('/api/books?title=Great%20Book')
+
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 1)
+        self._compare_book(json.loads(response)[0], great_book1)
+
+        # Serach for Great. Should get 2 books
+        rv = self.app.get('/api/books?title=Great')
+
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 2)
+        self._compare_book(json.loads(response)[0], great_book1)
+        self._compare_book(json.loads(response)[1], great_book2)
+
+
+
     def _put_book(self, book):
         book_id = book['tag']
         temp_book = copy.copy(book)
@@ -211,17 +274,12 @@ class BookTestCase(ServerTestCase):
                             content_type='application/json')
 
     def _compare_book(self, lv, rv):
-        self.assertEqual(lv['tag'], rv['tag'])
-        self.assertEqual(lv['isbn'], rv['isbn'])
-        self.assertEqual(lv['authors'], rv['authors'])
-        self.assertEqual(lv['pages'], rv['pages'])
-        self.assertEqual(lv['room_id'], rv['room_id'])
-        self.assertEqual(lv['publisher'], rv['publisher'])
-        self.assertEqual(lv['format'], rv['format'])
-        self.assertEqual(lv['publication_date'], rv['publication_date'])
-        self.assertEqual(lv['description'], rv['description'])
-        self.assertEqual(lv['thumbnail'], rv['thumbnail'])
+        # Test that lv and rv has the same size
+        self.assertEqual(len(lv.keys()), len(rv.keys()))
 
+        # Compare rv and lv
+        for key in lv.keys():
+            self.assertEqual(lv[key], rv[key])
 
 if __name__ == '__main__':
     unittest.main()

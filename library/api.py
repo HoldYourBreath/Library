@@ -12,11 +12,24 @@ class BookNotFound(Exception):
 @app.route('/api/books', methods=['GET'])
 def list_books():
     db_instance = database.get()
-    curs = db_instance.execute(
-        'SELECT * '
-        'FROM books LEFT OUTER JOIN loans using (book_id)'
-        'ORDER by book_id DESC'
-    )
+    where = ''
+    query_params = []
+
+    if 'isbn' in flask.request.args:
+        where += ' WHERE isbn = ?'
+        query_params.append(flask.request.args['isbn'])
+
+    if 'title' in flask.request.args:
+        where += ' WHERE title LIKE ?'
+        query_params.append('%' + flask.request.args['title'] + '%')
+
+    query = 'SELECT * FROM books {} GROUP BY isbn ORDER BY book_id '
+    query = query.format(where)
+    print(query)
+    print(query_params)
+
+    curs = db_instance.execute(query, tuple(query_params))
+
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
