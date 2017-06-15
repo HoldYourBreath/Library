@@ -203,9 +203,8 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self.assertEqual(len(json.loads(response)), 1)
 
-
     def test_find_isbn(self):
-        book = copy.copy(book1)
+        book = copy.deepcopy(book1)
         book['tag'] = 12345
         book['isbn'] = 9
         self._put_book(book)
@@ -219,14 +218,16 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response)[0], book)
 
     def test_find_title(self):
-        great_book1 = copy.copy(book1)
+        great_book1 = copy.deepcopy(book1)
         great_book1['tag'] = 12345
-        great_book1['title'] = 'Great Book'
+        great_book1['isbn'] = 10
+        great_book1['title'] = 'Great Songs'
         self._put_book(great_book1)
 
         # Put another book with similar title
-        great_book2 = copy.copy(book1)
+        great_book2 = copy.deepcopy(book1)
         great_book2['tag'] = 12346
+        great_book2['isbn'] = 11
         great_book2['title'] = 'Great Poems'
         self._put_book(great_book2)
 
@@ -235,7 +236,7 @@ class BookTestCase(ServerTestCase):
         self._put_book(book2)
 
         # Search for Great Book. Should get 1 book
-        rv = self.app.get('/api/books?title=Great%20Book')
+        rv = self.app.get('/api/books?title=Great%20Songs')
 
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)
@@ -247,7 +248,7 @@ class BookTestCase(ServerTestCase):
 
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)
-        self.assertEqual(len(json.loads(response)), 2)
+        self.assertEqual(len(json.loads(response)), 3)
         self._compare_book(json.loads(response)[0], great_book1)
         self._compare_book(json.loads(response)[1], great_book2)
 

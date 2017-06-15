@@ -25,8 +25,6 @@ def list_books():
 
     query = 'SELECT * FROM books {} GROUP BY isbn ORDER BY book_id '
     query = query.format(where)
-    print(query)
-    print(query_params)
 
     curs = db_instance.execute(query, tuple(query_params))
 
