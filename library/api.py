@@ -12,19 +12,31 @@ class BookNotFound(Exception):
 @app.route('/api/books', methods=['GET'])
 def list_books():
     db_instance = database.get()
-    where = ''
+    wheres = []
     query_params = []
+    where_conditions = ''
 
     if 'isbn' in flask.request.args:
-        where += ' WHERE isbn = ?'
+        wheres.append(' WHERE isbn = ?')
         query_params.append(flask.request.args['isbn'])
 
     if 'title' in flask.request.args:
-        where += ' WHERE title LIKE ?'
+        wheres.append(' WHERE title LIKE ?')
         query_params.append('%' + flask.request.args['title'] + '%')
 
+    if 'description' in flask.request.args:
+        wheres.append(' WHERE description LIKE ?')
+        query_params.append('%' + flask.request.args['description'] + '%')
+
+    if len(wheres) == 1:
+        where_conditions = wheres[0]
+    elif len(wheres) > 1:
+        where_conditions = wheres.pop(0)
+        for where in wheres:
+            where_conditions += where.replace('WHERE', 'AND')
+
     query = 'SELECT * FROM books {} GROUP BY isbn ORDER BY book_id '
-    query = query.format(where)
+    query = query.format(where_conditions)
 
     curs = db_instance.execute(query, tuple(query_params))
 
