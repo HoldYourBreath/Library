@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GoodreadsResponse>
+  <Request>
+    <authentication>true</authentication>
+      <key><![CDATA[PQkx0Upvp4Fyv9EtiB5Bg]]></key>
+    <method><![CDATA[search_index]]></method>
+  </Request>
+  <search>
+  <query><![CDATA[778347561]]></query>
+    <results-start>1</results-start>
+    <results-end>0</results-end>
+    <total-results>0</total-results>
+    <source>Goodreads</source>
+    <query-time-seconds>0.03</query-time-seconds>
+    <results>
+    </results>
+</search>
+
+</GoodreadsResponse>

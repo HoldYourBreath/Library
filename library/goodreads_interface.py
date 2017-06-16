@@ -1,6 +1,5 @@
 from flask import jsonify
 import urllib
-import json
 import xml.dom.minidom as minidom
 
 from library.app import app
@@ -10,6 +9,10 @@ GOODREADS_URL = "https://www.goodreads.com"
 GOODREADS_ISBN_SEARCH_URL = GOODREADS_URL + "/search/index.xml" \
                                             "?key={KEY}&q={ISBN}"
 GOODREADS_BOOK_URL = GOODREADS_URL + "/book/show/{BOOK_ID}?key={KEY}"
+
+
+class IsbnLookupError(LookupError):
+    pass
 
 
 @app.route('/api/books/goodreads/<isbn>')
@@ -28,11 +31,13 @@ def lookup_goodreads_id(isbn):
     raw = response.read()
 
     dom = minidom.parseString(raw)
-    for el in dom.getElementsByTagName('best_book')[0].childNodes:
-        if el.nodeName == 'id':
-            return el.firstChild.nodeValue
+    best_books = dom.getElementsByTagName('best_book')
+    if best_books:
+        for el in best_books[0].childNodes:
+            if el.nodeName == 'id':
+                return el.firstChild.nodeValue
 
-    raise LookupError("Can't find a book id for ISBN: {}".format(isbn))
+    raise IsbnLookupError("Can't find a book id for ISBN: {}".format(isbn))
 
 
 def fetch_goodreads_book(book_id):

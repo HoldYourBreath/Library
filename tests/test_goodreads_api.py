@@ -6,6 +6,7 @@ from queue import Queue, Empty
 # Local modules
 from .test_server import ServerTestCase
 import library.config as config
+import library.goodreads_interface as goodreads_interface
 
 
 class Response():
@@ -249,6 +250,35 @@ class GoodreadsTestCase(ServerTestCase):
 
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
+
+    def test_no_nothing(self):
+        isbn_data = self.open_response("isbn_no_nothing.xml")
+        book_data = self.open_response("book_id_no_nothing.xml")
+        self.response_queue.put(Response(200, isbn_data))
+        self.response_queue.put(Response(200, book_data))
+
+        expected_response = {
+            'author': [],
+            'title': '',
+            'publication_date': '',
+            'num_pages': 0,
+            'publisher': '',
+            'format': '',
+            'description': '',
+            'thumbnail': ''
+        }
+
+        rv, response = self.get_book(1234)
+
+        self.assertEqual(rv.status_code, 200)
+        self.verify_response(response, expected_response)
+
+    def test_isbn_not_found(self):
+        isbn_data = self.open_response("isbn_empty.xml")
+        self.response_queue.put(Response(200, isbn_data))
+
+        with self.assertRaises(goodreads_interface.IsbnLookupError):
+            rv, response = self.get_book(1234)
 
     def open_response(self, name):
         response = ""
