@@ -11,7 +11,7 @@ class BookNotFound(Exception):
 
 @app.route('/api/books', methods=['GET'])
 def list_books():
-    db_instance = database.get()
+    db = database.get()
     wheres = []
     query_params = []
     where_conditions = ''
@@ -38,7 +38,7 @@ def list_books():
     query = 'SELECT * FROM books {} GROUP BY isbn ORDER BY book_id '
     query = query.format(where_conditions)
 
-    curs = db_instance.execute(query, tuple(query_params))
+    curs = db.execute(query, tuple(query_params))
 
     books = _get_books(curs.fetchall())
     return jsonify(books)
@@ -49,10 +49,10 @@ def list_books_on_loan():
     """
     List all books that are out on loan
     """
-    db_instance = database.get()
-    curs = db_instance.execute('SELECT * from books '
-                               'JOIN loans USING (book_id) '
-                               'ORDER BY book_id DESC')
+    db = database.get()
+    curs = db.execute('SELECT * from books '
+                      'JOIN loans USING (book_id) '
+                      'ORDER BY book_id DESC')
     books = _get_books(curs.fetchall())
     return jsonify(books)
 
@@ -62,8 +62,8 @@ def list_available_books():
     """
     List all books that are not out on loan
     """
-    db_instance = database.get()
-    curs = db_instance.execute(
+    db = database.get()
+    curs = db.execute(
         'SELECT * '
         'FROM books LEFT OUTER JOIN loans using (book_id) '
         'WHERE loan_date IS NULL ORDER by book_id DESC'
