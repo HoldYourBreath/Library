@@ -27,6 +27,14 @@ def list_books():
         wheres.append(' WHERE books.description LIKE ?')
         query_params.append('%' + flask.request.args['description'] + '%')
 
+    if 'room_id' in flask.request.args:
+        wheres.append(' WHERE books.room_id = ?')
+        query_params.append(flask.request.args['room_id'])
+
+    if 'site' in flask.request.args:
+        wheres.append(' WHERE sites.site_name LIKE ?')
+        query_params.append('%' + flask.request.args['site'] + '%')
+
     if 'loaned' in flask.request.args:
         loaned = flask.request.args['loaned'].lower()
         if 'true' in loaned:
@@ -46,6 +54,7 @@ def list_books():
     query = 'SELECT * FROM books ' \
             'LEFT JOIN loans USING (book_id) ' \
             'LEFT JOIN rooms USING (room_id) ' \
+            'LEFT JOIN sites USING (site_id) ' \
             'WHERE loans.return_date IS NULL ' \
             '{} GROUP BY isbn ORDER BY book_id '
 

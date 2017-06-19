@@ -333,7 +333,7 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), book2)
 
-    def test_find_room(self):
+    def test_find_location(self):
         self._put_book(book1)
         self._put_book(book2)
         self._put_book(book3)
@@ -342,6 +342,8 @@ class BookTestCase(ServerTestCase):
         # Add a room
         with self.app.session_transaction():
             db = database.get()
+            db.execute('INSERT INTO sites (site_name) '
+                       'VALUES (?)', ('happy place',))
             db.execute('INSERT INTO rooms (site_id, room_name) '
                        'VALUES (?, ?)',
                        (2, 'happy room',))
@@ -350,6 +352,24 @@ class BookTestCase(ServerTestCase):
         # Search for title Great and description 'artists'
         # Should get 1 book
         rv = self.app.get('/api/books?room=happy%20room')
+
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 2)
+        self._compare_book(json.loads(response)[0], book1)
+        self._compare_book(json.loads(response)[1], book2)
+
+        # Search for room ID 1
+        rv = self.app.get('/api/books?room_id=1')
+
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 2)
+        self._compare_book(json.loads(response)[0], book1)
+        self._compare_book(json.loads(response)[1], book2)
+
+        # Search for site name Happy place
+        rv = self.app.get('/api/books?site=happy%20place')
 
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)
