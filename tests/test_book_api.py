@@ -4,6 +4,8 @@ import copy
 import codecs
 
 from .test_server import ServerTestCase
+from library.app import app
+import library.database as database
 
 book1 = {'tag': 1,
          'isbn': 1234,
@@ -15,7 +17,8 @@ book1 = {'tag': 1,
          'publisher': 'Crazy dude publishing',
          'publication_date': '1820 01 02',
          'description': 'a book',
-         'thumbnail': 'a thumbnail'}
+         'thumbnail': 'a thumbnail',
+         'loaned': False}
 
 book2 = {'tag': 2,
          'isbn': 1235,
@@ -27,7 +30,8 @@ book2 = {'tag': 2,
          'publisher': 'Sane gal publishing',
          'publication_date': '2016 12 31',
          'description': 'Another book',
-         'thumbnail': 'another thumbnail'}
+         'thumbnail': 'another thumbnail',
+         'loaned': False}
 
 book3 = {'tag': 3,
          'isbn': 1236,
@@ -40,7 +44,8 @@ book3 = {'tag': 3,
          'publication_date': '2000 01 01',
          'description':
          'A very nice book about songs! All the best artists',
-         'thumbnail': 'another thumbnail'}
+         'thumbnail': 'another thumbnail',
+         'loaned': False}
 
 book4 = {'tag': 4,
          'isbn': 1237,
@@ -53,7 +58,8 @@ book4 = {'tag': 4,
          'publication_date': '1999 12 31',
          'description':
          'A very nice book about poems! All the best poets',
-         'thumbnail': 'another thumbnail'}
+         'thumbnail': 'another thumbnail',
+         'loaned': False}
 
 
 class BookTestCase(ServerTestCase):
@@ -136,7 +142,8 @@ class BookTestCase(ServerTestCase):
                 'publisher': '',
                 'publication_date': '',
                 'description': '',
-                'thumbnail': ''}
+                'thumbnail': '',
+                'loaned': False}
 
         rv = self.app.put('/api/books/1',
                           data=json.dumps({'isbn': 1, 'room_id': 1}),
@@ -185,20 +192,6 @@ class BookTestCase(ServerTestCase):
                           data=json.dumps({'employee_num': 123}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 404)
-
-    def test_list_books_by_loan_status(self):
-        """
-        List all available books and all checked out books.
-        """
-        self._put_book(book1)
-        self._put_book(book2)
-
-        self.assertEqual(self._loan_book(1, 123).status_code, 200)
-        rv = self.app.get('/api/books_on_loan',
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-        response = codecs.decode(rv.data)
-        self.assertEqual(len(json.loads(response)), 1)
 
     def test_make_a_loan_and_return_book(self):
         """
@@ -297,6 +290,49 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self.assertEqual(len(json.loads(response)), 1)
         self._compare_book(json.loads(response)[0], book3)
+
+    def test_filter_out_loaned(self):
+        loaned_book = copy.copy(book1)
+        loaned_book['loaned'] = True
+        self._put_book(loaned_book)
+        self._put_book(book2)
+
+        with self.app.session_transaction():
+            db = database.get()
+            db.execute(
+                'INSERT INTO loans '
+                '(book_id, employee_number, loan_date, return_date)'
+                'VALUES (?, ?, ?, ?)', (1, 1, 1, 2))
+            db.execute(
+                'INSERT INTO loans (book_id, employee_number, loan_date)'
+                'VALUES (?, ?, ?)', (1, 1, 1))
+            db.commit()
+
+        # Book 1 is loaned so return only that one
+        rv = self.app.get('/api/books?loaned=true')
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 1)
+        self._compare_book(json.loads(response)[0], loaned_book)
+
+        # Make sure a specific get will mark book as loaned
+        rv = self.app.get('/api/books/{}'.format(loaned_book['tag']))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), loaned_book)
+
+        # Book 1 is loaned so only book2 should be returned
+        rv = self.app.get('/api/books?loaned=false')
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 1)
+        self._compare_book(json.loads(response)[0], book2)
+
+        # Make sure a specific get will not mark book as loaned
+        rv = self.app.get('/api/books/{}'.format(book2['tag']))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), book2)
 
     def _put_book(self, book):
         book_id = book['tag']

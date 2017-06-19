@@ -14,7 +14,6 @@ def list_books():
     db = database.get()
     wheres = []
     query_params = []
-    where_conditions = ''
 
     if 'isbn' in flask.request.args:
         wheres.append(' WHERE isbn = ?')
@@ -28,47 +27,29 @@ def list_books():
         wheres.append(' WHERE description LIKE ?')
         query_params.append('%' + flask.request.args['description'] + '%')
 
-    if len(wheres) == 1:
-        where_conditions = wheres[0]
-    elif len(wheres) > 1:
-        where_conditions = wheres.pop(0)
+    if 'loaned' in flask.request.args:
+        loaned = flask.request.args['loaned'].lower()
+        if 'true' in loaned:
+            wheres.append(' WHERE loans.loan_id IS NOT NULL')
+        elif 'false' in loaned:
+            wheres.append(' WHERE loans.loan_id IS NULL')
+
+    where_conditions = ''
+    if len(wheres) > 0:
         for where in wheres:
             where_conditions += where.replace('WHERE', 'AND')
 
-    query = 'SELECT * FROM books {} GROUP BY isbn ORDER BY book_id '
+    query = 'SELECT * FROM books ' \
+            'LEFT JOIN loans USING (book_id) ' \
+            'WHERE loans.return_date IS NULL ' \
+            '{} GROUP BY isbn ORDER BY book_id '
+
     query = query.format(where_conditions)
 
     curs = db.execute(query, tuple(query_params))
 
     books = _get_books(curs.fetchall())
-    return jsonify(books)
 
-
-@app.route('/api/books_on_loan', methods=['GET'])
-def list_books_on_loan():
-    """
-    List all books that are out on loan
-    """
-    db = database.get()
-    curs = db.execute('SELECT * from books '
-                      'JOIN loans USING (book_id) '
-                      'ORDER BY book_id DESC')
-    books = _get_books(curs.fetchall())
-    return jsonify(books)
-
-
-@app.route('/api/books_available', methods=['GET'])
-def list_available_books():
-    """
-    List all books that are not out on loan
-    """
-    db = database.get()
-    curs = db.execute(
-        'SELECT * '
-        'FROM books LEFT OUTER JOIN loans using (book_id) '
-        'WHERE loan_date IS NULL ORDER by book_id DESC'
-    )
-    books = _get_books(curs.fetchall())
     return jsonify(books)
 
 
@@ -80,30 +61,20 @@ def put_book(book_id):
     if 'isbn' not in book:
         return 'No ISBN present', 400
 
+    # Defaul parameters
+    defaults = {'title': '',
+                'authors': [],
+                'description': '',
+                'thumbnail': '',
+                'pages': 0,
+                'publisher': '',
+                'format': '',
+                'publication_date': ''}
+
     # Check if parameters are missing and if so, assign default
-    if 'title' not in book:
-        book['title'] = ''
-
-    if 'authors' not in book:
-        book['authors'] = []
-
-    if 'description' not in book:
-        book['description'] = ''
-
-    if 'thumbnail' not in book:
-        book['thumbnail'] = ''
-
-    if 'pages' not in book:
-        book['pages'] = 0
-
-    if 'publisher' not in book:
-        book['publisher'] = ''
-
-    if 'format' not in book:
-        book['format'] = ''
-
-    if 'publication_date' not in book:
-        book['publication_date'] = ''
+    for key, value in defaults.items():
+        if key not in book:
+            book[key] = value
 
     # Check integer parameter constraints
     try:
@@ -148,7 +119,9 @@ def get_single_book(book_id):
 
 def _get_book(book_id):
     db = database.get()
-    curs = db.execute('select * from books where tag = ?',
+    curs = db.execute('SELECT * FROM books '
+                      'LEFT JOIN loans USING (book_id) '
+                      'WHERE loans.return_date IS NULL AND books.tag = ?',
                       (book_id,))
 
     book = curs.fetchall()
@@ -171,13 +144,9 @@ def _get_books(rows):
                      'publisher': book['publisher'],
                      'publication_date': book['publication_date'],
                      'description': book['description'],
-                     'thumbnail': book['thumbnail']}
-        try:
-            json_book['return_date'] = book['return_date']
-            json_book['loan_date'] = book['loan_date']
-            json_book['employee_number'] = book['employee_number']
-        except IndexError:
-            pass
+                     'thumbnail': book['thumbnail'],
+                     'loaned':
+                     'loan_id' in book.keys() and book['loan_id'] is not None}
         books.append(json_book)
     return books
 
