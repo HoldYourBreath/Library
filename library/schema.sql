@@ -46,6 +46,7 @@ create table loans (
     employee_number INTEGER not null,
     loan_date INTEGER not null,
     return_date INTEGER,
+    due_date INTEGER,
     FOREIGN KEY(book_id) REFERENCES books(book_id)
 );
 

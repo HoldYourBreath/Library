@@ -22,7 +22,18 @@ def get_all_loans():
     """
     """
     db_instance = database.get()
-    curs = db_instance.execute('select * from loans order by return_date desc')
+    curs = db_instance.execute('select * from loans order by due_date desc')
+    loans = curs.fetchall()
+    items = [_serialize_loan(loan) for loan in loans]
+    return jsonify(items)
+
+@app.route('/api/loans/due', methods=['GET'])
+def get_all_due_loans():
+    """
+    Get all loans not yet returned.
+    """
+    db_instance = database.get()
+    curs = db_instance.execute('select * from loans order by due_date desc')
     loans = curs.fetchall()
     items = [_serialize_loan(loan) for loan in loans]
     return jsonify(items)
@@ -43,7 +54,7 @@ def loan_book(book_tag):
         response.status_code = 500
         return response
     loan_date = datetime.now()
-    return_date = datetime.now() + timedelta(days=BOOK_LOAN_IN_DAYS)
+    due_date = datetime.now() + timedelta(days=BOOK_LOAN_IN_DAYS)
     db_instance = database.get()
     curs = db_instance.execute('SELECT book_id FROM books where tag = ?',
                                (book_tag,))
@@ -56,13 +67,13 @@ def loan_book(book_tag):
     try:
         db_instance.execute(
             'INSERT INTO loans'
-            '(book_id, employee_number, loan_date, return_date) '
+            '(book_id, employee_number, loan_date, due_date) '
             'VALUES (?, ?, ?, ?)',
             (int(book['book_id']),
              int(put_data['employee_num']),
              int(loan_date.timestamp()),
-             int(return_date.timestamp())
-             )
+             int(due_date.timestamp())
+            )
         )
         db_instance.commit()
         response = jsonify({"msg": "OK"})
@@ -75,7 +86,7 @@ def loan_book(book_tag):
 
 
 @app.route('/api/loan/<int:book_tag>', methods=['DELETE'])
-def delete_loan(book_tag):
+def check_in_book(book_tag):
     """
     Set the return date to null to return a book.
     """

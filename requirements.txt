@@ -1,5 +1,5 @@
-setuptools
-flask
-coverage
-pep8
-ldap3
+Flask==0.12.2
+coverage==4.4.1
+pep8==1.7.0
+ldap3==2.2.4
+flask-cors==3.0.2

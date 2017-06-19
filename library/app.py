@@ -2,8 +2,13 @@ import os
 import flask
 
 from library.config import config
+from flask_cors import CORS
+
 
 app = flask.Flask(__name__)
+
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.config.from_object(__name__)  # load config from this file , flaskr.py
 app.secret_key = config.get('flask', 'secret_key')
 

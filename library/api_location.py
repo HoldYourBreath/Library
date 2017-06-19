@@ -65,8 +65,7 @@ def add_new_site():
 
 
 def _serialize_room(room):
-    return {"site_name": room["site_name"],
-            "room_name": room["room_name"],
+    return {"room_name": room["site_name"] + "-" + room["room_name"],
             "id": room["room_id"]}
 
 
