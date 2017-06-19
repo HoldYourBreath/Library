@@ -4,7 +4,6 @@ import copy
 import codecs
 
 from .test_server import ServerTestCase
-from library.app import app
 import library.database as database
 
 book1 = {'tag': 1,
@@ -38,7 +37,7 @@ book3 = {'tag': 3,
          'title': 'Great Songs',
          'authors': ['Jane Author'],
          'pages': 100,
-         'room_id': 1,
+         'room_id': 3,
          'format': 'Sturdy thing',
          'publisher': 'Sane gal publishing',
          'publication_date': '2000 01 01',
@@ -52,7 +51,7 @@ book4 = {'tag': 4,
          'title': 'Great Poems',
          'authors': ['Jane Author'],
          'pages': 3,
-         'room_id': 1,
+         'room_id': 6,
          'format': 'Sturdy thing',
          'publisher': 'Sane gal publishing',
          'publication_date': '1999 12 31',
@@ -333,6 +332,30 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), book2)
+
+    def test_find_room(self):
+        self._put_book(book1)
+        self._put_book(book2)
+        self._put_book(book3)
+        self._put_book(book4)
+
+        # Add a room
+        with self.app.session_transaction():
+            db = database.get()
+            db.execute('INSERT INTO rooms (site_id, room_name) '
+                       'VALUES (?, ?)',
+                       (2, 'happy room',))
+            db.commit()
+
+        # Search for title Great and description 'artists'
+        # Should get 1 book
+        rv = self.app.get('/api/books?room=happy%20room')
+
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(len(json.loads(response)), 2)
+        self._compare_book(json.loads(response)[0], book1)
+        self._compare_book(json.loads(response)[1], book2)
 
     def _put_book(self, book):
         book_id = book['tag']

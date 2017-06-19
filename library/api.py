@@ -16,15 +16,15 @@ def list_books():
     query_params = []
 
     if 'isbn' in flask.request.args:
-        wheres.append(' WHERE isbn = ?')
+        wheres.append(' WHERE books.isbn = ?')
         query_params.append(flask.request.args['isbn'])
 
     if 'title' in flask.request.args:
-        wheres.append(' WHERE title LIKE ?')
+        wheres.append(' WHERE books.title LIKE ?')
         query_params.append('%' + flask.request.args['title'] + '%')
 
     if 'description' in flask.request.args:
-        wheres.append(' WHERE description LIKE ?')
+        wheres.append(' WHERE books.description LIKE ?')
         query_params.append('%' + flask.request.args['description'] + '%')
 
     if 'loaned' in flask.request.args:
@@ -34,6 +34,10 @@ def list_books():
         elif 'false' in loaned:
             wheres.append(' WHERE loans.loan_id IS NULL')
 
+    if 'room' in flask.request.args:
+        wheres.append(' WHERE rooms.room_name LIKE ?')
+        query_params.append('%' + flask.request.args['room'] + '%')
+
     where_conditions = ''
     if len(wheres) > 0:
         for where in wheres:
@@ -41,6 +45,7 @@ def list_books():
 
     query = 'SELECT * FROM books ' \
             'LEFT JOIN loans USING (book_id) ' \
+            'LEFT JOIN rooms USING (room_id) ' \
             'WHERE loans.return_date IS NULL ' \
             '{} GROUP BY isbn ORDER BY book_id '
 

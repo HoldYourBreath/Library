@@ -8,3 +8,4 @@ library.cfg
 .coverage
 htmlcov/
 env/
+*.swo

@@ -27,6 +27,7 @@ def get_all_loans():
     items = [_serialize_loan(loan) for loan in loans]
     return jsonify(items)
 
+
 @app.route('/api/loans/due', methods=['GET'])
 def get_all_due_loans():
     """
@@ -72,8 +73,7 @@ def loan_book(book_tag):
             (int(book['book_id']),
              int(put_data['employee_num']),
              int(loan_date.timestamp()),
-             int(due_date.timestamp())
-            )
+             int(due_date.timestamp()))
         )
         db_instance.commit()
         response = jsonify({"msg": "OK"})
