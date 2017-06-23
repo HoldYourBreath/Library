@@ -21,20 +21,24 @@ class LogIn extends Component {
   }
 
   authenticate() {
-    let url = `${window.__appUrl}/api/books/${this.state.tag}`;
+    let url = `${window.__appUrl}/api/login`;
+    let signum = this.state.signum;
     request
       .post(url)
-      .send(this.state)
+      .send({
+        signum: signum,
+        password: this.state.password
+      })
       .type('application/json')
       .on('error', (err) => {
-        this.setState({errorMsg: `Unable to post new book: ${err.response.text}`});
+        this.setState({errorMsg: `Authentication failed`});
       })
       .end((err, res) => {
         if (!err) {
-          this.setState({
-              errorMsg: null,
-              infoMsg: `New book with tag ${res.body.tag} added!`
-            });
+          this.props.onAuthenticationDone({
+            signum: signum,
+            secret: res.body.secret,
+          });
         } 
       });
   }
@@ -43,7 +47,6 @@ class LogIn extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="jumbotron">
         <Form horizontal>

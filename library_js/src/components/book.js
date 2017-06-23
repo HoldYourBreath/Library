@@ -1,6 +1,5 @@
 import React from 'react';
-import {Media,
-        Button} from 'react-bootstrap';
+import {Media} from 'react-bootstrap';
 
 const Book = ({book}) => (
  <Media>

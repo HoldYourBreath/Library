@@ -4,6 +4,7 @@ import Books from './components/books';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
+import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -22,12 +23,21 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: []
+      rooms: [],
+      signum: '',
+      sessionSecret: ''
     };
   }
 
+  authenticationDone(sessionInfo) {
+    console.log(sessionInfo);
+    this.setState({
+      signum: sessionInfo.signum,
+      sessionSecret: sessionInfo.secret
+    });
+  }
+
   componentWillMount() {
-    // Get the list of current rooms.
     request
       .get(`${window.__appUrl}/api/rooms`)
       .type('application/json')
@@ -41,6 +51,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <Router>
           <div>
@@ -72,12 +83,8 @@ class App extends Component {
                       Add Book
                     </Link>
                   </li>
-                  <li>
-                    <Link to='/log_in'>
-                      Log in
-                    </Link>
-                  </li>
                 </ul>
+                <NavbarUserInfo secret={this.state.sessionSecret} signum={this.state.signum}/>
               </div>
             </div>
           </nav>
@@ -89,7 +96,9 @@ class App extends Component {
               component={() => (<AddBook rooms={this.state.rooms} />)}/>
             <Route 
               path={'/log_in'}
-              component={() => (<LogIn rooms={this.state.rooms} />)}/>
+              component={() => (
+                <LogIn 
+                  onAuthenticationDone={this.authenticationDone.bind(this)} />)}/>
           </div>
           </div>
       </Router>
