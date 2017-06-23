@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import Books from './components/books';
 import LoanBook from './components/loan';
+import LogIn from './components/logIn';
 import AddBook from './components/addBook';
 import './App.css';
 import {
@@ -71,6 +72,11 @@ class App extends Component {
                       Add Book
                     </Link>
                   </li>
+                  <li>
+                    <Link to='/log_in'>
+                      Log in
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -80,8 +86,10 @@ class App extends Component {
             <Route path={'/loan'} component={LoanBook}/>
             <Route 
               path={'/add_book'}
-              render={() => <div>Home</div>}
               component={() => (<AddBook rooms={this.state.rooms} />)}/>
+            <Route 
+              path={'/log_in'}
+              component={() => (<LogIn rooms={this.state.rooms} />)}/>
           </div>
           </div>
       </Router>

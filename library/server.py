@@ -8,7 +8,7 @@ import library.goodreads_interface as goodreads_interface
 import library.user_lookup
 import library.api_loan
 import library.api_location as api_location
-import library.session
+import library.session as session
 
 
 @app.route('/')
@@ -59,7 +59,10 @@ def serve_static(path):
     return send_from_directory('static', path)
 
 
-def run():
+def run(args):
+    if args.fake_auth:
+        print('Faking authentication')
+        session.AUTHENTICE = False
     app.config['DEBUG'] = True
     app.run(host='0.0.0.0')
 

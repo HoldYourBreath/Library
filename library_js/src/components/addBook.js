@@ -44,10 +44,6 @@ class AddBook extends Component {
       .get(url)
       .type('application/json')
       .on('error', (err) => {
-        console.log("error!!!");
-        console.log("error!!!");
-        console.log("error!!!");
-        console.log(err);
         this.setState({
           errorMsg: `Unable to fetch book info for ${isbn}`,
           loadingBookData: false
