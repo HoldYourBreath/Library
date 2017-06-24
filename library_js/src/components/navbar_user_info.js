@@ -5,6 +5,9 @@ class NavbarUserInfo extends React.Component {
   constructor(props) {
     super(props);
   }
+  logOut() {
+
+  }
   render() {
     if (!this.props.secret) {
       return (
@@ -21,7 +24,12 @@ class NavbarUserInfo extends React.Component {
       <span>
         <ul className="nav navbar-nav navbar-right">
           <li>
-            <a href="/logout">logout</a>
+            <Link to='/add_book'>
+              Add Book
+            </Link>
+          </li>
+          <li>
+            <a href="#" onClick={this.props.logOut}>logout</a>
           </li>
         </ul>
         <p className="nav navbar-nav navbar-right navbar-text">Signed in as 

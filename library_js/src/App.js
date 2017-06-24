@@ -4,6 +4,7 @@ import Books from './components/books';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
+import AdminPage from './components/admin';
 import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
 import {
@@ -15,9 +16,6 @@ const request = require('superagent');
 
 window.__appUrl = "http://127.0.0.1:5000";
 
-require("../node_modules/bootstrap/dist/css/bootstrap.min.css");
-require("../node_modules/bootstrap/dist/css/bootstrap-theme.min.css");
-require("../node_modules/font-awesome/css/font-awesome.min.css");
 
 class App extends Component {
   constructor(props) {
@@ -49,9 +47,15 @@ class App extends Component {
         this.setState({rooms: res.body});
       });
   }
+  logOut(){
+    console.log("logout");
+    this.setState({
+      signum: '',
+      sessionSecret: ''
+    });
+  }
 
   render() {
-    console.log(this.state);
     return (
       <Router>
           <div>
@@ -78,13 +82,11 @@ class App extends Component {
                       Loan Book
                     </Link>
                   </li>
-                  <li>
-                    <Link to='/add_book'>
-                      Add Book
-                    </Link>
-                  </li>
                 </ul>
-                <NavbarUserInfo secret={this.state.sessionSecret} signum={this.state.signum}/>
+                <NavbarUserInfo 
+                  logOut={this.logOut.bind(this)}
+                  secret={this.state.sessionSecret} 
+                  signum={this.state.signum}/>
               </div>
             </div>
           </nav>
@@ -100,7 +102,7 @@ class App extends Component {
                 <LogIn 
                   onAuthenticationDone={this.authenticationDone.bind(this)} />)}/>
           </div>
-          </div>
+        </div>
       </Router>
     );
   }
