@@ -23,7 +23,7 @@ class App extends Component {
     this.state = {
       rooms: [],
       signum: '',
-      sessionSecret: ''
+      secret: ''
     };
   }
 
@@ -31,8 +31,10 @@ class App extends Component {
     console.log(sessionInfo);
     this.setState({
       signum: sessionInfo.signum,
-      sessionSecret: sessionInfo.secret
+      secret: sessionInfo.secret
     });
+    localStorage.setItem('signum', sessionInfo.signum);
+    localStorage.setItem('secret', sessionInfo.secret);
   }
 
   componentWillMount() {
@@ -46,13 +48,47 @@ class App extends Component {
         }
         this.setState({rooms: res.body});
       });
+    let signum = localStorage.getItem('signum');
+    let secret = localStorage.getItem('secret');
+    if (secret && signum) {
+      // Validate stored session.
+      request
+        .post(`${window.__appUrl}/api/login/validate`)
+        .send({signum: signum, secret: secret})
+        .type('application/json')
+        .end((err, res) => {
+          if(err) {
+            this.clearLocalStorage();
+          } else {
+            this.setState({signum: signum, secret: secret});
+          }
+        });
+    }
   }
+  clearLocalStorage() {
+    localStorage.removeItem('signum');
+    localStorage.removeItem('secret');
+  }
+
   logOut(){
-    console.log("logout");
-    this.setState({
-      signum: '',
-      sessionSecret: ''
-    });
+    let url = `${window.__appUrl}/api/login/delete`;
+    request
+      .post(url)
+      .send({
+        signum: this.state.signum,
+        secret: this.state.secret
+      })
+      .type('application/json')
+      .end((err, res) => {
+        if (err) {
+          console.error(err);
+        }
+        this.setState({
+          signum: '',
+          secret: ''
+        });
+        this.clearLocalStorage();
+      });
   }
 
   render() {
@@ -85,7 +121,7 @@ class App extends Component {
                 </ul>
                 <NavbarUserInfo 
                   logOut={this.logOut.bind(this)}
-                  secret={this.state.sessionSecret} 
+                  secret={this.state.secret} 
                   signum={this.state.signum}/>
               </div>
             </div>
