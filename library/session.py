@@ -34,6 +34,21 @@ def login_required(f):
     return wrapper
 
 
+@app.route('/api/login/validate', methods=['POST'])
+def api_validate():
+    user_credentials = flask.request.get_json()
+    user = user_credentials['signum']
+    secret = user_credentials['secret']
+    session_id = validate_session(user, secret)
+    if not session_id:
+        response = jsonify({'err': 'Invalid session'})
+        response.status_code = 401
+    else:
+        response = jsonify({'msg': 'Session correct'})
+        response.status_code = 200
+    return response
+
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
     user_credentials = flask.request.get_json()
@@ -49,6 +64,24 @@ def api_login():
         response = jsonify({'err': 'Authentication failed'})
         response.status_code = 401
     return response
+
+
+def validate_session(user: str, secret: str) -> str:
+    """
+    Used to validate a session.
+
+    :param user:
+    :param secret:
+    :return: session_id if valid, empty string otherwise.
+    """
+    db = database.get()
+    curs = db.execute('SELECT session_id FROM sessions '
+                      'WHERE user_id = ? AND secret = ?',
+                      (user, secret))
+    previous_session = curs.fetchone()
+    if previous_session:
+        return previous_session['session_id']
+    return ''
 
 
 def get_session_for_user(user: str) -> str:
@@ -89,6 +122,29 @@ def create_session(user: str) -> str:
              login_time))
     db.commit()
     return secret
+
+
+@app.route('/api/login/delete', methods=['POST'])
+def delete_session():
+    user_credentials = flask.request.get_json()
+    user = user_credentials['signum']
+    secret = user_credentials['secret']
+    session_id = validate_session(user, secret)
+    if not session_id:
+        response = jsonify({'err': 'Authentication failed'})
+        response.status_code = 401
+        return response
+
+    db = database.get()
+    cursor = db.cursor()
+    cursor.execute(
+        'DELETE FROM sessions '
+        'WHERE session_id = ?',
+        (session_id, ))
+    db.commit()
+
+    response = jsonify({'msg': 'Session deleted'})
+    return response
 
 
 @app.route('/login', methods=['GET', 'POST'])
