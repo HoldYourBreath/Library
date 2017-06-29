@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {FormGroup, 
+import {FormGroup,
         Button, 
         Col,
         Alert,
@@ -8,7 +8,6 @@ import {FormGroup,
         ControlLabel} from 'react-bootstrap';
 const request = require('superagent');
 const FontAwesome = require('react-fontawesome');
-
 
 class AddBook extends Component {
   constructor(props) {
@@ -24,7 +23,8 @@ class AddBook extends Component {
       author: '',
       format: '',
       title: '',
-      publication_date: ''
+      publication_date: '',
+      thumbnail: 'https://images.gr-assets.com/books/1419180921s/23232941.jpg'
     };
   }
   onFormInput(e) {
@@ -208,6 +208,14 @@ class AddBook extends Component {
                   value={this.state.publication_date}
                   onChange={this.onFormInput.bind(this)}
                   placeholder=""/>
+                  <br/>
+              </Col>
+
+               <Col componentClass={ControlLabel} sm={2}>
+                Thumbnail
+              </Col>
+              <Col xs={6} md={3}>
+                <img id="thumbnail" alt="thumbnail" src={this.state.thumbnail} />
               </Col>
             </FormGroup>
             <FormGroup>
