@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import {getLocations} from './lib/sites';
 import Books from './components/books';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
@@ -22,6 +23,7 @@ class App extends Component {
     super(props);
     this.state = {
       rooms: [],
+      sites: [],
       signum: '',
       secret: ''
     };
@@ -37,17 +39,17 @@ class App extends Component {
     localStorage.setItem('secret', sessionInfo.secret);
   }
 
+  updateLocations() {
+    getLocations().
+      then((locations) => {
+        console.log(locations);
+        this.setState({rooms: locations.rooms,
+                       sites: locations.sites});
+    });
+  }
+
   componentWillMount() {
-    request
-      .get(`${window.__appUrl}/api/rooms`)
-      .type('application/json')
-      .end((err, res) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        this.setState({rooms: res.body});
-      });
+    this.updateLocations();
     let signum = localStorage.getItem('signum');
     let secret = localStorage.getItem('secret');
     if (secret && signum) {
@@ -132,6 +134,12 @@ class App extends Component {
             <Route 
               path={'/add_book'}
               component={() => (<AddBook rooms={this.state.rooms} />)}/>
+            <Route 
+              path={'/admin'}
+              component={() => (<AdminPage 
+                                  rooms={this.state.rooms}
+                                  locationUpdate={this.updateLocations.bind(this)}
+                                  sites={this.state.sites} />)}/>
             <Route 
               path={'/log_in'}
               component={() => (

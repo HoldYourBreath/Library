@@ -11,7 +11,7 @@ book1 = {'tag': 1,
          'title': 'The book',
          'authors': ['Bob Author'],
          'pages': 500,
-         'room_id': 1,
+         'room_id': 2,
          'format': 'Slippery back',
          'publisher': 'Crazy dude publishing',
          'publication_date': '1820 01 02',
@@ -24,7 +24,7 @@ book2 = {'tag': 2,
          'title': 'Great book',
          'authors': ['Jane Author'],
          'pages': 123,
-         'room_id': 1,
+         'room_id': 2,
          'format': 'Sturdy thing',
          'publisher': 'Sane gal publishing',
          'publication_date': '2016 12 31',
@@ -360,7 +360,7 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response)[1], book2)
 
         # Search for room ID 1
-        rv = self.app.get('/api/books?room_id=1')
+        rv = self.app.get('/api/books?room_id=2')
 
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)

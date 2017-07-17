@@ -24,9 +24,10 @@ class NavbarUserInfo extends React.Component {
       <span>
         <ul className="nav navbar-nav navbar-right">
           <li>
-            <Link to='/add_book'>
-              Add Book
-            </Link>
+            <Link to='/add_book'>Add Book</Link>
+          </li>
+          <li>
+            <Link to='/admin'>Admin</Link>
           </li>
           <li>
             <a href="#" onClick={this.props.logOut}>logout</a>

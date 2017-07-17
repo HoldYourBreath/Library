@@ -25,6 +25,7 @@ class ServerTestCase(unittest.TestCase):
         # Set up a temporary config file
         config.config = configparser.ConfigParser()
         self._post_new_site()
+        self._post_new_room()
 
     def _post_new_site(self):
         rv = self.app.post('/api/sites',

@@ -47,6 +47,7 @@ class LogIn extends Component {
   }
 
   render() {
+    const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
     return (
       <div className="jumbotron">
         <Form horizontal>
@@ -55,6 +56,7 @@ class LogIn extends Component {
             Login using your windows credentials
             </p>
           </FormGroup>
+          {ErrAlert}
           <FormGroup controlId="signum">
             <Col componentClass={ControlLabel} sm={2}>
             Signum

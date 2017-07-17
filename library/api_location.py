@@ -13,15 +13,29 @@ def _serialize_site(s):
         "id": s["site_id"]}
 
 
+def _get_sites():
+    db_instance = database.get()
+    curs = db_instance.execute('select * from sites order by site_name desc')
+    sites_cursor = curs.fetchall()
+    return [_serialize_site(s) for s in sites_cursor]
+
+
 @app.route('/api/sites', methods=['GET'])
 def get_all_sites():
     """
     """
-    db_instance = database.get()
-    curs = db_instance.execute('select * from sites order by site_name desc')
-    sites_cursor = curs.fetchall()
-    site_list = [_serialize_site(s) for s in sites_cursor]
-    return jsonify(site_list)
+    return jsonify(_get_sites())
+
+
+@app.route('/api/loc/all', methods=['GET'])
+def get_current_locations():
+    """
+    Get all rooms and all locations.
+
+    :return:
+    """
+    return jsonify({'rooms': get_rooms(),
+                    'sites': _get_sites()})
 
 
 def get_rooms():
@@ -32,6 +46,27 @@ def get_rooms():
         'ORDER BY room_name DESC')
     rooms_cursor = curs.fetchall()
     return [_serialize_room(r) for r in rooms_cursor]
+
+
+@app.route('/api/sites/<int:site_id>', methods=['PUT'])
+def rename_site(site_id):
+    put_data = flask.request.get_json()
+    if put_data is None:
+        response = jsonify({'msg': 'Missing data in put request.'})
+        response.status_code = 500
+        return response
+    db = database.get()
+    cursor = db.cursor()
+    cursor.execute(
+        'UPDATE sites '
+        'SET site_name = ? '
+        'WHERE site_id = ?',
+        (put_data['name'],
+         site_id))
+    db.commit()
+    response = jsonify({"msg": "OK"})
+    response.status_code = 200
+    return response
 
 
 @app.route('/api/sites', methods=['POST'])
@@ -66,6 +101,7 @@ def add_new_site():
 
 def _serialize_room(room):
     return {"room_name": room["site_name"] + "-" + room["room_name"],
+            "site_id": room["site_id"],
             "id": room["room_id"]}
 
 
