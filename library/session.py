@@ -8,7 +8,7 @@ from library.app import app
 import library.database as database
 import library.ldap as ldap
 
-AUTHENTICE = True
+AUTHENTICATE = True
 
 
 def validate_user():
@@ -54,7 +54,7 @@ def api_login():
     user_credentials = flask.request.get_json()
     user = user_credentials['signum']
     password = user_credentials['password']
-    if not AUTHENTICE:
+    if not AUTHENTICATE:
         secret = create_session(user)
         response = jsonify({'secret': secret})
     elif ldap.authenticate(user, password):

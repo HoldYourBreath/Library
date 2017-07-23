@@ -62,7 +62,7 @@ def serve_static(path):
 def run(args):
     if args.fake_auth:
         print('Faking authentication')
-        session.AUTHENTICE = False
+        session.AUTHENTICATE = False
     app.config['DEBUG'] = True
     app.run(host='0.0.0.0')
 
