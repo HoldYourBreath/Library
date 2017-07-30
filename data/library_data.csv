@@ -1,5 +1,0 @@
-BookName,Author,Topic,Description,NumberOfBooks,BooksInLibrary,BooksRating,ISBN
-GoodBook,RobertCMartin,Programming,Book about programming,3,1,4,12
-BadBook,SomeRandomGuy,Programming,Book about programming,7,4,1,13
-PythonIsGreat,some programmer dude,Programming,Book about programming,30,7,5,2342
-Comedy,Eddie Murphy,Entertainment,Something fun,5,1,3,6546
