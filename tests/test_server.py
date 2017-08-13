@@ -3,6 +3,7 @@ import json
 import unittest
 import tempfile
 import configparser
+import codecs
 from ldap3.core.exceptions import LDAPBindError
 
 # Local modules
@@ -24,21 +25,26 @@ class ServerTestCase(unittest.TestCase):
 
         # Set up a temporary config file
         config.config = configparser.ConfigParser()
-        self._post_new_site()
-        self._post_new_room()
+        site_id = self.add_site('DefaultSite')
+        self.add_room(site_id, 'DefaltRoom')
 
-    def _post_new_site(self):
+    def add_site(self, name):
         rv = self.app.post('/api/sites',
-                           data=json.dumps({"name": "DefaultSite"}),
+                           data=json.dumps({'name': name}),
                            content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
 
-    def _post_new_room(self):
-        rv = self.app.post(
-            '/api/rooms',
-            data=json.dumps({"name": "DefaultRoom", "site_id": 1}),
-            content_type='application/json')
         self.assertEqual(rv.status_code, 200)
+        response = json.loads(codecs.decode(rv.data))
+        return response['id']
+
+    def add_room(self, site_id, name):
+        rv = self.app.post('/api/sites/{}/rooms'.format(site_id),
+                           data=json.dumps({'name': name}),
+                           content_type='application/json')
+
+        self.assertEqual(rv.status_code, 200)
+        response = json.loads(codecs.decode(rv.data))
+        return response['id']
 
     def tearDown(self):
         os.close(self.db_fd)

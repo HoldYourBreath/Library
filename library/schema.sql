@@ -36,7 +36,7 @@ create table sites (
 create table rooms (
     room_id INTEGER primary key autoincrement,
     site_id INTEGER not null,
-    room_name TEXT not null unique,
+    room_name TEXT not null,
     FOREIGN KEY(site_id) REFERENCES sites(site_id)
 );
 

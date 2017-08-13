@@ -25,7 +25,7 @@ def root():
 def add_book_form():
     return flask.render_template('add_book.html',
                                  page='add_book',
-                                 rooms=api_location.get_rooms(),
+                                 sites=api_location._get_sites(),
                                  header_title="Add book!")
 
 
