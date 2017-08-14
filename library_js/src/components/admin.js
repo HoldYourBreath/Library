@@ -7,99 +7,117 @@ import {FormGroup,
         Form,
         FormControl, 
         ControlLabel} from 'react-bootstrap';
-import {addSite, renameSite} from '../lib/sites';
+import {addSite, renameSite, addRoom} from '../lib/sites';
 
-
-class AdminPage extends React.Component {
+class Site extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedSiteId: ''
+      newRoomName: ''
     }
   }
-  renameSite() {
-      let newSiteName = window.prompt('Enter new site name');
-      if (newSiteName) {
-        renameSite(this.state.selectedSiteId, newSiteName)
-          .then(() => {
-            this.props.locationUpdate();
-        });
-      }
+  handleNewRoomNameUpdate(e) {
+    this.setState({newRoomName: e.target.value});
   }
 
-  addNewSite() {
-    let newSite = window.prompt('Enter name of new site');
-    if (newSite){
-      addSite(newSite)
+  handleAddNewRoom(e) {
+	if (!this.state.newRoomName) {
+      alert("No new room name specified!");
+	} else {
+	  addRoom(this.props.site.id, this.state.newRoomName)
         .then(() => {
           this.props.locationUpdate();
         });
-    }
-  }
-
-  siteSelected(e) {
-    this.setState({selectedSiteId: parseInt(e.target.value)});
+	}
   }
 
   render() {
-    let rooms = [];
-    if (this.state.selectedSiteId !== 0) {
-      rooms = this.props.rooms.filter(r => r.id === this.state.selectedSiteId);
+    return (
+      <div className="panel panel-default">
+	    <div className="panel-heading">{this.props.site.name}</div>
+	    <ul className="list-group">
+          {this.props.site.rooms.map((room) => {
+            return <li className="list-group-item">{room.name}</li>
+          })}
+	    </ul>
+        <div className="input-group">
+          <input type="text"
+	        className="form-control"
+	        placeholder="New room name ..."
+	    	onChange={this.handleNewRoomNameUpdate.bind(this)} />
+          <span className="input-group-btn">
+            <button
+	          className="btn btn-default"
+	          type="button"
+	    	  onClick={this.handleAddNewRoom.bind(this)}>Add</button>
+          </span>
+        </div>
+	  </div>
+    )
+  }
+}
+			
+
+class Sites extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      newSiteName: ''
     }
+  }
+  handleNewSiteNameUpdate(e) {
+    this.setState({newSiteName: e.target.value});
+  }
+
+  handleAddNewSite(e) {
+	if (!this.state.newSiteName) {
+      alert("No new site name specified!");
+	} else {
+	  addSite(this.state.newSiteName)
+        .then(() => {
+          this.props.locationUpdate();
+        });
+	}
+  }
+
+  render() {
+    return (
+  	<div>
+  	  {this.props.sites.map((site) => {
+  		  return <Site site={site} locationUpdate={this.props.locationUpdate}/>
+  	  })}
+  	  <h3>Add a new site</h3>
+  	  <div className="input-group">
+  	    <input
+		  type="text"
+		  className="form-control"
+		  placeholder="New site name ..."
+		  onChange={this.handleNewSiteNameUpdate.bind(this)} />
+  		<span className="input-group-btn">
+  		  <button
+		    className="btn btn-default"
+		    type="button"
+			onClick={this.handleAddNewSite.bind(this)}
+		  >
+			  Add
+		  </button>
+  		</span>
+  	  </div>
+  	</div>
+    )
+  }
+}
+
+
+class AdminPage extends React.Component {
+  render() {
     return (
       <div>
         <h1>Admin</h1>
-        <Row style={{paddingBottom: "25px"}}>
-          <Col sm={3}/>
-          <Col sm={3}>
-            <Button 
-              onClick={this.renameSite.bind(this)}>
-              Rename site
-            </Button>
-            <Button style={{marginLeft: "25px"}} 
-                    onClick={this.addNewSite.bind(this)}>
-              Add site
-            </Button>
-          </Col>
-          <Col sm={3}/>
-          <Col sm={3}/>
-        </Row>
-        <Row>
-          <Col sm={3}/>
-          <Col sm={3}>
-            <FormGroup controlId="siteSelect">
-              <ControlLabel>Site</ControlLabel>
-              <FormControl 
-                componentClass="select" 
-                onChange={this.siteSelected.bind(this)}
-                placeholder="select">
-                <option value="0">Select a site</option>
-                {this.props.sites.map((site) => {
-                  return (
-                      <option 
-                        key={site.id}
-                        value={site.id}>{site.site_name}</option>
-                  )
-                })}
-              </FormControl>
-            </FormGroup>
-          </Col>
-          <Col sm={3}>
-            <FormGroup controlId="roomSelect">
-              <ControlLabel>Rooms</ControlLabel>
-              <FormControl componentClass="select" placeholder="select">
-                {rooms.map((room) => {
-                  return (
-                      <option 
-                        key={room.id}
-                        value={room.id}>{room.room_name}</option>
-                  )
-                })}
-              </FormControl>
-            </FormGroup>
-          </Col>
-          <Col sm={3}/>
-        </Row>
+		<h2>Sites</h2>
+		<p>Add sites, rename sites and add rooms to sites</p>
+		<Sites sites={this.props.sites} locationUpdate={this.props.locationUpdate}/>
+		<p />
       </div>
     );
   }

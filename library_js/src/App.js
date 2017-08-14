@@ -43,8 +43,7 @@ class App extends Component {
     getLocations().
       then((locations) => {
         console.log(locations);
-        this.setState({rooms: locations.rooms,
-                       sites: locations.sites});
+        this.setState({sites: locations});
     });
   }
 

@@ -36,7 +36,7 @@ const getRooms = function() {
 const getLocations = () => {
   return new Promise((resolve, reject) => {
     request
-      .get(`${window.__appUrl}/api/loc/all`)
+      .get(`${window.__appUrl}/api/sites`)
       .type('application/json')
       .end((err, res) => {
         if (err) {
@@ -64,4 +64,20 @@ const addSite = (siteName) => {
   });
 };
 
-export {getRooms, getLocations, addSite, renameSite}
+const addRoom = (siteId, siteName) => {
+  return new Promise((resolve, reject) => {
+    request
+	  .post(`${window.__appUrl}/api/sites/${siteId}/rooms`)
+	  .send({name: siteName})
+	  .type('application/json')
+	  .end((err, res) => {
+		  if (err) {
+			  reject(err);
+		  } else {
+			  resolve(res.body);
+		  }
+	  });
+  });
+};
+
+export {getRooms, getLocations, addSite, renameSite, addRoom}
