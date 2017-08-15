@@ -33,7 +33,6 @@ class AddBook extends Component {
   onIsbnChange(e) {
     let isbn = e.target.value;
     if (isbn.length === 13) {
-      console.log("onIsbnChange: " + isbn);
       this.getBookData(isbn);
     }
   }
@@ -84,10 +83,17 @@ class AddBook extends Component {
   }
   onRoomChange(e) {
     this.setState({room_id: e.target.value});
+    localStorage.setItem('selected_room', e.target.value);
   }
   render() {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
     const InfoAlert = this.state.infoMsg ? <Alert bsStyle="success"><strong>{this.state.infoMsg}</strong></Alert> : null;
+	let rooms = []
+	this.props.sites.map((site) => {
+		site.rooms.map((room) => {
+			rooms.push({name: `${site.name}-${room.name}`, id: room.id});
+		})
+	});
     return (
       <div>
         <h1>Add book</h1>
@@ -140,15 +146,15 @@ class AddBook extends Component {
               <Col sm={7}>
                 <FormControl 
                   componentClass="select"
+		          defaultValue={localStorage.getItem('selected_room')}
                   onChange={this.onRoomChange.bind(this)}
                   placeholder="select">
-                  <option key="0" value=""></option>
                   {
-                    this.props.rooms.map((room) => {
+					rooms.map((room) => {
                       return <option 
                                key={room.id} 
-                               value={room.id}>{room.room_name}</option>
-                    })
+                               value={room.id}>{room.name}</option>
+					})
                   }
                 </FormControl>
               </Col>

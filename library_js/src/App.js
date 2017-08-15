@@ -22,7 +22,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: [],
       sites: [],
       signum: '',
       secret: ''
@@ -42,7 +41,6 @@ class App extends Component {
   updateLocations() {
     getLocations().
       then((locations) => {
-        console.log(locations);
         this.setState({sites: locations});
     });
   }
@@ -132,11 +130,10 @@ class App extends Component {
             <Route path={'/loan'} component={LoanBook}/>
             <Route 
               path={'/add_book'}
-              component={() => (<AddBook rooms={this.state.rooms} />)}/>
+              component={() => (<AddBook sites={this.state.sites} />)}/>
             <Route 
               path={'/admin'}
               component={() => (<AdminPage 
-                                  rooms={this.state.rooms}
                                   locationUpdate={this.updateLocations.bind(this)}
                                   sites={this.state.sites} />)}/>
             <Route 
