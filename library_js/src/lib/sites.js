@@ -80,4 +80,20 @@ const addRoom = (siteId, siteName) => {
   });
 };
 
-export {getRooms, getLocations, addSite, renameSite, addRoom}
+const renameRoom = (siteId, roomId, newName) => {
+  return new Promise((resolve, reject) => {
+    request
+      .put(`${window.__appUrl}/api/sites/${siteId}/rooms/${roomId}`)
+      .send({name: newName})
+      .type('application/json')
+      .end((err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res.body);
+        }
+      });
+  });
+};
+
+export {getRooms, getLocations, addSite, renameSite, addRoom, renameRoom}
