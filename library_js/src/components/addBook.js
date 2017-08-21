@@ -12,6 +12,10 @@ const FontAwesome = require('react-fontawesome');
 class AddBook extends Component {
   constructor(props) {
     super(props);
+    let room_id = localStorage.getItem('selected_room');
+    if (room_id != null) {
+      this.setState({room_id: room_id});
+    }
     this.state = {
       loadingBookData: false,
       errorMsg: null,
@@ -149,13 +153,14 @@ class AddBook extends Component {
 		          defaultValue={localStorage.getItem('selected_room')}
                   onChange={this.onRoomChange.bind(this)}
                   placeholder="select">
-                  {
-					rooms.map((room) => {
-                      return <option 
-                               key={room.id} 
-                               value={room.id}>{room.name}</option>
-					})
-                  }
+                    <option />
+                    {
+                      rooms.map((room) => {
+                        return <option
+                                 key={room.id}
+                                 value={room.id}>{room.name}</option>
+				      })
+                    }
                 </FormControl>
               </Col>
             </FormGroup>
