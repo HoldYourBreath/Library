@@ -69,11 +69,21 @@ def list_books():
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def put_book(book_id):
+    '''
+    Add or update new book
+
+    This method will add a new book with a certein tag
+    or simply updating existing book with a tag if it
+    already exists
+    '''
+
     book = flask.request.get_json()
 
     # Check some prerequesite
     if 'isbn' not in book:
         return 'No ISBN present', 400
+    elif 'room_id' not in book:
+        return 'No room_id present', 400
 
     # Defaul parameters
     defaults = {'title': '',
@@ -97,9 +107,17 @@ def put_book(book_id):
     except ValueError:
         return 'Non number in parameter where number is expected', 400
 
-    # First delete any previous record, then add a new
+    # First delete any previous record, store old book id
+    # and then add a new
+    old_book_id = None
     db = database.get()
-    db.execute('delete from books where tag=?', (int(book_id),))
+    old_book_cursor = db.execute('select book_id from books where tag=?',
+                                 (int(book_id),))
+    old_book = old_book_cursor.fetchall()
+    if len(old_book) > 0:
+        old_book_id = old_book[0]['book_id']
+        db.execute('delete from books where book_id=?',
+                   (old_book_id,))
     db.execute('insert into books'
                '(tag, isbn, room_id, title, pages, publisher, format,'
                'publication_date, description, thumbnail)'
@@ -115,6 +133,10 @@ def put_book(book_id):
                 book['description'],
                 book['thumbnail']
                 ))
+    if old_book_id is not None:
+        # This book with this tag exister before, use same book_id
+        db.execute('UPDATE books SET book_id = ? WHERE tag = ?',
+                   (old_book_id, book_id))
     db.commit()
     _add_authors(book_id, book['authors'])
     return jsonify(_get_book(book_id))
