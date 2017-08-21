@@ -13,7 +13,7 @@ class NavbarUserInfo extends React.Component {
       return (
         <ul className="nav navbar-nav navbar-right">
           <li>
-            <Link to='/log_in'>
+            <Link to='/login'>
               Log in
             </Link>
           </li>
@@ -30,7 +30,7 @@ class NavbarUserInfo extends React.Component {
             <Link to='/admin'>Admin</Link>
           </li>
           <li>
-            <a href="#" onClick={this.props.logOut}>logout</a>
+            <a href="/books" onClick={this.props.logOut}>Logout</a>
           </li>
         </ul>
         <p className="nav navbar-nav navbar-right navbar-text">Signed in as 

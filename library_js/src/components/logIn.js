@@ -6,9 +6,9 @@ import {FormGroup,
         Form,
         FormControl, 
         ControlLabel} from 'react-bootstrap';
+import { Redirect } from 'react-router';
 const request = require('superagent');
 const FontAwesome = require('react-fontawesome');
-
 
 class LogIn extends Component {
     constructor(props) {
@@ -16,7 +16,8 @@ class LogIn extends Component {
     this.state = {
       errMsg: null,
       signum: "",
-      password: ""
+      password: "",
+      redirect: false
     };
   }
 
@@ -35,19 +36,24 @@ class LogIn extends Component {
       })
       .end((err, res) => {
         if (!err) {
+          this.setState({redirect: true});
           this.props.onAuthenticationDone({
             signum: signum,
-            secret: res.body.secret,
+            secret: res.body.secret
           });
-        } 
-      });
+         }
+    });
   }
+
   onFormInput(e) {
     this.setState({[e.target.id]: e.target.value});
   }
 
   render() {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
+  if (this.state.redirect) {
+    return <Redirect to={'/'}/>;
+  }
     return (
       <div className="jumbotron">
         <Form horizontal>
@@ -84,7 +90,7 @@ class LogIn extends Component {
           <FormGroup>
             <Col smOffset={2} sm={10}>
               <Button onClick={this.authenticate.bind(this)}>
-                Sign in
+                Login
               </Button>
             </Col>
           </FormGroup>

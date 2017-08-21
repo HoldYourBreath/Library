@@ -137,7 +137,7 @@ class App extends Component {
                                   locationUpdate={this.updateLocations.bind(this)}
                                   sites={this.state.sites} />)}/>
             <Route 
-              path={'/log_in'}
+              path={'/login'}
               component={() => (
                 <LogIn 
                   onAuthenticationDone={this.authenticationDone.bind(this)} />)}/>
