@@ -67,6 +67,22 @@ class AddBook extends Component {
       });
   }
 
+  reset(e) {
+    this.setState({
+        loadingBookData: false,
+        errorMsg: null,
+        infoMsg: null,
+        isbn: '',
+        title: '',
+        tag: '',
+        pages: '',
+        description: '',
+        author: '',
+        format: '',
+        publication_date: ''
+     });
+  }
+
   submitBook() {
     let url = `${window.__appUrl}/api/books/${this.state.tag}`;
     request
@@ -111,7 +127,8 @@ class AddBook extends Component {
                 ISBN-13
               </Col>
               <Col sm={4}>
-                <FormControl 
+                <FormControl
+                  value={this.state.isbn}
                   onChange={this.onIsbnChange.bind(this)}
                   type="text" 
                   placeholder="" />
@@ -126,6 +143,7 @@ class AddBook extends Component {
               </Col>
               <Col sm={5}>
                 <FormControl
+                  value={this.state.tag}
                   onChange={this.onFormInput.bind(this)}
                   type="text" 
                   placeholder=""/>
@@ -226,10 +244,16 @@ class AddBook extends Component {
               </Col>
             </FormGroup>
             <FormGroup>
-              <Col smOffset={2} sm={10}>
+              <Col smOffset={2} sm={1}>
                 <Button 
                   onClick={this.submitBook.bind(this)}>
                   Submit book
+                </Button>
+              </Col>
+              <Col smOffset={2} sm={1}>
+                <Button
+                  onClick={this.reset.bind(this)}>
+                  Reset
                 </Button>
               </Col>
             </FormGroup>
