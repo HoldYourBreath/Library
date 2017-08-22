@@ -108,13 +108,13 @@ class AddBook extends Component {
               <Col 
                 componentClass={ControlLabel} 
                 sm={2}>
-                ISBN
+                ISBN-13
               </Col>
               <Col sm={4}>
                 <FormControl 
                   onChange={this.onIsbnChange.bind(this)}
                   type="text" 
-                  placeholder="ISBN" />
+                  placeholder="" />
               </Col>
               <Col sm={1}>
                 {this.state.loadingBookData ? <FontAwesome name='spinner' size='2x'spin/> : null}
@@ -128,7 +128,7 @@ class AddBook extends Component {
                 <FormControl 
                   onChange={this.onFormInput.bind(this)}
                   type="text" 
-                  placeholder="Unique tag"/>
+                  placeholder=""/>
               </Col>
             </FormGroup>
             <FormGroup controlId="tag">
@@ -140,7 +140,7 @@ class AddBook extends Component {
                   value={this.state.title}
                   onChange={this.onFormInput.bind(this)}
                   type="text" 
-                  placeholder="Title"/>
+                  placeholder=""/>
               </Col>
             </FormGroup>
             <FormGroup controlId="room_id">
