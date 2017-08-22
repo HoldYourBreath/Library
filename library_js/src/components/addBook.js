@@ -131,7 +131,7 @@ class AddBook extends Component {
                   placeholder=""/>
               </Col>
             </FormGroup>
-            <FormGroup controlId="tag">
+            <FormGroup controlId="title">
               <Col componentClass={ControlLabel} sm={2}>
                 Title
               </Col>
@@ -164,7 +164,7 @@ class AddBook extends Component {
                 </FormControl>
               </Col>
             </FormGroup>
-            <FormGroup controlId="tag">
+            <FormGroup controlId="author">
               <Col componentClass={ControlLabel} sm={2}>
                 Author
               </Col>
@@ -176,7 +176,7 @@ class AddBook extends Component {
                   placeholder=""/>
               </Col>
             </FormGroup>
-            <FormGroup controlId="desc">
+            <FormGroup controlId="description">
               <Col componentClass={ControlLabel} sm={2}>
                 Description
               </Col>
