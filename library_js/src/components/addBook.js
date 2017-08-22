@@ -20,14 +20,14 @@ class AddBook extends Component {
       loadingBookData: false,
       errorMsg: null,
       infoMsg: null,
-      isbn: '',
-      description: '',
-      tag: '',
-      pages: '',
-      author: '',
-      format: '',
-      title: '',
-      publication_date: '',
+      isbn: null,
+      description: null,
+      tag: null,
+      pages: null,
+      author: null,
+      format: null,
+      title: null,
+      publication_date: null,
       thumbnail: 'https://images.gr-assets.com/books/1419180921s/23232941.jpg'
     };
   }
@@ -125,7 +125,7 @@ class AddBook extends Component {
                 TAG
               </Col>
               <Col sm={5}>
-                <FormControl 
+                <FormControl
                   onChange={this.onFormInput.bind(this)}
                   type="text" 
                   placeholder=""/>
