@@ -21,12 +21,12 @@ class AddBook extends Component {
       errorMsg: null,
       infoMsg: null,
       isbn: null,
-      description: null,
       tag: null,
-      pages: null,
-      author: null,
-      format: null,
       title: null,
+      author: null,
+      description: null,
+      format: null,
+      pages: null,
       publication_date: null,
       thumbnail: 'https://images.gr-assets.com/books/1419180921s/23232941.jpg'
     };
@@ -75,10 +75,10 @@ class AddBook extends Component {
         isbn: '',
         title: '',
         tag: '',
-        pages: '',
-        description: '',
         author: '',
+        description: '',
         format: '',
+        pages: '',
         publication_date: ''
      });
   }
@@ -96,9 +96,9 @@ class AddBook extends Component {
         if (!err) {
           this.setState({
               errorMsg: null,
-              infoMsg: `New book with tag ${res.body.tag} added!`
+              infoMsg: `New book with tag ${res.body.tag} added!`,
             });
-        } 
+        }
       });
   }
   onRoomChange(e) {
@@ -131,7 +131,7 @@ class AddBook extends Component {
                   value={this.state.isbn}
                   onChange={this.onIsbnChange.bind(this)}
                   type="text" 
-                  placeholder="" />
+                  placeholder=""/>
               </Col>
               <Col sm={1}>
                 {this.state.loadingBookData ? <FontAwesome name='spinner' size='2x'spin/> : null}
@@ -202,6 +202,7 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.description}
                   onChange={this.onFormInput.bind(this)}
+                  style={{height: '150px'}}
                   componentClass="textarea"
                   placeholder=""/>
               </Col>
@@ -226,7 +227,7 @@ class AddBook extends Component {
                   placeholder=""/>
               </Col>
               <Col componentClass={ControlLabel} sm={2}>
-                Pub date
+                Publication date
               </Col>
               <Col sm={2}>
                 <FormControl
