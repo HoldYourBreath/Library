@@ -252,8 +252,7 @@ class AddBook extends Component {
             <FormGroup>
               <Col smOffset={2} sm={1}>
                 <Button
-                  disabled={!this.state.isbn}
-                  disabled={!this.state.tag}
+                  disabled={!this.state.isbn && !this.state.tag}
                   onClick={this.submitBook.bind(this)}>
                   Submit book
                 </Button>
