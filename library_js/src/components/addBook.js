@@ -207,7 +207,7 @@ class AddBook extends Component {
                   placeholder=""/>
               </Col>
             </FormGroup>
-            <FormGroup controlId="media">
+            <FormGroup controlId="format">
               <Col componentClass={ControlLabel} sm={2}>
                 Format
               </Col>
@@ -217,6 +217,8 @@ class AddBook extends Component {
                   onChange={this.onFormInput.bind(this)}
                   placeholder=""/>
               </Col>
+            </FormGroup>
+            <FormGroup controlId="pages">
               <Col componentClass={ControlLabel} sm={2}>
                 Pages
               </Col>
@@ -226,6 +228,8 @@ class AddBook extends Component {
                   onChange={this.onFormInput.bind(this)}
                   placeholder=""/>
               </Col>
+            </FormGroup>
+            <FormGroup controlId="publication_date">
               <Col componentClass={ControlLabel} sm={2}>
                 Publication date
               </Col>
@@ -236,7 +240,8 @@ class AddBook extends Component {
                   placeholder=""/>
                   <br/>
               </Col>
-
+            </FormGroup>
+            <FormGroup controlId="thumbnail">
                <Col componentClass={ControlLabel} sm={2}>
                 Thumbnail
               </Col>
