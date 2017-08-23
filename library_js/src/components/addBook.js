@@ -130,7 +130,8 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.isbn}
                   onChange={this.onIsbnChange.bind(this)}
-                  type="text" 
+                  type="text"
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
               <Col sm={1}>
@@ -145,7 +146,8 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.tag}
                   onChange={this.onFormInput.bind(this)}
-                  type="text" 
+                  type="text"
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
             </FormGroup>
@@ -157,7 +159,8 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.title}
                   onChange={this.onFormInput.bind(this)}
-                  type="text" 
+                  type="text"
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
             </FormGroup>
@@ -190,7 +193,8 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.author}
                   onChange={this.onFormInput.bind(this)}
-                  type="text" 
+                  type="text"
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
             </FormGroup>
@@ -204,6 +208,7 @@ class AddBook extends Component {
                   onChange={this.onFormInput.bind(this)}
                   style={{height: '150px'}}
                   componentClass="textarea"
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
             </FormGroup>
@@ -215,6 +220,7 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.format}
                   onChange={this.onFormInput.bind(this)}
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
             </FormGroup>
@@ -226,6 +232,7 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.pages}
                   onChange={this.onFormInput.bind(this)}
+                  autoComplete="off"
                   placeholder=""/>
               </Col>
             </FormGroup>
@@ -237,6 +244,7 @@ class AddBook extends Component {
                 <FormControl
                   value={this.state.publication_date}
                   onChange={this.onFormInput.bind(this)}
+                  autoComplete="off"
                   placeholder=""/>
                   <br/>
               </Col>
