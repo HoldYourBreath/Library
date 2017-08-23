@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import {getLocations} from './lib/sites';
 import Books from './components/books';
 import LoanBook from './components/loan';
@@ -39,8 +38,8 @@ class App extends Component {
   }
 
   updateLocations() {
-    getLocations().
-      then((locations) => {
+    getLocations()
+      .then((locations) => {
         this.setState({sites: locations});
     });
   }
@@ -103,7 +102,7 @@ class App extends Component {
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                 </button>
-                <a className="navbar-brand" href="#">Brand</a>
+                <a className="navbar-brand" href='/brand'>Brand</a>
               </div>
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
