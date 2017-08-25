@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import {NavDropdown} from 'react-bootstrap';
 
 class NavbarUserInfo extends React.Component {
   constructor(props) {
@@ -29,13 +30,13 @@ class NavbarUserInfo extends React.Component {
           <li>
             <Link to='/admin'>Admin</Link>
           </li>
-          <li>
-            <a href="/books" onClick={this.props.logOut}>Logout</a>
-          </li>
+          <NavDropdown eventKey={3} title={this.props.signum} id="basic-nav-dropdown">
+            <li>
+              <Link to='/settings'>Settings</Link>
+              <a href="/books" onClick={this.props.logOut}>Log out</a>
+            </li>
+          </NavDropdown>
         </ul>
-        <p className="nav navbar-nav navbar-right navbar-text">Signed in as 
-          <a className="navbar-link"> {this.props.signum}</a>
-        </p>
       </span>
     );
   }
