@@ -82,6 +82,31 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response)[0], books[0])
 
+    def test_delete_room_books_in_room(self):
+        room_name = 'Reading'
+        site_id = self.add_site('test')
+        room_id = self.add_room(site_id, room_name)
+        rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
+        self.assertEqual(rv.status_code, 200)
+        books = [book1]
+        self._put_book(books[0])
+        rv = self.app.get('/api/books/1')
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), books[0])
+        rv = self.app.get('/api/books')
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response)[0], books[0])
+        self.remove_room_fail(site_id, room_id)
+        rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
+        self.assertEqual(rv.status_code, 200)
+
+    def test_delete_room_not_found(self):
+        site_id = self.add_site('test')
+        room_id = 100
+        self.remove_room_not_found(site_id, room_id)
+        rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
+        self.assertEqual(rv.status_code, 404)
+
     def test_multiple_put(self):
         books = [book2, book1]
         self._put_book(books[1])

@@ -1,26 +1,35 @@
 import React from 'react';
-import {FormGroup, 
-	    InputGroup,
+import {InputGroup,
 	    Glyphicon,
-        Button, 
-        Col,
-        Row,
+        Button,
         Alert,
-        Form,
-        FormControl, 
-        ControlLabel} from 'react-bootstrap';
-import {addSite, renameSite, addRoom, renameRoom} from '../lib/sites';
-
+        FormControl
+        } from 'react-bootstrap';
+import {addSite, addRoom, removeRoom, renameRoom} from '../lib/sites';
 class Room extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       newRoomName: props.room.name,
-	  edit: false
+	  edit: false,
+	  errorMsg: null
     }
   }
+
   toggleEdit(e) {
 	  this.setState({'edit': !this.state.edit});
+  }
+
+  handleRemoveRoom(e) {
+  if (window.confirm("Are you sure you want to delete this room?") === true) {
+    removeRoom(this.props.site_id, this.props.room.id)
+        .then(() => {
+            this.props.locationUpdate();
+        })
+        .catch((res) => {
+            this.setState({errorMsg: res.msg});
+        })
+        };
   }
 
   handleNewNameChange(e) {
@@ -28,7 +37,7 @@ class Room extends React.Component {
   }
 
   handleRenameRoom(e) {
-	if (this.state.newRoomName != this.props.room.name) {
+	if (this.state.newRoomName !== this.props.room.name) {
 	  renameRoom(this.props.site_id, this.props.room.id, this.state.newRoomName)
         .then(() => {
           this.props.locationUpdate();
@@ -37,22 +46,24 @@ class Room extends React.Component {
   }
 
   render () {
+    const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
 	if (this.state.edit) {
       return (
 	    <InputGroup>
+	      {ErrAlert}
 	      <FormControl
 		    type="text"
 		    defaultValue={this.state.newRoomName}
 			onChange={this.handleNewNameChange.bind(this)} />
 	      <InputGroup.Button>
-	        <Button onClick={this.toggleEdit.bind(this)}>
+	        <Button onClick={this.handleRemoveRoom.bind(this)}>
 			  <Glyphicon glyph="remove" style={{color: "red"}} />
-			</Button>
-	        <Button onClick={this.handleRenameRoom.bind(this)}>
-			  <Glyphicon glyph="ok" style={{color: "green"}} />
-			</Button>
-	      </InputGroup.Button>
-	    </InputGroup>
+	      </Button>
+	      <Button onClick={this.handleRenameRoom.bind(this)}>
+		    <Glyphicon glyph="ok" style={{color: "green"}} />
+		  </Button>
+	    </InputGroup.Button>
+	  </InputGroup>
 	  )
 	} else {
 	  return (
@@ -165,7 +176,7 @@ class Sites extends React.Component {
 		    className="btn btn-default"
 		    type="button"
 			onClick={this.handleAddNewSite.bind(this)}>
-		     <span className="glyphicon glyphicon-ok" style={{color: "green"}} />
+		    <span className="glyphicon glyphicon-ok" style={{color: "green"}} />
 		  </button>
   		</span>
   	  </div>

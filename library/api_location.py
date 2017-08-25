@@ -97,6 +97,32 @@ def get_all_sites():
     return jsonify(_get_sites())
 
 
+@app.route('/api/sites/<int:site_id>/rooms/<int:room_id>', methods=['DELETE'])
+def delete_room(site_id, room_id):
+    try:
+        response = jsonify(_get_room(room_id))
+    except RoomNotFound:
+        response = jsonify({'msg': 'Room not found'})
+        response.status_code = 404
+        return response
+    db = database.get()
+    books_cursor = db.cursor()
+    books_cursor.execute('SELECT * FROM books WHERE room_id = ?', (room_id,))
+    books = books_cursor.fetchall()
+    if len(books) == 0:
+        books_cursor.execute(
+            'DELETE FROM rooms '
+            'WHERE room_id = ?', (room_id,))
+        db.commit()
+    else:
+        response = jsonify({
+          'msg': 'Room currently has books linked to it.\
+          Make sure the room is empty before deleting this room'
+        })
+        response.status_code = 403
+    return response
+
+
 @app.route('/api/sites', methods=['POST'])
 def add_new_site():
     """

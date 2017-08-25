@@ -46,6 +46,18 @@ class ServerTestCase(unittest.TestCase):
         response = json.loads(codecs.decode(rv.data))
         return response['id']
 
+    def remove_room(self, site_id, name):
+        rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, name))
+        self.assertEqual(rv.status_code, 200)
+
+    def remove_room_not_found(self, site_id, name):
+        rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, name))
+        self.assertEqual(rv.status_code, 404)
+
+    def remove_room_fail(self, site_id, name):
+        rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, name))
+        self.assertEqual(rv.status_code, 403)
+
     def tearDown(self):
         os.close(self.db_fd)
         os.unlink(server.app.config['DATABASE'])

@@ -80,6 +80,21 @@ const addRoom = (siteId, siteName) => {
   });
 };
 
+const removeRoom = (siteId, roomId) => {
+  return new Promise((resolve, reject) => {
+    request
+	  .delete(`${window.__appUrl}/api/sites/${siteId}/rooms/${roomId}`)
+	  .type('application/json')
+	  .end((err, res) => {
+		  if (err) {
+			  reject(res.body);
+		  } else {
+			  resolve(res.body);
+		  }
+	  });
+  });
+};
+
 const renameRoom = (siteId, roomId, newName) => {
   return new Promise((resolve, reject) => {
     request
@@ -96,4 +111,4 @@ const renameRoom = (siteId, roomId, newName) => {
   });
 };
 
-export {getRooms, getLocations, addSite, renameSite, addRoom, renameRoom}
+export {getRooms, getLocations, addSite, renameSite, addRoom, removeRoom, renameRoom}

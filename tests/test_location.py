@@ -200,6 +200,16 @@ class SitesTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(new_site_name, new_name)
 
+    def test_delete_room(self):
+        room_name = 'Reading'
+        site_id = self.add_site('test')
+        room_id = self.add_room(site_id, room_name)
+        rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
+        self.assertEqual(rv.status_code, 200)
+        self.remove_room(site_id, room_id)
+        rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
+        self.assertEqual(rv.status_code, 404)
+
     def test_room_put_withoute_data(self):
         rv = self.app.put('/api/sites/100/rooms/100')
         self.assertEqual(rv.status_code, 400)
