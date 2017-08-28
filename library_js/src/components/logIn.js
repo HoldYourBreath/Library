@@ -8,7 +8,6 @@ import {FormGroup,
         ControlLabel} from 'react-bootstrap';
 import { Redirect } from 'react-router';
 const request = require('superagent');
-const FontAwesome = require('react-fontawesome');
 
 class LogIn extends Component {
     constructor(props) {
