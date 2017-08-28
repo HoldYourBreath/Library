@@ -109,11 +109,12 @@ class AddBook extends Component {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
     const InfoAlert = this.state.infoMsg ? <Alert bsStyle="success"><strong>{this.state.infoMsg}</strong></Alert> : null;
 	let rooms = []
-	this.props.sites.map((site) => {
-		site.rooms.map((room) => {
-			rooms.push({name: `${site.name}-${room.name}`, id: room.id});
-		})
-	});
+	this.props.sites.map((site) =>
+		site.rooms.map((room) =>
+		    rooms.push({name: `${site.name}-${room.name}`, id: room.id})
+		)
+	);
+
     return (
       <div>
         <h1>Add book</h1>
