@@ -35,6 +35,7 @@ class AddBook extends Component {
     this.setState({[e.target.id]: e.target.value});
   }
   onIsbnChange(e) {
+    this.setState({[e.target.id]: e.target.value});
     let isbn = e.target.value;
     if (isbn.length === 13) {
       this.getBookData(isbn);
@@ -64,6 +65,7 @@ class AddBook extends Component {
         delete state.num_pages;
         delete state.errorMsg;
         this.setState(state);
+
       });
   }
 
@@ -122,12 +124,10 @@ class AddBook extends Component {
           {InfoAlert}
           <Form horizontal>
             <FormGroup controlId="isbn">
-              <Col 
-                componentClass={ControlLabel} 
-                sm={2}>
+              <Col componentClass={ControlLabel} sm={2}>
                 ISBN-13
               </Col>
-              <Col sm={4}>
+              <Col sm={5}>
                 <FormControl
                   value={this.state.isbn}
                   onChange={this.onIsbnChange.bind(this)}
