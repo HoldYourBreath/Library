@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {NavDropdown} from 'react-bootstrap';
 
 class NavbarUserInfo extends React.Component {
+  // eslint-disable-next-line
   constructor(props) {
     super(props);
   }
