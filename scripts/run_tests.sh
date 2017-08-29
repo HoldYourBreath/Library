@@ -10,19 +10,16 @@ echo "Done"
 
 # Run tests
 echo -n "Run tests"
-python3 -m unittest discover
+python3 -m coverage run --rcfile=scripts/.coveragerc -m unittest discover
+echo "Generate coverage report"
+python3 -m coverage html
+python3 -m coverage report -m
+echo "Tests done.. Open htmlcov/index.html for more statistics"
 
 # Run PEP8 conformance
 echo -n "Check PEP8 conformance.."
 python3 -m pep8 --show-source --show-pep8 --count --exclude "library/library.py" library tests
 echo "Done"
-
-echo -n "Run coverage"
-# Get coverage
-python3 -m coverage run --rcfile=scripts/.coveragerc -m unittest discover
-echo "Generate coverage report"
-python3 -m coverage html
-python3 -m coverage report -m
 
 # Don't fail on errors
 set +e
@@ -37,4 +34,4 @@ fi
 
 echo "Done"
 
-echo "All done.. Open htmlcov/index.html for more statistics"
+echo "All OK"
