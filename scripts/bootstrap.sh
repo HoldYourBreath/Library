@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Fail on any error
-set -e
+# set -e
 
 python3 -m venv env
 
