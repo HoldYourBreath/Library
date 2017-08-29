@@ -325,10 +325,10 @@ class BookTestCase(ServerTestCase):
             db = database.get()
             db.execute(
                 'INSERT INTO loans '
-                '(book_id, employee_number, loan_date, return_date)'
+                '(book_id, user_id, loan_date, return_date)'
                 'VALUES (?, ?, ?, ?)', (1, 1, 1, 2))
             db.execute(
-                'INSERT INTO loans (book_id, employee_number, loan_date)'
+                'INSERT INTO loans (book_id, user_id, loan_date)'
                 'VALUES (?, ?, ?)', (1, 1, 1))
             db.commit()
 

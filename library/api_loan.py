@@ -11,7 +11,7 @@ BOOK_LOAN_IN_DAYS = 14
 def _serialize_loan(item):
     return {
         "book_id": item["book_id"],
-        "employee_num": item["employee_number"],
+        "employee_num": item["user_id"],
         "loan_date": item["loan_date"],
         "return_date": item["return_date"]
     }
@@ -51,7 +51,7 @@ def loan_book(book_tag):
         response.status_code = 500
         return response
     elif 'employee_num' not in put_data:
-        response = jsonify({'msg': 'Missing employee_number in put request.'})
+        response = jsonify({'msg': 'Missing user_id in put request.'})
         response.status_code = 500
         return response
     loan_date = datetime.now()
@@ -68,7 +68,7 @@ def loan_book(book_tag):
     try:
         db_instance.execute(
             'INSERT INTO loans'
-            '(book_id, employee_number, loan_date, due_date) '
+            '(book_id, user_id, loan_date, due_date) '
             'VALUES (?, ?, ?, ?)',
             (int(book['book_id']),
              int(put_data['employee_num']),
