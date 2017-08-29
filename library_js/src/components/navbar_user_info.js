@@ -25,13 +25,13 @@ class NavbarUserInfo extends React.Component {
     return (
       <span>
         <ul className="nav navbar-nav navbar-right">
-          <li>
-            <Link to='/add_book'>Add Book</Link>
-          </li>
-          <li>
-            <Link to='/admin'>Admin</Link>
-          </li>
-          <NavDropdown eventKey={3} title={this.props.signum} id="basic-nav-dropdown">
+          <NavDropdown eventKey={1} title="Admin" id="basic-nav-dropdown">
+            <li>
+              <Link to='/admin'>Sites and rooms</Link>
+              <a href="/add_book" onClick=''>Add book</a>
+            </li>
+          </NavDropdown>
+          <NavDropdown eventKey={2} title={this.props.signum} id="basic-nav-dropdown">
             <li>
               <Link to='/settings'>Settings</Link>
               <a href="/books" onClick={this.props.logOut}>Log out</a>

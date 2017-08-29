@@ -190,8 +190,7 @@ class AdminPage extends React.Component {
   render() {
     return (
       <div>
-        <h1>Admin</h1>
-		<h2>Sites</h2>
+        <h1>Sites and rooms</h1>
 		<p>Add sites, rename sites and add rooms to sites</p>
 		<Sites sites={this.props.sites} locationUpdate={this.props.locationUpdate}/>
 		<p />
