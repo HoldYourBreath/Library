@@ -8,3 +8,6 @@ api_key=INSERT_PRIVATE_API_KEY
 server=ldap.example.com
 port=636
 user_dn=
+
+[udb]
+url=udb.example.com
