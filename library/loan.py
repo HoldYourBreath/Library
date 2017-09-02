@@ -64,6 +64,9 @@ def by_book_id(book_id, only_active=True):
         raise LoanError('Multiple active loans for book_id {}'.
                         format(book_id))
 
+    if only_active:
+        return _serialize_loan(loans[0])
+
     return [_serialize_loan(loan) for loan in loans]
 
 
@@ -96,6 +99,12 @@ def add(book_id, user_id):
 def remove(loan_id):
     db_instance = database.get()
 
+    # Make sure loan exist and is active
+    loan = get(loan_id)
+    if loan['return_date'] is not None:
+        # Active loan not found
+        raise LoanNotFound
+
     return_date = datetime.now()
     curs = db_instance.cursor()
     curs.execute('UPDATE loans '
@@ -104,17 +113,21 @@ def remove(loan_id):
                  (int(return_date.timestamp()),
                   loan_id))
     db_instance.commit()
+    return get(loan_id)
 
 
 def remove_on_book(book_id):
     db_instance = database.get()
 
+    loan = by_book_id(book_id)
+    loan_id = loan['id']
+
     return_date = datetime.now()
     curs = db_instance.cursor()
     curs.execute('UPDATE loans '
                  'SET return_date = ? '
-                 'WHERE book_id = ? '
-                 'AND return_date is null',
+                 'WHERE loan_id = ?',
                  (int(return_date.timestamp()),
-                  book_id))
+                  loan_id))
     db_instance.commit()
+    return get(loan_id)

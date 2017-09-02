@@ -38,8 +38,6 @@ class LoanTestCase(ServerTestCase):
             loan_id1 = loan.add(self.dummy_book_id,
                                 self.dummy_user_id)
             test_loan = loan.by_book_id(self.dummy_book_id)
-            self.assertEqual(len(test_loan), 1)
-            test_loan = test_loan[0]
             self.assertEqual(test_loan['id'], loan_id1)
             self.assertIsNone(test_loan['return_date'])
             self.compare_loan(test_loan,
@@ -51,8 +49,6 @@ class LoanTestCase(ServerTestCase):
             loan_id2 = loan.add(self.dummy_book_id,
                                 self.dummy_user_id)
             test_loan = loan.by_book_id(self.dummy_book_id)
-            self.assertEqual(len(test_loan), 1)
-            test_loan = test_loan[0]
             self.assertEqual(test_loan['id'], loan_id2)
             self.assertIsNone(test_loan['return_date'])
             self.compare_loan(test_loan,
@@ -105,12 +101,36 @@ class LoanTestCase(ServerTestCase):
             test_loan = loan.get(loan_id)
             self.assertIsNotNone(test_loan['return_date'])
 
+            loan_id = loan.add(self.dummy_book_id,
+                               self.dummy_user_id)
+
+            # Loan should be active
+            test_loan = loan.by_book_id(self.dummy_book_id)
+            self.assertIsNone(test_loan['return_date'])
+
             # Return loan for dummy_book
             loan.remove_on_book(self.dummy_book_id)
 
             # Loan should be returned
             test_loan = loan.get(loan_id)
             self.assertIsNotNone(test_loan['return_date'])
+
+    def test_remove_returned_book(self):
+        with self.app.session_transaction():
+            loan_id = loan.add(self.dummy_book_id,
+                               self.dummy_user_id)
+
+            loan.remove(loan_id)
+            with self.assertRaises(loan.LoanNotFound):
+                loan.remove(loan_id)
+
+            loan_id = loan.add(self.dummy_book_id,
+                               self.dummy_user_id)
+
+            # Return loan for dummy_book
+            loan.remove_on_book(self.dummy_book_id)
+            with self.assertRaises(loan.LoanNotFound):
+                loan.remove_on_book(self.dummy_book_id)
 
     def test_add_multiple_loans_same_book(self):
         with self.app.session_transaction():
@@ -132,7 +152,7 @@ class LoanTestCase(ServerTestCase):
 
             with self.assertRaises(loan.LoanError):
                 # Loan error due to too many active loans for book
-                test_loan = loan.by_book_id(self.dummy_book_id)
+                loan.by_book_id(self.dummy_book_id)
 
     def compare_loan(self, in_loan, book_id, user_id):
         self.assertEqual(in_loan['book_id'], book_id)

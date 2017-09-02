@@ -198,53 +198,6 @@ class BookTestCase(ServerTestCase):
                           content_type='application/json')
         self.assertEqual(rv.status_code, 400)
 
-    def test_make_a_loan(self):
-        """
-        Make a loan for book #1 by user id 1234.
-        """
-        self._put_book(book1)
-        rv = self.app.put('/api/loan/1',
-                          data=json.dumps({'employee_num': 123}),
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-
-    def test_make_a_loan_for_non_existing_tag(self):
-        """
-        Make a loan for a tag that does not exist.
-        """
-        rv = self.app.put('/api/loan/111',
-                          data=json.dumps({'employee_num': 123}),
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 404)
-
-    def test_make_a_loan_and_return_book(self):
-        """
-        Make a loan and return the book. Check the correct
-        number of books and loans.
-        """
-        book_tag = 1
-        self._put_book(book1)
-        self.assertEqual(self._loan_book(book_tag, 123).status_code, 200)
-
-        self.assertEqual(len(self._get_loans()), 1)
-
-        rv = self.app.delete('/api/loan/{}'.format(1),
-                             content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-
-        rv = self.app.delete('/api/loan/{}'.format(book_tag),
-                             content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-        rv = self.app.delete('/api/loan/{}'.format(book_tag),
-                             content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-
-        self.assertEqual(len(self._get_loans()), 0)
-
-        rv = self.app.get('/api/books')
-        response = codecs.decode(rv.data)
-        self.assertEqual(len(json.loads(response)), 1)
-
     def test_find_isbn(self):
         book = copy.deepcopy(book1)
         book['tag'] = 12345
