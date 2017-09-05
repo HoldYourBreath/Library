@@ -5,6 +5,7 @@ import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
 import AdminPage from './components/admin';
+import Settings from './components/settings';
 import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
 import {
@@ -107,7 +108,7 @@ class App extends Component {
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
                   <li>
-                    <Link to='/'>
+                    <Link to='/books'>
                       Books
                     </Link>
                   </li>
@@ -125,9 +126,10 @@ class App extends Component {
             </div>
           </nav>
           <div className='container'>
-            <Route exact path={'/'} component={Books}/>
+            <Route path={'/books'} component={Books}/>
             <Route path={'/loan'} component={LoanBook}/>
-            <Route 
+            <Route path={'/settings'} component={Settings}/>
+            <Route
               path={'/add_book'}
               component={() => (<AddBook sites={this.state.sites} />)}/>
             <Route 
