@@ -67,7 +67,7 @@ class GoodreadsTestCase(ServerTestCase):
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': ['Sandro Mancuso'],
+            'authors': ['Sandro Mancuso'],
             'title': 'The Software Craftsman: Professionalism, '
                      'Pragmatism, Pride',
             'publication_date': '2014 12 04',
@@ -136,14 +136,14 @@ class GoodreadsTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         self.verify_response(response, expected_response)
 
-    def test_multi_author(self):
+    def test_multi_authors(self):
         isbn_data = self.open_response("isbn_multi_author.xml")
         book_data = self.open_response("book_id_multi_author.xml")
         self.response_queue.put(Response(200, isbn_data))
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
+            'authors': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
             'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
             'publication_date': '2013 12 20',
             'num_pages': 544,
@@ -166,7 +166,7 @@ class GoodreadsTestCase(ServerTestCase):
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': [],
+            'authors': [],
             'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
             'publication_date': '2013 12 20',
             'num_pages': 544,
@@ -189,7 +189,7 @@ class GoodreadsTestCase(ServerTestCase):
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': [],
+            'authors': [],
             'title': '',
             'publication_date': '2013 12 20',
             'num_pages': 544,
@@ -212,7 +212,7 @@ class GoodreadsTestCase(ServerTestCase):
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
+            'authors': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
             'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
             'publication_date': '',
             'publisher': 'Academic Press',
@@ -235,7 +235,7 @@ class GoodreadsTestCase(ServerTestCase):
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
+            'authors': ["Erik Dahlman", "Stefan Parkvall", "Johan Skold"],
             'title': '4g: Lte/Lte-Advanced for Mobile Broadband',
             'publication_date': '',
             'num_pages': 0,
@@ -258,7 +258,7 @@ class GoodreadsTestCase(ServerTestCase):
         self.response_queue.put(Response(200, book_data))
 
         expected_response = {
-            'author': [],
+            'authors': [],
             'title': '',
             'publication_date': '',
             'num_pages': 0,
@@ -288,7 +288,7 @@ class GoodreadsTestCase(ServerTestCase):
         return response
 
     def verify_response(self, lv, rv):
-        test_keys = ('author', 'title', 'publication_date', 'num_pages',
+        test_keys = ('authors', 'title', 'publication_date', 'num_pages',
                      'format', 'publisher', 'description', 'thumbnail')
 
         for key in test_keys:

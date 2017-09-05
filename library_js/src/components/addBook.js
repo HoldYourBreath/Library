@@ -23,7 +23,7 @@ class AddBook extends Component {
       isbn: null,
       tag: null,
       title: null,
-      author: null,
+      authors: null,
       description: null,
       format: null,
       pages: null,
@@ -77,7 +77,7 @@ class AddBook extends Component {
         isbn: '',
         title: '',
         tag: '',
-        author: '',
+        authors: '',
         description: '',
         format: '',
         pages: '',
@@ -186,13 +186,13 @@ class AddBook extends Component {
                 </FormControl>
               </Col>
             </FormGroup>
-            <FormGroup controlId="author">
+            <FormGroup controlId="authors">
               <Col componentClass={ControlLabel} sm={2}>
-                Author
+                Authors
               </Col>
               <Col sm={7}>
                 <FormControl
-                  value={this.state.author}
+                  value={this.state.authors}
                   onChange={this.onFormInput.bind(this)}
                   type="text"
                   autoComplete="off"

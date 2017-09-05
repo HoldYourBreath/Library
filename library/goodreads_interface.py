@@ -58,7 +58,7 @@ def fetch_goodreads_book(book_id):
 
 def get_json_response(book):
     json_response = {
-        'author': get_authors(book),
+        'authors': get_authors(book),
         'title': get_title(book),
         'publication_date': get_publication_date(book),
         'num_pages': get_num_pages(book),

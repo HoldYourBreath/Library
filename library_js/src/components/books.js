@@ -51,8 +51,8 @@ class Books extends Component {
               columns:
               [
                 {
-                  Header: "Author",
-                  accessor: "author"
+                  Header: "Authors",
+                  accessor: "authors"
                 }
               ]
             },

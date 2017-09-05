@@ -380,7 +380,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(len(lv.keys()), len(rv.keys()))
 
         # Compare rv and lv
-        for key in lv.keys():
+        for key in rv.keys():
             self.assertEqual(lv[key], rv[key])
 
 
