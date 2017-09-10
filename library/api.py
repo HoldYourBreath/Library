@@ -2,6 +2,7 @@ import flask
 from flask import jsonify
 
 import library.database as database
+import library.loan as loan
 from library.app import app
 
 
@@ -185,6 +186,38 @@ def _get_books(rows):
                      'loan_id' in book.keys() and book['loan_id'] is not None}
         books.append(json_book)
     return books
+
+
+@app.route('/api/books/<int:book_id>/loan', methods=['GET'])
+def get_loan_for_book(book_id):
+    """ Get the loan for this book """
+    try:
+        return jsonify(loan.by_book_id(book_id))
+    except loan.LoanNotFound:
+        response = jsonify({'msg': 'No loan found for this book'})
+        response.status_code = 404
+        return response
+
+
+@app.route('/api/books/<int:book_id>/loan', methods=['PUT'])
+def loan_book(book_id):
+    """ Loan this book """
+    put_data = flask.request.get_json()
+    if put_data is None:
+        response = jsonify({'msg': 'Missing json data in put request.'})
+        response.status_code = 400
+        return response
+    elif 'user_id' not in put_data:
+        response = jsonify({'msg': 'Missing user_id in put request.'})
+        response.status_code = 400
+        return response
+
+    try:
+        return jsonify(loan.add(book_id, put_data['user_id']))
+    except loan.LoanNotAllowed:
+        response = jsonify({'msg': 'Loan allready exists for this book'})
+        response.status_code = 403
+        return response
 
 
 def _add_authors(book_id, authors):

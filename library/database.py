@@ -16,6 +16,10 @@ def connect():
     db_path = app.config['DATABASE']
     rv = sqlite3.connect(db_path)
     rv.row_factory = sqlite3.Row
+
+    # Foreign keys support should be enabled by default
+    # But for now, keep it off
+    rv.execute('PRAGMA foreign_keys = OFF')
     return rv
 
 
