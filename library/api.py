@@ -215,8 +215,19 @@ def loan_book(book_id):
     try:
         return jsonify(loan.add(book_id, put_data['user_id']))
     except loan.LoanNotAllowed:
-        response = jsonify({'msg': 'Loan allready exists for this book'})
+        response = jsonify({'msg': 'Loan already exists for this book'})
         response.status_code = 403
+        return response
+
+
+@app.route('/api/books/<int:book_id>/loan', methods=['DELETE'])
+def return_book(book_id):
+    """ Return current loan for this book """
+    try:
+        return jsonify(loan.remove_on_book(book_id))
+    except loan.LoanNotFound:
+        response = jsonify({'msg': 'Loan not found'})
+        response.status_code = 404
         return response
 
 
