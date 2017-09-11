@@ -21,7 +21,7 @@ class Room extends React.Component {
   }
 
   handleRemoveRoom(e) {
-  if (window.confirm("Are you sure you want to delete this room?") === true) {
+    if (window.confirm("Are you sure you want to delete this room?") === true) {
     removeRoom(this.props.site_id, this.props.room.id)
         .then(() => {
             this.props.locationUpdate();
@@ -29,7 +29,7 @@ class Room extends React.Component {
         .catch((res) => {
             this.setState({errorMsg: res.msg});
         })
-        };
+    };
   }
 
   handleNewNameChange(e) {
@@ -37,48 +37,48 @@ class Room extends React.Component {
   }
 
   handleRenameRoom(e) {
-	if (this.state.newRoomName !== this.props.room.name) {
-	  renameRoom(this.props.site_id, this.props.room.id, this.state.newRoomName)
-        .then(() => {
-          this.props.locationUpdate();
-        });
-	}
+    if (this.state.newRoomName !== this.props.room.name) {
+      renameRoom(this.props.site_id, this.props.room.id, this.state.newRoomName)
+          .then(() => {
+            this.props.locationUpdate();
+          });
+    }
   }
 
   render () {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
-	if (this.state.edit) {
+    if (this.state.edit) {
+        return (
+        <InputGroup>
+          {ErrAlert}
+          <FormControl
+          type="text"
+          defaultValue={this.state.newRoomName}
+        onChange={this.handleNewNameChange.bind(this)} />
+          <InputGroup.Button>
+            <Button onClick={this.handleRemoveRoom.bind(this)}>
+          <Glyphicon glyph="remove" style={{color: "red"}} />
+          </Button>
+          <Button onClick={this.handleRenameRoom.bind(this)}>
+          <Glyphicon glyph="ok" style={{color: "green"}} />
+        </Button>
+        </InputGroup.Button>
+      </InputGroup>
+      )
+    } else {
       return (
-	    <InputGroup>
-	      {ErrAlert}
-	      <FormControl
-		    type="text"
-		    defaultValue={this.state.newRoomName}
-			onChange={this.handleNewNameChange.bind(this)} />
-	      <InputGroup.Button>
-	        <Button onClick={this.handleRemoveRoom.bind(this)}>
-			  <Glyphicon glyph="remove" style={{color: "red"}} />
-	      </Button>
-	      <Button onClick={this.handleRenameRoom.bind(this)}>
-		    <Glyphicon glyph="ok" style={{color: "green"}} />
-		  </Button>
-	    </InputGroup.Button>
-	  </InputGroup>
-	  )
-	} else {
-	  return (
-        <li className="list-group-item">{this.props.room.name}
-          <a
-		    role="button"
-		    className="input-group-button"
-		    onClick= {this.toggleEdit.bind(this)}>
-             <span
-		       className="glyphicon glyphicon-pencil pull-right"
-			   style={{color: 'gold'}}></span>
-          </a>
-        </li>
-	  )
-	}
+          <li className="list-group-item">{this.props.room.name}
+            <a
+          role="button"
+          className="input-group-button"
+          onClick= {this.toggleEdit.bind(this)}>
+              <span
+            className="glyphicon glyphicon-pencil pull-right"
+          style={{color: 'gold'}}></span>
+            </a>
+          </li>
+      )
+    }
   }
 }
 
@@ -101,7 +101,7 @@ class Site extends React.Component {
         .then(() => {
           this.props.locationUpdate();
         });
-	}
+	  }
   }
 
   render() {

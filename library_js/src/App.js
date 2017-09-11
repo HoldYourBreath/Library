@@ -23,6 +23,7 @@ class App extends Component {
     super(props);
     this.state = {
       sites: [],
+      selectedRoom: '',
       signum: '',
       secret: ''
     };
@@ -38,6 +39,11 @@ class App extends Component {
     localStorage.setItem('secret', sessionInfo.secret);
   }
 
+  onRoomSelection(roomId) {
+    localStorage.setItem('selectedRoom', roomId);
+    this.setState({selectedRoom: roomId});
+  }
+
   updateLocations() {
     getLocations()
       .then((locations) => {
@@ -47,6 +53,10 @@ class App extends Component {
 
   componentWillMount() {
     this.updateLocations();
+    let selectedRoom = localStorage.getItem('selectedRoom');
+    if (selectedRoom) {
+      this.setState({selectedRoom: selectedRoom});
+    }
     let signum = localStorage.getItem('signum');
     let secret = localStorage.getItem('secret');
     if (secret && signum) {
@@ -131,7 +141,10 @@ class App extends Component {
             <Route path={'/settings'} component={Settings}/>
             <Route
               path={'/add_book'}
-              component={() => (<AddBook sites={this.state.sites} />)}/>
+              component={() => (<AddBook
+                                  onRoomSelection={this.onRoomSelection.bind(this)}
+                                  selectedRoom={this.state.selectedRoom}
+                                  sites={this.state.sites} />)}/>
             <Route 
               path={'/admin'}
               component={() => (<AdminPage 

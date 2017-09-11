@@ -22,7 +22,8 @@ class Books extends Component {
       .get(`${window.__appUrl}/api/books`)
       .type('application/json')
       .end((err, res) => {
-        this.setState({books: res.body});
+        let currentBooks = res ? res.body : [];
+        this.setState({books: currentBooks});
       });
   }
 
