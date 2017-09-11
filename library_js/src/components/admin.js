@@ -111,7 +111,8 @@ class Site extends React.Component {
 	    <ul className="list-group">
           {this.props.site.rooms.map((room) => {
 			return <Room 
-			  		 site_id={this.props.site.id}
+			  		   site_id={this.props.site.id}
+               key={this.props.site.id}
 			         room={room}
 			         locationUpdate={this.props.locationUpdate} />
           })}
@@ -161,8 +162,8 @@ class Sites extends React.Component {
   render() {
     return (
   	<div>
-  	  {this.props.sites.map((site) => {
-  		  return <Site site={site} locationUpdate={this.props.locationUpdate}/>
+  	  {this.props.sites.map((site, i) => {
+  		  return <Site key={i} site={site} locationUpdate={this.props.locationUpdate}/>
   	  })}
   	  <h3>Add a new site</h3>
   	  <div className="input-group">

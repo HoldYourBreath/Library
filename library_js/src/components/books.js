@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { render } from "react-dom";
 import { Tips } from "./Utils";
 import './books.css';
 import ReactTable from 'react-table'
@@ -28,12 +27,10 @@ class Books extends Component {
   }
 
   render() {
-    const data = this.state.books;
-    console.log(data);
     return (
       <div>
         <ReactTable
-         data={data}
+         data={this.state.books}
           columns={
           [
             {
@@ -89,5 +86,5 @@ class Books extends Component {
     );
   }
 }
-render(<Books />, document.getElementById("root"));
+
 export default Books;
