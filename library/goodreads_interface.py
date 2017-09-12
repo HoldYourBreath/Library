@@ -139,8 +139,8 @@ def get_publisher(book):
 
 
 def get_thumbnail(book):
-    if book.getElementsByTagName('image_url')[0].hasChildNodes():
-        return book.getElementsByTagName('image_url')[0] \
+    if book.getElementsByTagName('small_image_url')[0].hasChildNodes():
+        return book.getElementsByTagName('small_image_url')[0] \
             .childNodes[0].nodeValue
 
     # In the case of no thumbnail, return empty string

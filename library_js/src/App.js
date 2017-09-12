@@ -142,7 +142,7 @@ class App extends React.Component {
               </div>
             </div>
           </nav>
-          <div className='content'>
+          <div className='container'>
             <Route path={'/books'} component={Books}/>
             <Route path={'/loan'} component={LoanBook}/>
             <Route

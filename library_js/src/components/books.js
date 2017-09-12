@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { render } from "react-dom";
 import { Tips } from "./Utils";
 import './books.css';
 import ReactTable from 'react-table'
@@ -22,17 +21,16 @@ class Books extends Component {
       .get(`${window.__appUrl}/api/books`)
       .type('application/json')
       .end((err, res) => {
-        this.setState({books: res.body});
+        let currentBooks = res ? res.body : [];
+        this.setState({books: currentBooks});
       });
   }
 
   render() {
-    const data = this.state.books;
-    console.log(data);
     return (
       <div>
         <ReactTable
-         data={data}
+         data={this.state.books}
           columns={
           [
             {
@@ -51,8 +49,8 @@ class Books extends Component {
               columns:
               [
                 {
-                  Header: "Author",
-                  accessor: "author"
+                  Header: "Authors",
+                  accessor: "authors"
                 }
               ]
             },
@@ -88,5 +86,5 @@ class Books extends Component {
     );
   }
 }
-render(<Books />, document.getElementById("root"));
+
 export default Books;
