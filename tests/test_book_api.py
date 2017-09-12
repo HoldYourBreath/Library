@@ -355,6 +355,92 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response)[0], book1)
         self._compare_book(json.loads(response)[1], book2)
 
+    def test_loan_book(self):
+        # Fetch loan for non existing book should return 404
+        rv = self.app.get('/api/books/123456/loan')
+        self.assertEqual(rv.status_code, 404)
+
+        # @TODO: Actually check for 404
+        # Loan request to non existing book should return 404
+        rv = self.app.put('/api/books/123456/loan',
+                          data=json.dumps({'user_id': 1}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+        book_id = book1['tag']
+        self._put_book(book1)
+
+        # Fetch loan for book without loan should return 404
+        rv = self.app.get('/api/books/{}/loan'.format(book_id))
+        self.assertEqual(rv.status_code, 404)
+
+        # Loan book
+        rv = self.app.put('/api/books/{}/loan'.format(book_id),
+                          data=json.dumps({'user_id': 1}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+        # Multiple loans should not be allowed
+        rv = self.app.put('/api/books/{}/loan'.format(book_id),
+                          data=json.dumps({'user_id': 2}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 403)
+
+        # Fetch loan for book
+        rv = self.app.get('/api/books/{}/loan'.format(book_id))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(json.loads(response)['book_id'], book_id)
+
+    def test_loan_book_malformed_request(self):
+        book_id = book1['tag']
+        self._put_book(book1)
+
+        # Empty loan request should yield 400
+        rv = self.app.put('/api/books/{}/loan'.format(book_id))
+        self.assertEqual(rv.status_code, 400)
+
+        # Loan book
+        rv = self.app.put('/api/books/{}/loan'.format(book_id),
+                          data=json.dumps({'user_id': 1}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+        # Loan request without user_id should yield 400
+        rv = self.app.put('/api/books/{}/loan'.format(book_id),
+                          data=json.dumps({}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 400)
+
+    def test_return_book(self):
+        # Return loan on unknown book
+        rv = self.app.delete('/api/books/1234/loan')
+        self.assertEqual(rv.status_code, 404)
+
+        book_id = book1['tag']
+        self._put_book(book1)
+
+        # Return unloaned book should yield 404
+        rv = self.app.delete('/api/books/{}/loan'.format(book_id))
+        self.assertEqual(rv.status_code, 404)
+
+        # Loan book
+        rv = self.app.put('/api/books/{}/loan'.format(book_id),
+                          data=json.dumps({'user_id': 1}),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+        # Return book
+        rv = self.app.delete('/api/books/{}/loan'.format(book_id))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self.assertEqual(json.loads(response)['book_id'], book_id)
+        self.assertIsNotNone(json.loads(response)['return_date'])
+
+        # Return unloaned book should yield 404
+        rv = self.app.delete('/api/books/{}/loan'.format(book_id))
+        self.assertEqual(rv.status_code, 404)
+
     def _put_book(self, book):
         book_id = book['tag']
         temp_book = copy.copy(book)
@@ -380,7 +466,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(len(lv.keys()), len(rv.keys()))
 
         # Compare rv and lv
-        for key in lv.keys():
+        for key in rv.keys():
             self.assertEqual(lv[key], rv[key])
 
 

@@ -23,7 +23,7 @@ class AddBook extends Component {
       isbn: null,
       tag: null,
       title: null,
-      author: null,
+      authors: null,
       description: null,
       format: null,
       pages: null,
@@ -77,7 +77,7 @@ class AddBook extends Component {
         isbn: '',
         title: '',
         tag: '',
-        author: '',
+        authors: '',
         description: '',
         format: '',
         pages: '',
@@ -103,20 +103,22 @@ class AddBook extends Component {
         }
       });
   }
+
   onRoomChange(e) {
     this.setState({room_id: e.target.value});
-    localStorage.setItem('selected_room', e.target.value);
+    this.props.onRoomSelection(e.target.value);
   }
+
   render() {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
     const InfoAlert = this.state.infoMsg ? <Alert bsStyle="success"><strong>{this.state.infoMsg}</strong></Alert> : null;
-	let rooms = []
-	this.props.sites.map((site) =>
-		site.rooms.map((room) =>
-		    rooms.push({name: `${site.name}-${room.name}`, id: room.id})
-		)
-	);
-
+    let rooms = []
+    this.props.sites.map((site) =>
+      site.rooms.map((room) =>
+        rooms.push({name: `${site.name}-${room.name}`, id: room.id})
+      )
+    );
+    console.log();
     return (
       <div>
         <h1>Add book</h1>
@@ -172,7 +174,7 @@ class AddBook extends Component {
               <Col sm={7}>
                 <FormControl 
                   componentClass="select"
-		          defaultValue={localStorage.getItem('selected_room')}
+		              defaultValue={this.props.selectedRoom}
                   onChange={this.onRoomChange.bind(this)}
                   placeholder="select">
                     <option />
@@ -186,13 +188,13 @@ class AddBook extends Component {
                 </FormControl>
               </Col>
             </FormGroup>
-            <FormGroup controlId="author">
+            <FormGroup controlId="authors">
               <Col componentClass={ControlLabel} sm={2}>
-                Author
+                Authors
               </Col>
               <Col sm={7}>
                 <FormControl
-                  value={this.state.author}
+                  value={this.state.authors}
                   onChange={this.onFormInput.bind(this)}
                   type="text"
                   autoComplete="off"

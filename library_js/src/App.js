@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {getLocations} from './lib/sites';
 import Books from './components/books';
 import LoanBook from './components/loan';
@@ -9,7 +9,7 @@ import Settings from './components/settings';
 import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
 import {
-  BrowserRouter as Router,
+  withRouter,
   Route,
   Link
 } from 'react-router-dom';
@@ -18,24 +18,37 @@ const request = require('superagent');
 window.__appUrl = "http://127.0.0.1:5000";
 
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       sites: [],
+      redirectTo: '',
+      selectedRoom: '',
       signum: '',
       secret: ''
     };
   }
 
   authenticationDone(sessionInfo) {
-    console.log(sessionInfo);
+    const location = {
+      pathname: this.state.redirectTo,
+      state: {from: 'login'}
+    }
+    this.props.history.push(location);
     this.setState({
       signum: sessionInfo.signum,
-      secret: sessionInfo.secret
+      secret: sessionInfo.secret,
+      redirectTo: ''
     });
     localStorage.setItem('signum', sessionInfo.signum);
     localStorage.setItem('secret', sessionInfo.secret);
+
+  }
+
+  onRoomSelection(roomId) {
+    localStorage.setItem('selectedRoom', roomId);
+    this.setState({selectedRoom: roomId});
   }
 
   updateLocations() {
@@ -47,6 +60,10 @@ class App extends Component {
 
   componentWillMount() {
     this.updateLocations();
+    let selectedRoom = localStorage.getItem('selectedRoom');
+    if (selectedRoom) {
+      this.setState({selectedRoom: selectedRoom});
+    }
     let signum = localStorage.getItem('signum');
     let secret = localStorage.getItem('secret');
     if (secret && signum) {
@@ -89,10 +106,13 @@ class App extends Component {
         this.clearLocalStorage();
       });
   }
+  logInBegun() {
+    this.setState({redirectTo: this.props.location.pathname});
+  }
 
   render() {
+    //console.log(this.props);
     return (
-      <Router>
           <div>
           <nav className="navbar navbar-default">
             <div className="container-fluid">
@@ -108,17 +128,14 @@ class App extends Component {
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
                   <li>
-                    <Link to='/books'>
-                      Books
-                    </Link>
+                    <Link to='/books'>Books</Link>
                   </li>
                   <li>
-                    <Link to='/loan'>
-                      Loan Book
-                    </Link>
+                    <Link to='/loan'>Loan Book</Link>
                   </li>
                 </ul>
                 <NavbarUserInfo 
+                  logInBegun={this.logInBegun.bind(this)}
                   logOut={this.logOut.bind(this)}
                   secret={this.state.secret} 
                   signum={this.state.signum}/>
@@ -128,10 +145,12 @@ class App extends Component {
           <div className='content'>
             <Route path={'/books'} component={Books}/>
             <Route path={'/loan'} component={LoanBook}/>
-            <Route path={'/settings'} component={Settings}/>
             <Route
               path={'/add_book'}
-              component={() => (<AddBook sites={this.state.sites} />)}/>
+              component={() => (<AddBook
+                                  onRoomSelection={this.onRoomSelection.bind(this)}
+                                  selectedRoom={this.state.selectedRoom}
+                                  sites={this.state.sites} />)}/>
             <Route 
               path={'/admin'}
               component={() => (<AdminPage 
@@ -144,9 +163,8 @@ class App extends Component {
                   onAuthenticationDone={this.authenticationDone.bind(this)} />)}/>
           </div>
         </div>
-      </Router>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

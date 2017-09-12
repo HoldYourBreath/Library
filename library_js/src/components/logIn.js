@@ -50,9 +50,9 @@ class LogIn extends Component {
 
   render() {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
-  if (this.state.redirect) {
-    return <Redirect to={'/'}/>;
-  }
+    if (this.state.redirect) {
+      return <Redirect to={'/'}/>;
+    }
     return (
       <div className="jumbotron">
         <Form horizontal>
