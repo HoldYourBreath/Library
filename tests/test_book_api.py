@@ -62,6 +62,17 @@ book4 = {'tag': 4,
 
 
 class BookTestCase(ServerTestCase):
+
+    def setUp(self):
+        ServerTestCase.setUp(self)
+        # Create some rooms
+        site_id = self.add_site('happy place')
+        self.add_room(site_id, 'happy room')
+
+        site_id = self.add_site('testing')
+        for name in '3456':
+            self.add_room(site_id, name)
+
     def test_book_get(self):
         rv = self.app.get('/api/books')
         self.assertEqual(rv.status_code, 200)
@@ -96,6 +107,9 @@ class BookTestCase(ServerTestCase):
         rv = self.app.get('/api/books')
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response)[0], books[0])
+        test_book = copy.copy(book2)
+        test_book['room_id'] = room_id
+        self._put_book(test_book)
         self.remove_room_fail(site_id, room_id)
         rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
         self.assertEqual(rv.status_code, 200)
@@ -318,14 +332,14 @@ class BookTestCase(ServerTestCase):
         self._put_book(book4)
 
         # Add a room
-        with self.app.session_transaction():
-            db = database.get()
-            db.execute('INSERT INTO sites (site_name) '
-                       'VALUES (?)', ('happy place',))
-            db.execute('INSERT INTO rooms (site_id, room_name) '
-                       'VALUES (?, ?)',
-                       (2, 'happy room',))
-            db.commit()
+        # with self.app.session_transaction():
+        #     db = database.get()
+        #     db.execute('INSERT INTO sites (site_name) '
+        #                'VALUES (?)', ('happy place',))
+        #     db.execute('INSERT INTO rooms (site_id, room_name) '
+        #                'VALUES (?, ?)',
+        #                (2, 'happy room',))
+        #     db.commit()
 
         # Search for title Great and description 'artists'
         # Should get 1 book
@@ -337,7 +351,7 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response)[0], book1)
         self._compare_book(json.loads(response)[1], book2)
 
-        # Search for room ID 1
+        # Search for room ID 2
         rv = self.app.get('/api/books?room_id=2')
 
         self.assertEqual(rv.status_code, 200)
@@ -360,12 +374,11 @@ class BookTestCase(ServerTestCase):
         rv = self.app.get('/api/books/123456/loan')
         self.assertEqual(rv.status_code, 404)
 
-        # @TODO: Actually check for 404
         # Loan request to non existing book should return 404
         rv = self.app.put('/api/books/123456/loan',
                           data=json.dumps({'user_id': 1}),
                           content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(rv.status_code, 404)
 
         book_id = book1['tag']
         self._put_book(book1)

@@ -68,8 +68,8 @@ def list_books():
     return jsonify(books)
 
 
-@app.route('/api/books/<int:book_id>', methods=['PUT'])
-def put_book(book_id):
+@app.route('/api/books/<int:tag>', methods=['PUT'])
+def put_book(tag):
     '''
     Add or update new book
 
@@ -108,39 +108,39 @@ def put_book(book_id):
     except ValueError:
         return 'Non number in parameter where number is expected', 400
 
-    # First delete any previous record, store old book id
-    # and then add a new
-    old_book_id = None
+    params = (int(book['isbn']),
+              int(book['room_id']),
+              book['title'],
+              book['pages'],
+              book['publisher'],
+              book['format'],
+              book['publication_date'],
+              book['description'],
+              book['thumbnail'])
+
     db = database.get()
-    old_book_cursor = db.execute('select book_id from books where tag=?',
-                                 (int(book_id),))
+    old_book_cursor = db.execute('SELECT book_id FROM books WHERE tag=?',
+                                 (tag,))
     old_book = old_book_cursor.fetchall()
     if len(old_book) > 0:
-        old_book_id = old_book[0]['book_id']
-        db.execute('delete from books where book_id=?',
-                   (old_book_id,))
-    db.execute('insert into books'
-               '(tag, isbn, room_id, title, pages, publisher, format,'
-               'publication_date, description, thumbnail)'
-               'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-               (int(book_id),
-                int(book['isbn']),
-                int(book['room_id']),
-                book['title'],
-                book['pages'],
-                book['publisher'],
-                book['format'],
-                book['publication_date'],
-                book['description'],
-                book['thumbnail']
-                ))
-    if old_book_id is not None:
-        # This book with this tag exister before, use same book_id
-        db.execute('UPDATE books SET book_id = ? WHERE tag = ?',
-                   (old_book_id, book_id))
+        # Update existing book
+        db.execute('UPDATE books '
+                   'SET isbn = ?, room_id = ?, title = ?, pages = ?, '
+                   'publisher = ?, format = ?, publication_date = ?, '
+                   'description = ?, thumbnail = ? '
+                   'WHERE tag=?',
+                   params + (tag,))
+    else:
+        # Create a new book
+        db.execute('INSERT INTO books'
+                   '(tag, isbn, room_id, title, pages, publisher, format,'
+                   'publication_date, description, thumbnail)'
+                   'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                   (tag,) + params)
+
     db.commit()
-    _add_authors(book_id, book['authors'])
-    return jsonify(_get_book(book_id))
+    _add_authors(tag, book['authors'])
+    return jsonify(_get_book(tag))
 
 
 @app.route('/api/books/<int:book_id>', methods=['GET'])
@@ -154,12 +154,12 @@ def get_single_book(book_id):
         return response
 
 
-def _get_book(book_id):
+def _get_book(tag):
     db = database.get()
     curs = db.execute('SELECT * FROM books '
                       'LEFT JOIN loans USING (book_id) '
                       'WHERE loans.return_date IS NULL AND books.tag = ?',
-                      (book_id,))
+                      (tag,))
 
     book = curs.fetchall()
     if len(book) == 0:
@@ -188,19 +188,27 @@ def _get_books(rows):
     return books
 
 
-@app.route('/api/books/<int:book_id>/loan', methods=['GET'])
-def get_loan_for_book(book_id):
+@app.route('/api/books/<int:tag>/loan', methods=['GET'])
+def get_loan_for_book(tag):
     """ Get the loan for this book """
+    book_id = -1
     try:
-        return jsonify(loan.by_book_id(book_id))
+        book_id = _get_book_id(tag)
+    except BookNotFound:
+        response = jsonify({'msg': 'Book not found'})
+        response.status_code = 404
+        return response
+
+    try:
+        return jsonify(loan.get(book_id))
     except loan.LoanNotFound:
         response = jsonify({'msg': 'No loan found for this book'})
         response.status_code = 404
         return response
 
 
-@app.route('/api/books/<int:book_id>/loan', methods=['PUT'])
-def loan_book(book_id):
+@app.route('/api/books/<int:tag>/loan', methods=['PUT'])
+def loan_book(tag):
     """ Loan this book """
     put_data = flask.request.get_json()
     if put_data is None:
@@ -210,6 +218,14 @@ def loan_book(book_id):
     elif 'user_id' not in put_data:
         response = jsonify({'msg': 'Missing user_id in put request.'})
         response.status_code = 400
+        return response
+
+    book_id = -1
+    try:
+        book_id = _get_book_id(tag)
+    except BookNotFound:
+        response = jsonify({'msg': 'Book not found'})
+        response.status_code = 404
         return response
 
     try:
@@ -233,13 +249,13 @@ def return_book(book_id):
 
 def _add_authors(book_id, authors):
     db = database.get()
-    curs = db.execute('select * from books where tag = ?',
+    curs = db.execute('SELECT * FROM books WHERE tag = ?',
                       (book_id,))
     book = curs.fetchone()
 
     for author in authors:
         curs = db.execute(
-            'insert into authors (book_id, name) values (?, ?)',
+            'INSERT INTO authors (book_id, name) VALUES (?, ?)',
             (book['book_id'], author))
 
     db.commit()
@@ -247,7 +263,7 @@ def _add_authors(book_id, authors):
 
 def _get_authors(book_id):
     db = database.get()
-    curs = db.execute('select * from authors where book_id = ?',
+    curs = db.execute('SELECT * FROM authors WHERE book_id = ?',
                       (book_id,))
 
     authors = []
@@ -255,3 +271,15 @@ def _get_authors(book_id):
         authors.append(author['name'])
 
     return authors
+
+
+def _get_book_id(tag):
+    db = database.get()
+    curs = db.execute('SELECT * FROM books WHERE tag = ?',
+                      (tag,))
+
+    books = curs.fetchall()
+    if len(books) == 0:
+        raise BookNotFound
+    else:
+        return books[0]['book_id']

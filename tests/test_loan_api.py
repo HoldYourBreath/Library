@@ -8,6 +8,13 @@ class LoanApiTestCase(ServerTestCase):
     dummy_book_id = 1
     dummy_user_id = 200
 
+    def setUp(self):
+        ServerTestCase.setUp(self)
+        book = {'tag': self.dummy_book_id,
+                'isbn': 1234,
+                'room_id': 1}
+        self.add_book(book)
+
     def test_loans(self):
         rv = self.app.get('/api/loans')
         response = json.loads(codecs.decode(rv.data))

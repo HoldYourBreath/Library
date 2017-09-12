@@ -1,3 +1,4 @@
+from sqlite3 import IntegrityError
 from datetime import datetime, timedelta
 
 import library.database as database
@@ -85,12 +86,17 @@ def add(book_id, user_id):
 
     loan_date = datetime.now()
     curs = db_instance.cursor()
-    curs.execute('INSERT INTO loans '
-                 '(book_id, user_id, loan_date) '
-                 'VALUES (?, ?, ?)',
-                 (book_id,
-                  user_id,
-                  int(loan_date.timestamp())))
+    try:
+        curs.execute('INSERT INTO loans '
+                     '(book_id, user_id, loan_date) '
+                     'VALUES (?, ?, ?)',
+                     (book_id,
+                      user_id,
+                      int(loan_date.timestamp())))
+    except IntegrityError:
+        # No book with that id
+        raise LoanNotAllowed
+
     loan_id = curs.lastrowid
     db_instance.commit()
     return loan_id

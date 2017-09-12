@@ -8,6 +8,13 @@ class LoanTestCase(ServerTestCase):
     dummy_book_id = 1
     dummy_user_id = 2
 
+    def setUp(self):
+        ServerTestCase.setUp(self)
+        book = {'tag': self.dummy_book_id,
+                'isbn': 1234,
+                'room_id': 1}
+        self.add_book(book)
+
     def test_loan(self):
         with self.app.session_transaction():
             loan_id = loan.add(self.dummy_book_id,
@@ -17,11 +24,28 @@ class LoanTestCase(ServerTestCase):
                               self.dummy_book_id,
                               self.dummy_user_id)
 
+    def test_add_loan_no_book(self):
+        """
+        Loan a non existent book
+
+        Loaning a non existent book should not be allowed
+        """
+        with self.app.session_transaction():
+            with self.assertRaises(loan.LoanNotAllowed):
+                loan.add(self.dummy_book_id + 1000,
+                         self.dummy_user_id)
+
     def test_loan_all(self):
         with self.app.session_transaction():
             num_loans = 42
             loans = {}
-            for book_id in range(num_loans):
+            for book_id in range(2, num_loans+1):
+                book = {'tag': book_id,
+                        'isbn': 1234,
+                        'room_id': 1}
+                self.add_book(book)
+
+            for book_id in range(1, num_loans+1):
                 loan_id = loan.add(book_id,
                                    self.dummy_user_id)
                 loans[loan_id] = book_id

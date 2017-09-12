@@ -14,8 +14,8 @@ class SitesTestCase(ServerTestCase):
         # Make sure sites and rooms tables are empty
         with self.app.session_transaction():
             db = database.get()
-            db.execute('DELETE FROM sites')
             db.execute('DELETE FROM rooms')
+            db.execute('DELETE FROM sites')
             db.commit()
 
     def test_get_sites(self):

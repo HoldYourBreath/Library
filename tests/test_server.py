@@ -1,5 +1,6 @@
 import os
 import json
+import copy
 import unittest
 import tempfile
 import configparser
@@ -27,6 +28,15 @@ class ServerTestCase(unittest.TestCase):
         config.config = configparser.ConfigParser()
         site_id = self.add_site('DefaultSite')
         self.add_room(site_id, 'DefaltRoom')
+
+    def add_book(self, book):
+        book_id = book['tag']
+        temp_book = copy.copy(book)
+        del temp_book['tag']
+        rv = self.app.put('/api/books/{}'.format(book_id),
+                          data=json.dumps(temp_book),
+                          content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
 
     def add_site(self, name):
         rv = self.app.post('/api/sites',
