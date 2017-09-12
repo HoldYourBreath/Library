@@ -125,7 +125,7 @@ class App extends Component {
               </div>
             </div>
           </nav>
-          <div className='container'>
+          <div className='content'>
             <Route path={'/books'} component={Books}/>
             <Route path={'/loan'} component={LoanBook}/>
             <Route path={'/settings'} component={Settings}/>

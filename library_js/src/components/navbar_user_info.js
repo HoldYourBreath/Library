@@ -28,7 +28,7 @@ class NavbarUserInfo extends React.Component {
           <NavDropdown eventKey={1} title="Admin" id="basic-nav-dropdown">
             <li>
               <Link to='/admin'>Sites and rooms</Link>
-              <a href="/add_book" onClick=''>Add book</a>
+              <a href="/add_book">Add book</a>
             </li>
           </NavDropdown>
           <NavDropdown eventKey={2} title={this.props.signum} id="basic-nav-dropdown">
