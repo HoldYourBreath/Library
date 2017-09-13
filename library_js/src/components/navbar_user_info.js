@@ -4,11 +4,6 @@ import {LinkContainer} from 'react-router-bootstrap';
 import {NavDropdown, MenuItem} from 'react-bootstrap';
 
 class NavbarUserInfo extends React.Component {
-  // eslint-disable-next-line
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     if (!this.props.secret) {
       return (
@@ -30,7 +25,7 @@ class NavbarUserInfo extends React.Component {
             <LinkContainer to='/admin'>
               <MenuItem eventKey={2.1}>Sites and rooms</MenuItem>
             </LinkContainer>
-            <LinkContainer  to="/add_book">
+            <LinkContainer to="/add_book">
               <MenuItem eventKey={2.2}>Add book</MenuItem>
             </LinkContainer>
           </NavDropdown>

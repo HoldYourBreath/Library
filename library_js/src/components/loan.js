@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
+import UserInfo from "./UserInfo";
 import {FormGroup, 
         Button, 
         Col,
+        Row,
         Alert,
         Form,
         FormControl, 
@@ -10,12 +12,13 @@ const request = require('superagent');
 const FontAwesome = require('react-fontawesome');
 
 
-class LoanBook extends Component {
+class LoanBook extends React.Component {
     constructor(props) {
     super(props);
     this.state = {
       errMsg: null,
-      userName: null,
+      userData: null,
+      bookData: null,
       bookTitle: null,
       loadingUserData: false,
       userId: "",
@@ -44,13 +47,10 @@ class LoanBook extends Component {
         this.setState({loadingBookData: false});
         if (!err) {
           this.setState({errorMsg: "",
-                         bookTitle: res.body.title});
+                         bookData: res.body});
         }
-        console.log(res);
-        //this.setState({userName: res.body.name});
       });
   }
-
 
   getUserData(userId) {
     this.setState({loadingUserData: true});
@@ -65,14 +65,21 @@ class LoanBook extends Component {
         });
       })
       .end((err, res) => {
-        this.setState({loadingUserData: false});
-        if (!err) {
-          this.setState({errorMsg: null,
-                         userName: null});
+        if (err) {
+          let errMsg = null;
+          if(err.status === 404) {
+            errMsg = `User id ${userId} not found`;
+          }
+          this.setState({
+            errorMsg: errMsg,
+            userData: null});
           return;
         }
-        console.log(res);
-        this.setState({userName: res.body.name});
+        this.setState({
+          errorMsg: null,
+          loadingUserData: false,
+          userData: res.body
+        });
       });
   }
   
@@ -136,14 +143,17 @@ class LoanBook extends Component {
               </Col>
             </FormGroup>
           <FormGroup>
-            <Col sm={2}></Col>
+            <Col sm={6}/>
             <Col sm={6}>
-              <Alert bsStyle="info">
-                <p><strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.</p>
-                <p><strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.</p>
-              </Alert>
             </Col>
           </FormGroup>
+          <Row>
+            <Col sm={6}>
+              {this.state.userData ? <UserInfo userData={this.state.userData}/> : null}
+            </Col>
+            <Col sm={6}>
+            </Col>
+          </Row>
           <FormGroup>
             <Col sm={2}></Col>
             <Col sm={6}>
