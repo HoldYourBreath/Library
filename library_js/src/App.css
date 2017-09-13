@@ -114,3 +114,53 @@ em {
 .react-resizable{
   max-width: 100%;
 }
+
+.flex-container {
+   border: 1px solid #fff;
+   flex: 1;
+   display: flex;
+   flex-direction: row;
+   align-content: stretch;
+   overflow: auto;
+}
+
+.bookTable
+{
+  flex: 1;
+  width: 40%;
+  display: inline-block;
+  flex-direction: row;
+  margin-top: 100px;
+  height: 800px;
+  font-size: 11px;
+  font-weight: bold;
+  justify-content: flex-start;
+  margin: 0 15px;
+  align-content: stretch;
+}
+
+.bookInfo
+{
+  flex: 2;
+  width: 40%;
+  display: inline-block;
+  flex-direction: row;
+  margin-top: 100px;
+  height: 800px;
+  font-size: 12px;
+  justify-content: flex-end;
+  margin: 0 10px;
+  align-content: stretch;
+}
+
+.booksTitle {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.booksAuthor {
+  font-size: 12px;
+  line-height: 0px;
+  line-spacing: 0em;
+}
+
