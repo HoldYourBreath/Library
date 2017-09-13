@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form } from 'react-bootstrap';
 import { render } from "react-dom";
 import { Tips } from "./Utils";
@@ -8,7 +8,7 @@ import '../App.css';
 const request = require('superagent');
 
 
-class Books extends Component {
+class Books extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -38,6 +38,17 @@ class Books extends Component {
       });
   }
 
+  bookSelected(bookData) {
+    this.setState({
+      description: bookData.description,
+      authors: bookData.authors,
+      format: bookData.format,
+      pages: bookData.pages,
+      title: bookData.title,
+      thumbnail: bookData.thumbnail,
+    });
+  }
+
   render() {
     console.log(this.state.books);
     return (
@@ -48,31 +59,8 @@ class Books extends Component {
             return {
               onClick: (e) => {
                   if (rowInfo.original !== null) {
-                    let url = `${window.__appUrl}/api/books/goodreads/${rowInfo.original.isbn}`;
-                    this.setState({loadingBookData: true});
-                    request
-                      .get(url)
-                      .type('application/json')
-                      .on('error', (err) => {
-                        this.setState({
-                          errorMsg: `Unable to fetch book info for ${rowInfo.original.isbn}`,
-                          loadingBookData: false
-                        });
-                      })
-                      .end((err, res) => {
-                        if (err) {
-                          return;
-                        }
-                        this.setState({loadingBookData: false});
-                        this.setState({errorMsg: null});
-                        let state = Object.assign({}, res.body);
-                        state.pages = state.num_pages;
-                        delete state.num_pages;
-                        delete state.errorMsg;
-                        this.setState(state);
-                        }
-                      );
-                }
+                    this.bookSelected(rowInfo.original);
+                  }
                }
               }
             }
@@ -130,6 +118,5 @@ class Books extends Component {
     );
   }
 }
-render(<Books />, document.getElementById("root"));
-export default Books;
 
+export default Books;
