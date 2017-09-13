@@ -58,9 +58,9 @@ class Books extends React.Component {
           getTdProps={(state, rowInfo, column, instance) => {
             return {
               onClick: (e) => {
-                  if (rowInfo.original !== null) {
-                    this.bookSelected(rowInfo.original);
-                  }
+                if (rowInfo.original !== null) {
+                  this.bookSelected(rowInfo.original);
+                }
                }
               }
             }

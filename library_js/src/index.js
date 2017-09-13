@@ -8,6 +8,7 @@ import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
+import 'react-table/react-table.css'
 
 ReactDOM.render(
   <BrowserRouter>
