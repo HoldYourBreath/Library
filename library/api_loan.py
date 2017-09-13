@@ -1,8 +1,8 @@
 from library.app import app
+import library.loan as loan
 import flask
 from flask import jsonify
 
-import library.loan as loan
 
 
 @app.route('/api/loans', methods=['GET'])

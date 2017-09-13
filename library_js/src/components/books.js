@@ -29,7 +29,6 @@ class Books extends Component {
   };
 
   componentWillMount() {
-    console.log("Get books");
     request
       .get(`${window.__appUrl}/api/books`)
       .type('application/json')

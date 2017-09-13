@@ -42,7 +42,6 @@ class App extends React.Component {
     });
     localStorage.setItem('signum', sessionInfo.signum);
     localStorage.setItem('secret', sessionInfo.secret);
-
   }
 
   onRoomSelection(roomId) {
