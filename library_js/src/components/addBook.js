@@ -28,7 +28,7 @@ class AddBook extends Component {
       format: null,
       pages: null,
       publication_date: null,
-      thumbnail: 'https://images.gr-assets.com/books/1419180921s/23232941.jpg'
+      thumbnail: 'https://images.gr-assets.com/books/1419180921m/23232941.jpg'
     };
   }
   onFormInput(e) {
