@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ShowThumbnail from './ShowThumbnail';
 import {FormGroup,
         Button, 
         Col,
@@ -12,23 +13,20 @@ const FontAwesome = require('react-fontawesome');
 class AddBook extends Component {
   constructor(props) {
     super(props);
-    let room_id = localStorage.getItem('selected_room');
-    if (room_id != null) {
-      this.setState({room_id: room_id});
-    }
     this.state = {
       loadingBookData: false,
-      errorMsg: null,
-      infoMsg: null,
-      isbn: null,
-      tag: null,
-      title: null,
-      authors: null,
-      description: null,
-      format: null,
-      pages: null,
-      publication_date: null,
-      thumbnail: 'https://images.gr-assets.com/books/1419180921m/23232941.jpg'
+      errorMsg: '',
+      infoMsg: '',
+      room_id: '',
+      isbn: '',
+      tag: '',
+      title: '',
+      authors: '',
+      description: '',
+      format: '',
+      pages: '',
+      publication_date: '',
+      thumbnail: ''
     };
   }
   onFormInput(e) {
@@ -65,7 +63,6 @@ class AddBook extends Component {
         delete state.num_pages;
         delete state.errorMsg;
         this.setState(state);
-
       });
   }
 
@@ -74,6 +71,7 @@ class AddBook extends Component {
         loadingBookData: false,
         errorMsg: null,
         infoMsg: null,
+        thumbnail: null,
         isbn: '',
         title: '',
         tag: '',
@@ -118,7 +116,7 @@ class AddBook extends Component {
         rooms.push({name: `${site.name}-${room.name}`, id: room.id})
       )
     );
-    console.log();
+    console.log(this.state);
     return (
       <div>
         <h1>Add book</h1>
@@ -178,12 +176,11 @@ class AddBook extends Component {
                   onChange={this.onRoomChange.bind(this)}
                   placeholder="select">
                     <option />
-                    {
-                      rooms.map((room) => {
+                    {rooms.map((room) => {
                         return <option
                                  key={room.id}
                                  value={room.id}>{room.name}</option>
-				      })
+                      })
                     }
                 </FormControl>
               </Col>
@@ -226,8 +223,6 @@ class AddBook extends Component {
                   autoComplete="off"
                   placeholder=""/>
               </Col>
-            </FormGroup>
-            <FormGroup controlId="pages">
               <Col componentClass={ControlLabel} sm={2}>
                 Pages
               </Col>
@@ -238,8 +233,6 @@ class AddBook extends Component {
                   autoComplete="off"
                   placeholder=""/>
               </Col>
-            </FormGroup>
-            <FormGroup controlId="publication_date">
               <Col componentClass={ControlLabel} sm={2}>
                 Publication date
               </Col>
@@ -252,12 +245,12 @@ class AddBook extends Component {
                   <br/>
               </Col>
             </FormGroup>
-            <FormGroup controlId="thumbnail">
-               <Col componentClass={ControlLabel} sm={2}>
+            <FormGroup controlId="publication_date">
+              <Col componentClass={ControlLabel} sm={2}>
                 Thumbnail
               </Col>
-              <Col xs={6} md={3}>
-                <img id="thumbnail" alt="thumbnail" src={this.state.thumbnail} />
+              <Col sm={6}>
+                <ShowThumbnail thumbnailUrl={this.state.thumbnail}/>
               </Col>
             </FormGroup>
             <FormGroup>

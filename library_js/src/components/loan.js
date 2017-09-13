@@ -86,6 +86,10 @@ class LoanBook extends React.Component {
   getUserDataButtonPress() {
     this.getUserData(this.state.userId);
   }
+
+  loanBookButtonPress() {
+    console.log("Loan book!");
+  }
   getBookDataButtonPress() {
     this.getBookData(this.state.bookId);
   }
@@ -124,7 +128,7 @@ class LoanBook extends React.Component {
               <Col 
                 componentClass={ControlLabel} 
                 sm={2}>
-                Book Id
+                Book Tag
               </Col>
               <Col sm={3}>
                 <FormControl
@@ -155,11 +159,10 @@ class LoanBook extends React.Component {
             </Col>
           </Row>
           <FormGroup>
-            <Col sm={2}></Col>
-            <Col sm={6}>
-              <Button onClick={this.getUserDataButtonPress.bind(this)}>
-                Loan
-              </Button>
+            <Col sm={2}/>
+            <Col sm={10}>
+              {this.state.userData ? 
+                <Button onClick={this.loanBookButtonPress.bind(this)}>Loan</Button> : null}
             </Col>
           </FormGroup>
         </Form>

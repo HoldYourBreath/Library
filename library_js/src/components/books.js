@@ -25,6 +25,7 @@ class Books extends Component {
   }
 
   render() {
+    console.log(this.state.books);
     return (
       <div>
         <ReactTable
