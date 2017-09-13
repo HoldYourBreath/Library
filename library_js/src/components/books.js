@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Tips } from "./Utils";
-import './books.css';
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 const request = require('superagent');
