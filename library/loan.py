@@ -123,17 +123,7 @@ def remove(loan_id):
 
 
 def remove_on_book(book_id):
-    db_instance = database.get()
-
     loan = by_book_id(book_id)
     loan_id = loan['id']
 
-    return_date = datetime.now()
-    curs = db_instance.cursor()
-    curs.execute('UPDATE loans '
-                 'SET return_date = ? '
-                 'WHERE loan_id = ?',
-                 (int(return_date.timestamp()),
-                  loan_id))
-    db_instance.commit()
-    return get(loan_id)
+    return remove(loan_id)

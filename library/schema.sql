@@ -7,8 +7,7 @@ drop table if exists admins;
 drop table if exists books;
 
 create table books (
-    book_id INTEGER primary key autoincrement,
-    tag INTEGER not null unique,
+    book_id INTEGER primary key,
     isbn INTEGER not null,
     title TEXT,
     description TEXT,

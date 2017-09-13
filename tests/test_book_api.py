@@ -6,7 +6,7 @@ import codecs
 from .test_server import ServerTestCase
 import library.database as database
 
-book1 = {'tag': 1,
+book1 = {'id': 1,
          'isbn': 1234,
          'title': 'The book',
          'authors': ['Bob Author'],
@@ -19,7 +19,7 @@ book1 = {'tag': 1,
          'thumbnail': 'a thumbnail',
          'loaned': False}
 
-book2 = {'tag': 2,
+book2 = {'id': 2,
          'isbn': 1235,
          'title': 'Great book',
          'authors': ['Jane Author'],
@@ -32,7 +32,7 @@ book2 = {'tag': 2,
          'thumbnail': 'another thumbnail',
          'loaned': False}
 
-book3 = {'tag': 3,
+book3 = {'id': 3,
          'isbn': 1236,
          'title': 'Great Songs',
          'authors': ['Jane Author'],
@@ -46,7 +46,7 @@ book3 = {'tag': 3,
          'thumbnail': 'another thumbnail',
          'loaned': False}
 
-book4 = {'tag': 4,
+book4 = {'id': 4,
          'isbn': 1237,
          'title': 'Great Poems',
          'authors': ['Jane Author'],
@@ -136,7 +136,7 @@ class BookTestCase(ServerTestCase):
 
         # Test adding another copy of an existing book
         same_book = copy.copy(book1)
-        same_book['tag'] = 3
+        same_book['id'] = 3
         self._put_book(same_book)
 
         rv = self.app.get('/api/books/3')
@@ -170,7 +170,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 400)
 
     def test_put_only_isbn_and_room(self):
-        book = {'tag': 1,
+        book = {'id': 1,
                 'isbn': 1,
                 'title': '',
                 'room_id': 1,
@@ -190,7 +190,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         self._compare_book(json.loads(response), book)
 
-    def test_put_invalid_tag(self):
+    def test_put_invalid_id(self):
         # Try to PUT a new book with invalid id
         rv = self.app.put('/api/books/123jaasdasd',
                           data=json.dumps({'isbn': 1}),
@@ -214,7 +214,7 @@ class BookTestCase(ServerTestCase):
 
     def test_find_isbn(self):
         book = copy.deepcopy(book1)
-        book['tag'] = 12345
+        book['id'] = 12345
         book['isbn'] = 9
         self._put_book(book)
         self._put_book(book1)
@@ -307,7 +307,7 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response)[0], loaned_book)
 
         # Make sure a specific get will mark book as loaned
-        rv = self.app.get('/api/books/{}'.format(loaned_book['tag']))
+        rv = self.app.get('/api/books/{}'.format(loaned_book['id']))
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), loaned_book)
@@ -320,7 +320,7 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response)[0], book2)
 
         # Make sure a specific get will not mark book as loaned
-        rv = self.app.get('/api/books/{}'.format(book2['tag']))
+        rv = self.app.get('/api/books/{}'.format(book2['id']))
         self.assertEqual(rv.status_code, 200)
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), book2)
@@ -380,7 +380,7 @@ class BookTestCase(ServerTestCase):
                           content_type='application/json')
         self.assertEqual(rv.status_code, 404)
 
-        book_id = book1['tag']
+        book_id = book1['id']
         self._put_book(book1)
 
         # Fetch loan for book without loan should return 404
@@ -406,7 +406,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(json.loads(response)['book_id'], book_id)
 
     def test_loan_book_malformed_request(self):
-        book_id = book1['tag']
+        book_id = book1['id']
         self._put_book(book1)
 
         # Empty loan request should yield 400
@@ -430,7 +430,7 @@ class BookTestCase(ServerTestCase):
         rv = self.app.delete('/api/books/1234/loan')
         self.assertEqual(rv.status_code, 404)
 
-        book_id = book1['tag']
+        book_id = book1['id']
         self._put_book(book1)
 
         # Return unloaned book should yield 404
@@ -455,9 +455,9 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 404)
 
     def _put_book(self, book):
-        book_id = book['tag']
+        book_id = book['id']
         temp_book = copy.copy(book)
-        del temp_book['tag']
+        del temp_book['id']
         rv = self.app.put('/api/books/{}'.format(book_id),
                           data=json.dumps(temp_book),
                           content_type='application/json')
@@ -469,8 +469,8 @@ class BookTestCase(ServerTestCase):
         response = codecs.decode(rv.data)
         return json.loads(response)
 
-    def _loan_book(self, book_tag, employee_num):
-        return self.app.put('/api/loan/{}'.format(book_tag),
+    def _loan_book(self, book_id, employee_num):
+        return self.app.put('/api/loan/{}'.format(book_id),
                             data=json.dumps({'employee_num': employee_num}),
                             content_type='application/json')
 

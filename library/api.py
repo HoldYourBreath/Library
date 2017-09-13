@@ -12,6 +12,12 @@ class BookNotFound(Exception):
 
 @app.route('/api/books', methods=['GET'])
 def list_books():
+    '''
+    List all books
+
+    List all available books. Query params can be used to search
+    for different books
+    '''
     db = database.get()
     wheres = []
     query_params = []
@@ -68,14 +74,13 @@ def list_books():
     return jsonify(books)
 
 
-@app.route('/api/books/<int:tag>', methods=['PUT'])
-def put_book(tag):
+@app.route('/api/books/<int:book_id>', methods=['PUT'])
+def put_book(book_id):
     '''
     Add or update new book
 
-    This method will add a new book with a certein tag
-    or simply updating existing book with a tag if it
-    already exists
+    This method will add a new book with a certein book_id
+    or simply updating existing book with if it already exists
     '''
 
     book = flask.request.get_json()
@@ -119,28 +124,26 @@ def put_book(tag):
               book['thumbnail'])
 
     db = database.get()
-    old_book_cursor = db.execute('SELECT book_id FROM books WHERE tag=?',
-                                 (tag,))
-    old_book = old_book_cursor.fetchall()
-    if len(old_book) > 0:
+    if _book_exist(book_id):
         # Update existing book
         db.execute('UPDATE books '
                    'SET isbn = ?, room_id = ?, title = ?, pages = ?, '
                    'publisher = ?, format = ?, publication_date = ?, '
                    'description = ?, thumbnail = ? '
-                   'WHERE tag=?',
-                   params + (tag,))
+                   'WHERE book_id=?',
+                   params + (book_id,))
+        _update_authors(book_id, book['authors'])
     else:
         # Create a new book
         db.execute('INSERT INTO books'
-                   '(tag, isbn, room_id, title, pages, publisher, format,'
+                   '(book_id, isbn, room_id, title, pages, publisher, format,'
                    'publication_date, description, thumbnail)'
                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                   (tag,) + params)
+                   (book_id,) + params)
+        _add_authors(book_id, book['authors'])
 
     db.commit()
-    _add_authors(tag, book['authors'])
-    return jsonify(_get_book(tag))
+    return jsonify(_get_book(book_id))
 
 
 @app.route('/api/books/<int:book_id>', methods=['GET'])
@@ -154,12 +157,12 @@ def get_single_book(book_id):
         return response
 
 
-def _get_book(tag):
+def _get_book(book_id):
     db = database.get()
     curs = db.execute('SELECT * FROM books '
                       'LEFT JOIN loans USING (book_id) '
-                      'WHERE loans.return_date IS NULL AND books.tag = ?',
-                      (tag,))
+                      'WHERE loans.return_date IS NULL AND books.book_id = ?',
+                      (book_id,))
 
     book = curs.fetchall()
     if len(book) == 0:
@@ -171,7 +174,7 @@ def _get_book(tag):
 def _get_books(rows):
     books = []
     for book in rows:
-        json_book = {'tag': book['tag'],
+        json_book = {'id': book['book_id'],
                      'isbn': book['isbn'],
                      'title': book['title'],
                      'authors': _get_authors(book['book_id']),
@@ -188,13 +191,10 @@ def _get_books(rows):
     return books
 
 
-@app.route('/api/books/<int:tag>/loan', methods=['GET'])
-def get_loan_for_book(tag):
-    """ Get the loan for this book """
-    book_id = -1
-    try:
-        book_id = _get_book_id(tag)
-    except BookNotFound:
+@app.route('/api/books/<int:book_id>/loan', methods=['GET'])
+def get_loan_for_book(book_id):
+    '''Get loan for this book'''
+    if not _book_exist(book_id):
         response = jsonify({'msg': 'Book not found'})
         response.status_code = 404
         return response
@@ -207,9 +207,9 @@ def get_loan_for_book(tag):
         return response
 
 
-@app.route('/api/books/<int:tag>/loan', methods=['PUT'])
-def loan_book(tag):
-    """ Loan this book """
+@app.route('/api/books/<int:book_id>/loan', methods=['PUT'])
+def loan_book(book_id):
+    '''Loan this book'''
     put_data = flask.request.get_json()
     if put_data is None:
         response = jsonify({'msg': 'Missing json data in put request.'})
@@ -220,10 +220,7 @@ def loan_book(tag):
         response.status_code = 400
         return response
 
-    book_id = -1
-    try:
-        book_id = _get_book_id(tag)
-    except BookNotFound:
+    if not _book_exist(book_id):
         response = jsonify({'msg': 'Book not found'})
         response.status_code = 404
         return response
@@ -239,6 +236,11 @@ def loan_book(tag):
 @app.route('/api/books/<int:book_id>/loan', methods=['DELETE'])
 def return_book(book_id):
     """ Return current loan for this book """
+    if not _book_exist(book_id):
+        response = jsonify({'msg': 'Book not found'})
+        response.status_code = 404
+        return response
+
     try:
         return jsonify(loan.remove_on_book(book_id))
     except loan.LoanNotFound:
@@ -247,16 +249,19 @@ def return_book(book_id):
         return response
 
 
+def _update_authors(book_id, authors):
+    db = database.get()
+    db.execute('DELETE FROM authors WHERE book_id = ?',
+               (book_id,))
+    _add_authors(book_id, authors)
+
+
 def _add_authors(book_id, authors):
     db = database.get()
-    curs = db.execute('SELECT * FROM books WHERE tag = ?',
-                      (book_id,))
-    book = curs.fetchone()
-
     for author in authors:
-        curs = db.execute(
+        db.execute(
             'INSERT INTO authors (book_id, name) VALUES (?, ?)',
-            (book['book_id'], author))
+            (book_id, author))
 
     db.commit()
 
@@ -273,13 +278,13 @@ def _get_authors(book_id):
     return authors
 
 
-def _get_book_id(tag):
+def _book_exist(book_id):
     db = database.get()
-    curs = db.execute('SELECT * FROM books WHERE tag = ?',
-                      (tag,))
+    curs = db.execute('SELECT * FROM books WHERE book_id = ?',
+                      (book_id,))
 
     books = curs.fetchall()
     if len(books) == 0:
-        raise BookNotFound
-    else:
-        return books[0]['book_id']
+        return False
+
+    return True
