@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { render } from "react-dom";
 import { Tips } from "./Utils";
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'

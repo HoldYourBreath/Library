@@ -2,7 +2,7 @@ import React from 'react';
 
 const ShowThumbnail = ({thumbnailUrl}) => (
   <div>
-    <img src={thumbnailUrl}></img>
+    <img src={thumbnailUrl} alt="" ></img>
   </div>
 );
 
