@@ -5,7 +5,6 @@ import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
 import AdminPage from './components/admin';
-import Settings from './components/settings';
 import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
 import {
