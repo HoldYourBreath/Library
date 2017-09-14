@@ -28,9 +28,13 @@ def create_loan():
         response.status_code = 400
         return response
 
-    loan_id = loan.add(put_data['book_id'], put_data['user_id'])
-    return jsonify(loan.get(loan_id))
-
+    try:
+        loan_id = loan.add(put_data['book_id'], put_data['user_id'])
+        return jsonify(loan.get(loan_id))
+    except loan.LoanNotAllowed as err:
+        response = jsonify({'msg': str(err)})
+        response.status_code = 400
+        return response
 
 @app.route('/api/loans/<int:loan_id>', methods=['GET'])
 def get_loan(loan_id):

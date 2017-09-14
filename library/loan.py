@@ -82,7 +82,7 @@ def add(book_id, user_id):
 
     if loan:
         # Can't have multiple active loan on one book
-        raise LoanNotAllowed('Active loan detected')
+        raise LoanNotAllowed('Active loan detected on book {0}'.format(book_id))
 
     loan_date = datetime.now()
     curs = db_instance.cursor()

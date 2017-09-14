@@ -104,10 +104,10 @@ class LoanTestCase(ServerTestCase):
             test_loan_id = loan.add(self.dummy_book_id,
                                     self.dummy_user_id)
             with self.assertRaises(loan.LoanNotFound):
-                test_loan = loan.get(test_loan_id + 10)
+                loan.get(test_loan_id + 10)
 
             with self.assertRaises(loan.LoanNotFound):
-                test_loan = loan.by_book_id(self.dummy_book_id + 10)
+                loan.by_book_id(self.dummy_book_id + 10)
 
     def test_remove(self):
         with self.app.session_transaction():
@@ -166,7 +166,7 @@ class LoanTestCase(ServerTestCase):
 
             # Test error state, too many active loans
             db = database.get()
-            for i in range(3):
+            for _ in range(3):
                 # Insert three active loans
                 db.execute('INSERT INTO loans '
                            '(book_id, user_id, loan_date) '
