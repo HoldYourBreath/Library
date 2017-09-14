@@ -29,6 +29,11 @@ class AddBook extends Component {
       thumbnail: ''
     };
   }
+
+  componentWillMount() {
+    this.setState({room_id: this.props.selectedRoom});
+  }
+
   onFormInput(e) {
     this.setState({[e.target.id]: e.target.value});
   }

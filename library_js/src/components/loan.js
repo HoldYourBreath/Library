@@ -1,5 +1,7 @@
 import React from 'react';
-import UserInfo from "./UserInfo";
+import UserInfo from './UserInfo';
+import BookInfo from './BookInfo';
+import {newLoan} from '../lib/loans';
 import {FormGroup, 
         Button, 
         Col,
@@ -17,9 +19,9 @@ class LoanBook extends React.Component {
     super(props);
     this.state = {
       errMsg: null,
+      infoMsg: null,
       userData: null,
       bookData: null,
-      bookTitle: null,
       loadingUserData: false,
       userId: "",
       bookId: ""
@@ -28,6 +30,18 @@ class LoanBook extends React.Component {
 
   onFormInput(e) {
     this.setState({[e.target.id]: e.target.value});
+  }
+
+  resetForms() {
+    this.setState({
+      errMsg: null,
+      infoMsg: null,
+      userData: null,
+      bookData: null,
+      loadingUserData: false,
+      userId: "",
+      bookId: ""
+    });
   }
 
   getBookData(bookId) {
@@ -88,19 +102,28 @@ class LoanBook extends React.Component {
   }
 
   loanBookButtonPress() {
-    console.log("Loan book!");
+    newLoan(this.state.userData.id, this.state.bookData.id,)
+      .then((res) => {
+        this.setState({infoMsg: 'Book successfully loaned!'});
+        this.resetForms();
+      })
+      .catch((e) => {
+        this.setState({errorMsg: e});
+      });
   }
+
   getBookDataButtonPress() {
     this.getBookData(this.state.bookId);
   }
+
   render() {
     return (
       <div>
-        <h1>
-            Loan book
-        </h1>
+        <h1>Loan book</h1>
         {this.state.errorMsg ? 
           <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null}
+        {this.state.infoMsg ? 
+          <Alert bsStyle="info"><strong>{this.state.infoMsg}</strong></Alert> : null}
         <Form horizontal>
             <FormGroup controlId="userId">
               <Col 
@@ -128,7 +151,7 @@ class LoanBook extends React.Component {
               <Col 
                 componentClass={ControlLabel} 
                 sm={2}>
-                Book Tag
+                Book Id
               </Col>
               <Col sm={3}>
                 <FormControl
@@ -156,12 +179,13 @@ class LoanBook extends React.Component {
               {this.state.userData ? <UserInfo userData={this.state.userData}/> : null}
             </Col>
             <Col sm={6}>
+              {this.state.bookData ? <BookInfo bookData={this.state.bookData}/> : null}
             </Col>
           </Row>
           <FormGroup>
             <Col sm={2}/>
             <Col sm={10}>
-              {this.state.userData ? 
+              {this.state.userData && this.state.bookData ? 
                 <Button onClick={this.loanBookButtonPress.bind(this)}>Loan</Button> : null}
             </Col>
           </FormGroup>

@@ -4,7 +4,6 @@ import flask
 from flask import jsonify
 
 
-
 @app.route('/api/loans', methods=['GET'])
 def get_all_loans():
     """
@@ -35,6 +34,7 @@ def create_loan():
         response = jsonify({'msg': str(err)})
         response.status_code = 400
         return response
+
 
 @app.route('/api/loans/<int:loan_id>', methods=['GET'])
 def get_loan(loan_id):

@@ -1,4 +1,3 @@
-
 const request = require('superagent');
 
 
@@ -111,4 +110,4 @@ const renameRoom = (siteId, roomId, newName) => {
   });
 };
 
-export {getRooms, getLocations, addSite, renameSite, addRoom, removeRoom, renameRoom}
+export {getRooms, getLocations, addSite, renameSite, addRoom, removeRoom, renameRoom};
