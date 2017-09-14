@@ -1,3 +1,4 @@
+import os
 import flask
 import sqlite3
 
@@ -10,6 +11,13 @@ def init():
         db.cursor().executescript(f.read())
         db.commit()
 
+def validate_db():
+    """
+    Validate db. Create and init if it does not exist.
+    """
+    if not os.path.exists(app.config['DATABASE']):
+        print("Init database!")
+        init()
 
 def connect():
     """Connects to the specific database."""

@@ -16,3 +16,8 @@ app.secret_key = config.get('flask', 'secret_key')
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'library.db'),
 ))
+
+@app.before_first_request
+def validate_database():
+    from library.database import validate_db
+    validate_db()
