@@ -27,16 +27,6 @@ class Books extends React.Component {
     };
   };
 
-  componentWillMount() {
-    request
-      .get(`${window.__appUrl}/api/books`)
-      .type('application/json')
-      .end((err, res) => {
-        let currentBooks = res ? res.body : [];
-        this.setState({books: currentBooks});
-      });
-  }
-
   bookSelected(bookData) {
     this.setState({
       description: bookData.description,
@@ -49,7 +39,7 @@ class Books extends React.Component {
   }
 
   render() {
-    console.log(this.state.books);
+    console.log(this.props.books);
     return (
     <div className="flex-container">
       <div className="bookTable">
@@ -64,7 +54,7 @@ class Books extends React.Component {
               }
             }
           }
-         data={this.state.books}
+         data={this.props.books}
           columns={
           [
             {

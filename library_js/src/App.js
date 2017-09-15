@@ -1,6 +1,6 @@
 import React from 'react';
 import {getLocations} from './lib/sites';
-import Books from './components/books';
+import ListBooks from './components/ListBooks';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
@@ -140,7 +140,7 @@ class App extends React.Component {
             </div>
           </nav>
           <div className='container'>
-            <Route path={'/books'} component={Books}/>
+            <Route path={'/books'} component={ListBooks}/>
             <Route path={'/loan'} component={LoanBook}/>
             <Route
               path={'/add_book'}
