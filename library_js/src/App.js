@@ -5,6 +5,7 @@ import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
 import AdminPage from './components/admin';
+import SettingsPage from './components/settings';
 import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
 import {
@@ -151,6 +152,11 @@ class App extends React.Component {
             <Route 
               path={'/admin'}
               component={() => (<AdminPage 
+                                  locationUpdate={this.updateLocations.bind(this)}
+                                  sites={this.state.sites} />)}/>
+            <Route
+              path={'/settings'}
+              component={() => (<SettingsPage
                                   locationUpdate={this.updateLocations.bind(this)}
                                   sites={this.state.sites} />)}/>
             <Route 
