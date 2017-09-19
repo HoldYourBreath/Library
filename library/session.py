@@ -10,8 +10,7 @@ import library.ldap as ldap
 
 AUTHENTICATE = True
 
-
-def validate_user():
+def validate_user(admin_required):
     if 'id' in flask.session:
         db = database.get()
         curs = db.execute('select * from sessions where session_id = (?)',
@@ -22,16 +21,35 @@ def validate_user():
             return True
     return False
 
+def login_required(*args, admin=False):
+    """
+    Login required decorator
 
-def login_required(f):
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        if not validate_user():
-            return flask.redirect(
-                flask.url_for('login', next=flask.request.path))
-        return f(*args, **kwargs)
+    Decorator to restrict a resource to loged in users only
 
-    return wrapper
+
+    Keyword arguments:
+    admin -- Require that the user is admin
+    """
+    def _login_required(f):
+        @functools.wraps(f)
+        def wrapper(*args, **kwargs):
+            if not validate_user(admin):
+                response = jsonify({'err': 'Authentication failed'})
+                response.status_code = 401
+                return response
+
+            return f(*args, **kwargs)
+
+        return wrapper
+
+    if len(args) == 1 and callable(args[0]):
+        # Assume decorator called without argument
+        return _login_required(args[0])
+    elif len(args) > 0:
+        raise TypeError('Invalid use of decorator')
+
+    return _login_required
 
 
 @app.route('/api/login/validate', methods=['POST'])
@@ -54,10 +72,7 @@ def api_login():
     user_credentials = flask.request.get_json()
     user = user_credentials['signum']
     password = user_credentials['password']
-    if not AUTHENTICATE:
-        secret = create_session(user)
-        response = jsonify({'secret': secret})
-    elif ldap.authenticate(user, password):
+    if not AUTHENTICATE or ldap.authenticate(user, password):
         secret = create_session(user)
         response = jsonify({'secret': secret})
     else:
