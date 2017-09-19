@@ -59,6 +59,6 @@ create table sessions (
 
 create table admins (
     admin_id INTEGER primary key autoincrement,
-    signum TEXT not null unique,
+    user_id TEXT not null unique,
     admin_level INTEGER not null
 );

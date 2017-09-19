@@ -10,22 +10,38 @@ import library.ldap as ldap
 
 AUTHENTICATE = True
 
+
+def is_admin(user):
+    db = database.get()
+    curs = db.execute('SELECT * FROM admins WHERE user_id = ?',
+                      (user,))
+    if len(curs.fetchall()):
+        return True
+
+    return False
+
+
 def validate_user(admin_required):
-    if 'id' in flask.session:
+    if 'signum' in flask.session:
         db = database.get()
-        curs = db.execute('select * from sessions where session_id = (?)',
-                          (flask.session['id'],))
+
+        curs = db.execute('select * from sessions where user_id = (?)',
+                          (flask.session['signum'],))
         sessions = curs.fetchall()
         if len(sessions) > 0 and \
            sessions[0]['secret'] == flask.session['secret']:
-            return True
+            if admin_required:
+                return is_admin(flask.session['signum'])
+            else:
+                return True
     return False
 
-def login_required(*args, admin=False):
+
+def login_required(*args, admin_required=False):
     """
     Login required decorator
 
-    Decorator to restrict a resource to loged in users only
+    Decorator to restrict a resource to logged in users only
 
 
     Keyword arguments:
@@ -34,7 +50,7 @@ def login_required(*args, admin=False):
     def _login_required(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
-            if not validate_user(admin):
+            if not validate_user(admin_required):
                 response = jsonify({'err': 'Authentication failed'})
                 response.status_code = 401
                 return response
@@ -160,47 +176,3 @@ def delete_session():
 
     response = jsonify({'msg': 'Session deleted'})
     return response
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if flask.request.method == 'POST':
-        user = flask.request.form['signum']
-        password = flask.request.form['password']
-        if ldap.authenticate(user, password):
-            login_time = datetime.now()
-            flask.session['secret'] = str(uuid.uuid4())
-            flask.session['user'] = user
-            db = database.get()
-            cursor = db.cursor()
-            cursor.execute(
-                       'INSERT INTO sessions'
-                       '(secret, user_id, login_time, last_activity)'
-                       'values (?, ?, ?, ?)',
-                       (flask.session['secret'],
-                        flask.session['user'],
-                        login_time,
-                        login_time))
-
-            db.commit()
-
-            # Get last autoincremented primary key
-            flask.session['id'] = cursor.lastrowid
-
-            return flask.redirect('/')
-        else:
-            return flask.render_template('login.html',
-                                         page='login',
-                                         header_title='login')
-
-    return flask.render_template('login.html',
-                                 page='login',
-                                 header_title='login')
-
-
-@app.route('/logout', methods=['GET'])
-def logout():
-    flask.session.clear()
-    return flask.render_template('logout.html',
-                                 page='logout',
-                                 header_title='logout')

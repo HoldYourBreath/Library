@@ -1,16 +1,26 @@
-import flask
-from ldap3.core.exceptions import LDAPBindError
-
 from .test_server import ServerTestCase
-from library.app import app
 import json
 import codecs
 import library.session as session
+from library.app import app
+import library.database as database
 
 TEST_SIGNUM = "book_reader"
 
 
 class SessionApiTestCase(ServerTestCase):
+    @classmethod
+    def setUpClass(cls):
+        @app.route('/test_login_decorator')
+        @session.login_required
+        def test_login_required():
+            return 'allowed'
+
+        @app.route('/test_admin_login_decorator')
+        @session.login_required(admin_required=True)
+        def test_admin_login_required():
+            return 'allowed'
+
     def setUp(self):
         ServerTestCase.setUp(self)
 
@@ -37,14 +47,17 @@ class SessionApiTestCase(ServerTestCase):
 
         :return: Session secret
         """
+        password = 'page4'
         rv = self.app.post('/api/login',
                            data=json.dumps({'signum': TEST_SIGNUM,
-                                            'password': 'page4'}),
+                                            'password': password}),
                            content_type='application/json')
         response = codecs.decode(rv.data)
         self.assertEqual(rv.status_code, 200)
         secret = json.loads(response)['secret']
         self.assertTrue(secret)
+        self.assertEqual(self.ldap_stub.user, TEST_SIGNUM)
+        self.assertEqual(self.ldap_stub.password, password)
         return secret
 
     def test_login(self) -> None:
@@ -108,4 +121,59 @@ class SessionApiTestCase(ServerTestCase):
                            data=json.dumps({'signum': TEST_SIGNUM,
                                             'secret': secret}),
                            content_type='application/json')
+        self.assertEqual(rv.status_code, 200)
+
+    def test_login_required_decorator(self):
+
+        # Test malformed decorator usage
+        with self.assertRaises(TypeError):
+            @session.login_required(True)
+            def test_malformed_decorator():
+                pass
+
+        self._login_decorator('/test_login_decorator')
+
+    def test_login_admin_required_decorator(self):
+        with self.app.session_transaction():
+            db = database.get()
+            db.execute('INSERT INTO admins '
+                       '(user_id, admin_level) '
+                       'VALUES(?, ?)',
+                       (TEST_SIGNUM, 1))
+            db.commit()
+
+        self._login_decorator('/test_admin_login_decorator')
+
+        # Remove the TEST_SIGNUM from admins
+        with self.app.session_transaction():
+            db = database.get()
+            db.execute('UPDATE admins '
+                       'SET user_id=? '
+                       'WHERE user_id=?',
+                       ('DUMMY', TEST_SIGNUM))
+            db.commit()
+
+        # TEST_SIGNUM should not longer be authorized as admin
+        rv = self.app.get('/test_admin_login_decorator')
+        self.assertEqual(rv.status_code, 401)
+
+    def _login_decorator(self, route):
+        # Test with no prevous login at all
+        rv = self.app.get(route)
+        self.assertEqual(rv.status_code, 401)
+
+        # Test with unexisting login
+        with self.app.session_transaction() as sess:
+            sess['signum'] = TEST_SIGNUM
+            sess['secret'] = 'wrong_one'
+
+        rv = self.app.get(route)
+        self.assertEqual(rv.status_code, 401)
+
+        # Test with existing login
+        secret = self._create_session()
+        with self.app.session_transaction() as sess:
+            sess['secret'] = secret
+
+        rv = self.app.get(route)
         self.assertEqual(rv.status_code, 200)
