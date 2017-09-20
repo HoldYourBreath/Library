@@ -22,6 +22,7 @@ class ListBooks extends React.Component {
     }
 
     render() {
+      console.log(this.props);
       return (
         <Books books={this.state.books}/>
       )

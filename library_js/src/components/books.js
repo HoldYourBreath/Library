@@ -4,7 +4,6 @@ import { Tips } from "./Utils";
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 import '../App.css';
-const request = require('superagent');
 
 
 class Books extends React.Component {
@@ -73,6 +72,17 @@ class Books extends React.Component {
               columns:
               [
                 {
+                  Header: "",
+                  accessor: "publication_date",
+                  width: 67
+                }
+              ]
+            },
+            {
+              Header: "",
+              columns:
+              [
+                {
                   Header: "Published",
                   accessor: "publication_date",
                   width: 67
@@ -91,13 +101,10 @@ class Books extends React.Component {
         <div className="booksTitle">
           {this.state.title}
         </div>
-
         <div className="booksAuthor">
           {this.state.authors}    {this.state.format}    {this.state.pages}
         </div>
-
           <img id="" alt="" src={this.state.thumbnail} />
-
         <div className="description">
           {this.state.description}
         </div>

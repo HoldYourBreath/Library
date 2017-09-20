@@ -21,27 +21,11 @@ class LogIn extends Component {
   }
 
   authenticate() {
-    let url = `${window.__appUrl}/api/login`;
-    let signum = this.state.signum;
-    request
-      .post(url)
-      .send({
-        signum: signum,
-        password: this.state.password
-      })
-      .type('application/json')
-      .on('error', (err) => {
-        this.setState({errorMsg: `Authentication failed`});
-      })
-      .end((err, res) => {
-        if (!err) {
-          this.setState({redirect: true});
-          this.props.onAuthenticationDone({
-            signum: signum,
-            secret: res.body.secret
-          });
-         }
-    });
+    console.log(this.props);
+    this.props.sessionStore.validateUserSession(
+      this.state.signum, 
+      this.state.password, 
+      this.props.onAuthenticationDone);
   }
 
   onFormInput(e) {

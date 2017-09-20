@@ -1,5 +1,6 @@
 import React from 'react';
 import {getLocations} from './lib/sites';
+import sessionStore from './stores/Session';
 import ListBooks from './components/ListBooks';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
@@ -24,9 +25,7 @@ class App extends React.Component {
     this.state = {
       sites: [],
       redirectTo: '',
-      selectedRoom: '',
-      signum: '',
-      secret: ''
+      selectedRoom: ''
     };
   }
 
@@ -36,13 +35,6 @@ class App extends React.Component {
       state: {from: 'login'}
     }
     this.props.history.push(location);
-    this.setState({
-      signum: sessionInfo.signum,
-      secret: sessionInfo.secret,
-      redirectTo: ''
-    });
-    localStorage.setItem('signum', sessionInfo.signum);
-    localStorage.setItem('secret', sessionInfo.secret);
   }
 
   onRoomSelection(roomId) {
@@ -54,57 +46,19 @@ class App extends React.Component {
     getLocations()
       .then((locations) => {
         this.setState({sites: locations});
+        console.log(locations);
     });
   }
 
   componentWillMount() {
+    sessionStore.initSession();
     this.updateLocations();
     let selectedRoom = localStorage.getItem('selectedRoom');
     if (selectedRoom) {
       this.setState({selectedRoom: selectedRoom});
     }
-    let signum = localStorage.getItem('signum');
-    let secret = localStorage.getItem('secret');
-    if (secret && signum) {
-      // Validate stored session.
-      request
-        .post(`${window.__appUrl}/api/login/validate`)
-        .send({signum: signum, secret: secret})
-        .type('application/json')
-        .end((err, res) => {
-          if(err) {
-            this.clearLocalStorage();
-          } else {
-            this.setState({signum: signum, secret: secret});
-          }
-        });
-    }
-  }
-  clearLocalStorage() {
-    localStorage.removeItem('signum');
-    localStorage.removeItem('secret');
   }
 
-  logOut(){
-    let url = `${window.__appUrl}/api/login/delete`;
-    request
-      .post(url)
-      .send({
-        signum: this.state.signum,
-        secret: this.state.secret
-      })
-      .type('application/json')
-      .end((err, res) => {
-        if (err) {
-          console.error(err);
-        }
-        this.setState({
-          signum: '',
-          secret: ''
-        });
-        this.clearLocalStorage();
-      });
-  }
   logInBegun() {
     this.setState({redirectTo: this.props.location.pathname});
   }
@@ -132,16 +86,17 @@ class App extends React.Component {
                     <Link to='/loan'>Loan Book</Link>
                   </li>
                 </ul>
-                <NavbarUserInfo 
-                  logInBegun={this.logInBegun.bind(this)}
-                  logOut={this.logOut.bind(this)}
-                  secret={this.state.secret} 
-                  signum={this.state.signum}/>
+                <NavbarUserInfo
+                  sessionStore={sessionStore}
+                  logInBegun={this.logInBegun.bind(this)}/>
               </div>
             </div>
           </nav>
           <div className='container'>
-            <Route path={'/books'} component={ListBooks}/>
+            <Route path={'/books'} component={() => (
+              <ListBooks
+                rooms={this.state.sites}
+              />)}/>
             <Route path={'/loan'} component={LoanBook}/>
             <Route
               path={'/add_book'}
@@ -163,6 +118,7 @@ class App extends React.Component {
               path={'/login'}
               component={() => (
                 <LogIn 
+                  sessionStore={sessionStore}
                   onAuthenticationDone={this.authenticationDone.bind(this)} />)}/>
           </div>
         </div>
