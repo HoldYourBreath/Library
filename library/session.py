@@ -15,7 +15,8 @@ def is_admin(user):
     db = database.get()
     curs = db.execute('SELECT * FROM admins WHERE user_id = ?',
                       (user,))
-    if len(curs.fetchall()):
+    admins = curs.fetchall()
+    if len(admins):
         return True
 
     return False
@@ -37,35 +38,44 @@ def validate_user(admin_required):
     return False
 
 
-def login_required(*args, admin_required=False):
+def admin_required(f):
+    """
+    admin required decorator
+
+    Decorator to restrict a resource to admin users only
+    """
+    admin_required = True
+
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        if not validate_user(admin_required):
+            response = jsonify({'err': 'Authentication failed'})
+            response.status_code = 401
+            return response
+
+        return f(*args, **kwargs)
+
+    return wrapper
+
+
+def login_required(f):
     """
     Login required decorator
 
     Decorator to restrict a resource to logged in users only
-
-
-    Keyword arguments:
-    admin -- Require that the user is admin
     """
-    def _login_required(f):
-        @functools.wraps(f)
-        def wrapper(*args, **kwargs):
-            if not validate_user(admin_required):
-                response = jsonify({'err': 'Authentication failed'})
-                response.status_code = 401
-                return response
+    admin_required = False
 
-            return f(*args, **kwargs)
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        if not validate_user(admin_required):
+            response = jsonify({'err': 'Authentication failed'})
+            response.status_code = 401
+            return response
 
-        return wrapper
+        return f(*args, **kwargs)
 
-    if len(args) == 1 and callable(args[0]):
-        # Assume decorator called without argument
-        return _login_required(args[0])
-    elif len(args) > 0:
-        raise TypeError('Invalid use of decorator')
-
-    return _login_required
+    return wrapper
 
 
 @app.route('/api/login/validate', methods=['POST'])

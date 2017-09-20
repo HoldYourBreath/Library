@@ -20,10 +20,10 @@ def get_book(isbn):
     try:
         book_id = lookup_goodreads_id(isbn)
     except IndexError:
-            response = jsonify(
-                {"msg": "Book data for isbn {} not found".format(isbn)})
-            response.status_code = 404
-            return response
+        response = jsonify(
+            {"msg": "Book data for isbn {} not found".format(isbn)})
+        response.status_code = 404
+        return response
     book = fetch_goodreads_book(book_id)
     return get_json_response(book)
 

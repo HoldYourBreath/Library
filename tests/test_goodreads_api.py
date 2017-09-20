@@ -129,7 +129,7 @@ class GoodreadsTestCase(ServerTestCase):
                 'and the rest of the world."',
                 'thumbnail': 'https://images.gr-assets.com/books/'
                              '1416778735m/23215733.jpg'
-                }
+        }
 
         rv, response = self.get_book(1234)
 

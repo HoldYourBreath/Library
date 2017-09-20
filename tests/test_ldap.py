@@ -42,7 +42,7 @@ class LdapTestCase(ServerTestCase):
             if start_pos == 0 or end_pos == 0:
                 raise MalformedDn()
 
-            return self.dn[start_pos+1:end_pos]
+            return self.dn[start_pos + 1:end_pos]
 
         def get_user_dn(self):
             # Find starting pos
@@ -51,7 +51,7 @@ class LdapTestCase(ServerTestCase):
             if start_pos == 0:
                 raise MalformedDn()
 
-            return self.dn[start_pos+1:]
+            return self.dn[start_pos + 1:]
 
         def raise_exception(self, exception, text):
             '''Set up stub to raise exception in Connection function'''

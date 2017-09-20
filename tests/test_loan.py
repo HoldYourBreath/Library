@@ -10,10 +10,16 @@ class LoanTestCase(ServerTestCase):
 
     def setUp(self):
         ServerTestCase.setUp(self)
-        book = {'tag': self.dummy_book_id,
+        book = {'id': self.dummy_book_id,
                 'isbn': 1234,
                 'room_id': 1}
+        self.add_admin('admin')
+        self.create_session(user='admin', update_session=True)
         self.add_book(book)
+
+    def tearDown(self):
+        self.remove_admin('admin')
+        ServerTestCase.tearDown(self)
 
     def test_loan(self):
         with self.app.session_transaction():
@@ -39,13 +45,13 @@ class LoanTestCase(ServerTestCase):
         with self.app.session_transaction():
             num_loans = 42
             loans = {}
-            for book_id in range(2, num_loans+1):
-                book = {'tag': book_id,
+            for book_id in range(2, num_loans + 1):
+                book = {'id': book_id,
                         'isbn': 1234,
                         'room_id': 1}
                 self.add_book(book)
 
-            for book_id in range(1, num_loans+1):
+            for book_id in range(1, num_loans + 1):
                 loan_id = loan.add(book_id,
                                    self.dummy_user_id)
                 loans[loan_id] = book_id

@@ -66,12 +66,19 @@ class BookTestCase(ServerTestCase):
     def setUp(self):
         ServerTestCase.setUp(self)
         # Create some rooms
+        self.add_admin('admin')
+        self.create_session(user='admin', update_session=True)
+
         site_id = self.add_site('happy place')
         self.add_room(site_id, 'happy room')
 
         site_id = self.add_site('testing')
         for name in '3456':
             self.add_room(site_id, name)
+
+    def tearDown(self):
+        self.remove_admin('admin')
+        ServerTestCase.tearDown(self)
 
     def test_book_get(self):
         rv = self.app.get('/api/books')
@@ -83,7 +90,7 @@ class BookTestCase(ServerTestCase):
 
     def test_book_put(self):
         books = [book1]
-        self._put_book(books[0])
+        self.add_book(books[0])
 
         rv = self.app.get('/api/books/1')
         response = codecs.decode(rv.data)

@@ -18,7 +18,7 @@ echo "Tests done.. Open htmlcov/index.html for more statistics"
 
 # Run PEP8 conformance
 echo -n "Check PEP8 conformance.."
-python3 -m pep8 --show-source --show-pep8 --count --exclude "library/library.py" library tests
+python3 -m pep8 --show-source --show-pep8 --count library tests
 echo "Done"
 
 # Don't fail on errors

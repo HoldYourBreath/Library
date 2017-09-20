@@ -3,6 +3,7 @@ from flask import jsonify
 
 import library.database as database
 import library.loan as loan
+import library.session as session
 from library.app import app
 
 
@@ -75,6 +76,7 @@ def list_books():
 
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
+@session.admin_required
 def put_book(book_id):
     '''
     Add or update new book

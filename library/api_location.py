@@ -3,6 +3,7 @@ from library.app import app
 import library.database as database
 import flask
 from flask import jsonify
+import library.session as session
 
 
 class SiteNotFound(Exception):
@@ -98,6 +99,7 @@ def get_all_sites():
 
 
 @app.route('/api/sites/<int:site_id>/rooms/<int:room_id>', methods=['DELETE'])
+@session.admin_required
 def delete_room(site_id, room_id):
     try:
         response = jsonify(_get_room(room_id))
@@ -116,7 +118,7 @@ def delete_room(site_id, room_id):
         db.commit()
     else:
         response = jsonify({
-          'msg': 'Room currently has books linked to it.\
+            'msg': 'Room currently has books linked to it.\
           Make sure the room is empty before deleting this room'
         })
         response.status_code = 403
@@ -124,6 +126,7 @@ def delete_room(site_id, room_id):
 
 
 @app.route('/api/sites', methods=['POST'])
+@session.admin_required
 def add_new_site():
     """
     """
@@ -157,7 +160,7 @@ def add_new_site():
 
 
 @app.route('/api/sites/<int:site_id>', methods=['GET'])
-def get_all_site(site_id):
+def get_site(site_id):
     """
     """
     try:
@@ -171,6 +174,7 @@ def get_all_site(site_id):
 
 
 @app.route('/api/sites/<int:site_id>', methods=['PUT'])
+@session.admin_required
 def rename_site(site_id):
     put_data = flask.request.get_json()
     if put_data is None:
@@ -199,6 +203,7 @@ def get_rooms(site_id):
 
 
 @app.route('/api/sites/<int:site_id>/rooms', methods=['POST'])
+@session.admin_required
 def post_new_room(site_id):
     """
     """
@@ -255,6 +260,7 @@ def get_room(site_id, room_id):
 
 
 @app.route('/api/sites/<int:site_id>/rooms/<int:room_id>', methods=['PUT'])
+@session.admin_required
 def rename_room(site_id, room_id):
     put_data = flask.request.get_json()
     if put_data is None:

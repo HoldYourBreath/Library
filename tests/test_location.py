@@ -18,6 +18,13 @@ class SitesTestCase(ServerTestCase):
             db.execute('DELETE FROM sites')
             db.commit()
 
+        self.add_admin('admin')
+        self.create_session(user='admin', update_session=True)
+
+    def tearDown(self):
+        self.remove_admin('admin')
+        ServerTestCase.tearDown(self)
+
     def test_get_sites(self):
         num_sites = 100
         for site in range(num_sites):
@@ -50,6 +57,14 @@ class SitesTestCase(ServerTestCase):
         response = json.loads(codecs.decode(rv.data))
         self.assertEqual(response['id'], test_site_id)
         self.assertEqual(response['name'], test_site_name)
+
+        # Test that non admin user can't add site
+        self.remove_admin('admin')
+        rv = self.app.post('/api/sites',
+                           data=json.dumps({'name': 'some site'}),
+                           content_type='application/json')
+
+        self.assertEqual(rv.status_code, 401)
 
     def test_get_invalid_site(self):
         rv = self.app.get('/api/sites/{}'.format(1000))
@@ -123,6 +138,14 @@ class SitesTestCase(ServerTestCase):
         self.assertEqual(response['id'], test_room_id)
         self.assertEqual(response['name'], test_room_name)
 
+        # Test that non authorized user can't add rooms
+        self.remove_admin('admin')
+        rv = self.app.post('/api/sites/{}/rooms'.format(site_id),
+                           data=json.dumps({'name': 'dummy_room'}),
+                           content_type='application/json')
+
+        self.assertEqual(rv.status_code, 401)
+
     def test_get_invalid_room(self):
         # Try to get room with invalid site
         rv = self.app.get('/api/sites/{}/rooms/1000'.format(1000))
@@ -181,6 +204,14 @@ class SitesTestCase(ServerTestCase):
         self.assertEqual(new_site_name, new_name)
         self.assertEqual(rv.status_code, 200)
 
+        # Test that non authorized user rename sites
+        self.remove_admin('admin')
+        rv = self.app.put('/api/sites/{}'.format(site_id),
+                          data=json.dumps({'name': 'dummy_new_name'}),
+                          content_type='application/json')
+
+        self.assertEqual(rv.status_code, 401)
+
     def test_site_put_without_data(self):
         rv = self.app.put('/api/sites/100')
         self.assertEqual(rv.status_code, 400)
@@ -200,6 +231,14 @@ class SitesTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(new_site_name, new_name)
 
+        # Test that non authorized user can't rename rooms
+        self.remove_admin('admin')
+        rv = self.app.put('/api/sites/{}/rooms/{}'.format(site_id, room_id),
+                          data=json.dumps({'name': 'dummy_room_new_name'}),
+                          content_type='application/json')
+
+        self.assertEqual(rv.status_code, 401)
+
     def test_delete_room(self):
         room_name = 'Reading'
         site_id = self.add_site('test')
@@ -210,6 +249,13 @@ class SitesTestCase(ServerTestCase):
         rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
         self.assertEqual(rv.status_code, 404)
 
-    def test_room_put_withoute_data(self):
+        # Test that non authorized user can't delete room
+        room_id = self.add_room(site_id, room_name)
+
+        self.remove_admin('admin')
+        rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, room_id))
+        self.assertEqual(rv.status_code, 401)
+
+    def test_room_put_without_data(self):
         rv = self.app.put('/api/sites/100/rooms/100')
         self.assertEqual(rv.status_code, 400)
