@@ -20,12 +20,12 @@ class LogIn extends Component {
     };
   }
 
-  authenticate() {
-    console.log(this.props);
+  authenticate(e) {
     this.props.sessionStore.validateUserSession(
-      this.state.signum, 
-      this.state.password, 
+      this.state.signum,
+      this.state.password,
       this.props.onAuthenticationDone);
+    e.preventDefault();
   }
 
   onFormInput(e) {
@@ -39,7 +39,7 @@ class LogIn extends Component {
     }
     return (
       <div className="jumbotron">
-        <Form horizontal>
+        <Form horizontal onSubmit={this.authenticate.bind(this)}>
           <FormGroup controlId="signum">
             <p>
             Login using your windows credentials
@@ -72,7 +72,7 @@ class LogIn extends Component {
           </FormGroup>
           <FormGroup>
             <Col smOffset={2} sm={10}>
-              <Button onClick={this.authenticate.bind(this)}>
+              <Button type="submit">
                 Login
               </Button>
             </Col>
