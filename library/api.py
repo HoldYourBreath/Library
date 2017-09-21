@@ -202,7 +202,7 @@ def get_loan_for_book(book_id):
         return response
 
     try:
-        return jsonify(loan.get(book_id))
+        return jsonify(loan.by_book_id(book_id))
     except loan.LoanNotFound:
         response = jsonify({'msg': 'No loan found for this book'})
         response.status_code = 404

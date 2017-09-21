@@ -6,7 +6,7 @@ import codecs
 from .test_server import ServerTestCase
 import library.database as database
 
-book1 = {'id': 1,
+book1 = {'id': 10,
          'isbn': 1234,
          'title': 'The book',
          'authors': ['Bob Author'],
@@ -19,7 +19,7 @@ book1 = {'id': 1,
          'thumbnail': 'a thumbnail',
          'loaned': False}
 
-book2 = {'id': 2,
+book2 = {'id': 20,
          'isbn': 1235,
          'title': 'Great book',
          'authors': ['Jane Author'],
@@ -32,7 +32,7 @@ book2 = {'id': 2,
          'thumbnail': 'another thumbnail',
          'loaned': False}
 
-book3 = {'id': 3,
+book3 = {'id': 30,
          'isbn': 1236,
          'title': 'Great Songs',
          'authors': ['Jane Author'],
@@ -46,7 +46,7 @@ book3 = {'id': 3,
          'thumbnail': 'another thumbnail',
          'loaned': False}
 
-book4 = {'id': 4,
+book4 = {'id': 40,
          'isbn': 1237,
          'title': 'Great Poems',
          'authors': ['Jane Author'],
@@ -92,7 +92,7 @@ class BookTestCase(ServerTestCase):
         books = [book1]
         self.add_book(books[0])
 
-        rv = self.app.get('/api/books/1')
+        rv = self.app.get('/api/books/{}'.format(books[0]['id']))
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), books[0])
 
@@ -108,7 +108,7 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 200)
         books = [book1]
         self._put_book(books[0])
-        rv = self.app.get('/api/books/1')
+        rv = self.app.get('/api/books/{}'.format(books[0]['id']))
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), books[0])
         rv = self.app.get('/api/books')
@@ -133,11 +133,11 @@ class BookTestCase(ServerTestCase):
         self._put_book(books[1])
         self._put_book(books[0])
 
-        rv = self.app.get('/api/books/1')
+        rv = self.app.get('/api/books/{}'.format(books[1]['id']))
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), books[1])
 
-        rv = self.app.get('/api/books/2')
+        rv = self.app.get('/api/books/{}'.format(books[0]['id']))
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), books[0])
 
@@ -146,7 +146,7 @@ class BookTestCase(ServerTestCase):
         same_book['id'] = 3
         self._put_book(same_book)
 
-        rv = self.app.get('/api/books/3')
+        rv = self.app.get('/api/books/{}'.format(same_book['id']))
         response = codecs.decode(rv.data)
         self._compare_book(json.loads(response), same_book)
 
@@ -295,16 +295,9 @@ class BookTestCase(ServerTestCase):
         self._put_book(loaned_book)
         self._put_book(book2)
 
-        with self.app.session_transaction():
-            db = database.get()
-            db.execute(
-                'INSERT INTO loans '
-                '(book_id, user_id, loan_date, return_date)'
-                'VALUES (?, ?, ?, ?)', (1, 1, 1, 2))
-            db.execute(
-                'INSERT INTO loans (book_id, user_id, loan_date)'
-                'VALUES (?, ?, ?)', (1, 1, 1))
-            db.commit()
+        self.app.put('/api/books/{}/loan'.format(loaned_book['id']),
+                     data=json.dumps({'user_id': 'test_user'}),
+                     content_type='application/json')
 
         # Book 1 is loaned so return only that one
         rv = self.app.get('/api/books?loaned=true')
@@ -337,16 +330,6 @@ class BookTestCase(ServerTestCase):
         self._put_book(book2)
         self._put_book(book3)
         self._put_book(book4)
-
-        # Add a room
-        # with self.app.session_transaction():
-        #     db = database.get()
-        #     db.execute('INSERT INTO sites (site_name) '
-        #                'VALUES (?)', ('happy place',))
-        #     db.execute('INSERT INTO rooms (site_id, room_name) '
-        #                'VALUES (?, ?)',
-        #                (2, 'happy room',))
-        #     db.commit()
 
         # Search for title Great and description 'artists'
         # Should get 1 book
