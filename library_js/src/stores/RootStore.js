@@ -4,32 +4,25 @@ import Room from "./Room";
 const RootStore = types
 .model({
   rooms: types.optional(types.map(Room), {}),
-  selectedRoom: types.optional(types.number, 0),
-  secret: types.optional(types.string, ''),
-  signum: types.optional(types.string, ''),
-  loggedIn: types.optional(types.boolean, false)
+  selectedRoom: types.optional(types.number, 0)
 })
 .actions(self => {
   function fetchRooms() {
     console.log('FetchRooms');
   }
+  function selectRoom(roomId, save=true) {
+    self.selectedRoom = parseInt(roomId);
+    if (save) {
+      localStorage.setItem('selectedRoom', roomId);
+    }
+  }
   function initStore() {
-    console.log('initStore');
+    let selectedRoom = localStorage.getItem('selectedRoom');
+    if (selectedRoom) {
+      self.selectRoom(selectedRoom);
+    }
   }
-  function setSession(signum, secret) {
-    self.signum = signum;
-    self.secret = secret;
-    localStorage.setItem('signum', signum);
-    localStorage.setItem('secret', secret);
-  }
-  function clearSession() {
-    self.loggedIn = false;
-    self.signum = '';
-    self.secret = '';
-    localStorage.removeItem('signum');
-    localStorage.removeItem('secret');
-  }
-  return { fetchRooms, initStore, setSession, clearSession };
+  return { fetchRooms, initStore, selectRoom};
 });
 
 export default RootStore.create();

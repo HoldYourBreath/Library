@@ -1,6 +1,7 @@
 import React from 'react';
 import {getLocations} from './lib/sites';
 import sessionStore from './stores/Session';
+import rootStore from './stores/RootStore';
 import ListBooks from './components/ListBooks';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
@@ -24,8 +25,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       sites: [],
-      redirectTo: '',
-      selectedRoom: ''
+      redirectTo: ''
     };
   }
 
@@ -35,11 +35,6 @@ class App extends React.Component {
       state: {from: 'login'}
     }
     this.props.history.push(location);
-  }
-
-  onRoomSelection(roomId) {
-    localStorage.setItem('selectedRoom', roomId);
-    this.setState({selectedRoom: roomId});
   }
 
   updateLocations() {
@@ -52,11 +47,8 @@ class App extends React.Component {
 
   componentWillMount() {
     sessionStore.initSession();
+    rootStore.initStore();
     this.updateLocations();
-    let selectedRoom = localStorage.getItem('selectedRoom');
-    if (selectedRoom) {
-      this.setState({selectedRoom: selectedRoom});
-    }
   }
 
   logInBegun() {
@@ -101,8 +93,6 @@ class App extends React.Component {
             <Route
               path={'/add_book'}
               component={() => (<AddBook
-                                  onRoomSelection={this.onRoomSelection.bind(this)}
-                                  selectedRoom={this.state.selectedRoom}
                                   sites={this.state.sites} />)}/>
             <Route 
               path={'/admin'}

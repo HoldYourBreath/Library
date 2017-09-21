@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ShowThumbnail from './ShowThumbnail';
+import { observer } from 'mobx-react';
+import rootStore from '../stores/RootStore';
 import {FormGroup,
         Button, 
         Col,
@@ -7,6 +9,7 @@ import {FormGroup,
         Form,
         FormControl, 
         ControlLabel} from 'react-bootstrap';
+        
 const request = require('superagent');
 const FontAwesome = require('react-fontawesome');
 
@@ -109,7 +112,7 @@ class AddBook extends Component {
 
   onRoomChange(e) {
     this.setState({room_id: e.target.value});
-    this.props.onRoomSelection(e.target.value);
+    rootStore.selectRoom(e.target.value);
   }
 
   render() {
@@ -121,7 +124,6 @@ class AddBook extends Component {
         rooms.push({name: `${site.name}-${room.name}`, id: room.id})
       )
     );
-    console.log(this.state);
     return (
       <div>
         <h1>Add book</h1>
@@ -177,7 +179,7 @@ class AddBook extends Component {
               <Col sm={7}>
                 <FormControl 
                   componentClass="select"
-		              defaultValue={this.props.selectedRoom}
+		              defaultValue={rootStore.selectedRoom}
                   onChange={this.onRoomChange.bind(this)}
                   placeholder="select">
                     <option />
@@ -279,4 +281,4 @@ class AddBook extends Component {
   }
 }
 
-export default AddBook;
+export default observer(AddBook);
