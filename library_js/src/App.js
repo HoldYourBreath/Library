@@ -17,7 +17,7 @@ import {
 } from 'react-router-dom';
 const request = require('superagent');
 
-window.__appUrl = "http://127.0.0.1:5000";
+window.__appUrl = "";
 
 
 class App extends React.Component {

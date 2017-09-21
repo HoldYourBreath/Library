@@ -7,11 +7,15 @@ from datetime import datetime
 from library.app import app
 import library.database as database
 import library.ldap as ldap
+from library.config import config
 
 AUTHENTICATE = True
 
 
 def is_admin(user):
+    if user == config.get('General', 'admin'):
+        return True
+
     db = database.get()
     curs = db.execute('SELECT * FROM admins WHERE user_id = ?',
                       (user,))
@@ -101,6 +105,8 @@ def api_login():
     if not AUTHENTICATE or ldap.authenticate(user, password):
         secret = create_session(user)
         response = jsonify({'secret': secret})
+        flask.session['secret'] = secret
+        flask.session['signum'] = user
     else:
         response = jsonify({'err': 'Authentication failed'})
         response.status_code = 401
