@@ -92,24 +92,31 @@ class ServerTestCase(unittest.TestCase):
 
         :return: Session secret
         """
+
+        class UserSession:
+            def __init__(self, session_id, secret):
+                self.id = session_id
+                self.secret = secret
+
         if not user:
             user = self.TEST_SIGNUM
 
         rv = self.app.post('/api/login',
-                           data=json.dumps({'signum': user,
+                           data=json.dumps({'user': user,
                                             'password': password}),
                            content_type='application/json')
         response = codecs.decode(rv.data)
         self.assertEqual(rv.status_code, 200)
-        secret = json.loads(response)['secret']
+        session_id = json.loads(response)['session_id']
+        secret = json.loads(response)['session_secret']
         self.assertTrue(secret)
 
         if update_session:
             with self.app.session_transaction() as sess:
-                sess['signum'] = user
-                sess['secret'] = secret
+                sess['session_id'] = session_id
+                sess['session_secret'] = secret
 
-        return secret
+        return UserSession(session_id, secret)
 
     def add_admin(self, admin):
         with self.app.session_transaction():
@@ -128,8 +135,8 @@ class ServerTestCase(unittest.TestCase):
 
     def delete_session(self):
         with self.app.session_transaction() as sess:
-            del sess['signum']
-            del sess['secret']
+            del sess['session_id']
+            del sess['session_secret']
 
 
 if __name__ == '__main__':

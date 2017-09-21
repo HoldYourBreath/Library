@@ -12,6 +12,10 @@ from library.config import config
 AUTHENTICATE = True
 
 
+class SessionNotFound(Exception):
+    pass
+
+
 def is_admin(user):
     if user == config.get('General', 'admin'):
         return True
@@ -27,16 +31,17 @@ def is_admin(user):
 
 
 def validate_user(admin_required):
-    if 'signum' in flask.session:
+    if 'session_id' in flask.session:
         db = database.get()
 
-        curs = db.execute('select * from sessions where user_id = (?)',
-                          (flask.session['signum'],))
+        curs = db.execute('select * from sessions where session_id = (?)',
+                          (flask.session['session_id'],))
         sessions = curs.fetchall()
+
         if len(sessions) > 0 and \
-           sessions[0]['secret'] == flask.session['secret']:
+           sessions[0]['secret'] == flask.session['session_secret']:
             if admin_required:
-                return is_admin(flask.session['signum'])
+                return is_admin(sessions[0]['user_id'])
             else:
                 return True
     return False
@@ -85,9 +90,9 @@ def login_required(f):
 @app.route('/api/login/validate', methods=['POST'])
 def api_validate():
     user_credentials = flask.request.get_json()
-    user = user_credentials['signum']
-    secret = user_credentials['secret']
-    session_id = validate_session(user, secret)
+    user = user_credentials['session_id']
+    session_secret = user_credentials['secret']
+    session_id = validate_session(user, session_secret)
     if not session_id:
         response = jsonify({'err': 'Invalid session'})
         response.status_code = 401
@@ -100,30 +105,38 @@ def api_validate():
 @app.route('/api/login', methods=['POST'])
 def api_login():
     user_credentials = flask.request.get_json()
-    user = user_credentials['signum']
+    for param in ['user', 'password']:
+        if param not in user_credentials:
+            response = jsonify({'err': 'Missing {}'.format(param)})
+            response.status_code = 400
+            return response
+
+    user = user_credentials['user']
     password = user_credentials['password']
     if not AUTHENTICATE or ldap.authenticate(user, password):
-        secret = create_session(user)
-        response = jsonify({'secret': secret})
-        flask.session['secret'] = secret
-        flask.session['signum'] = user
+        session_id = create_session(user)
+        session_secret = get_secret(session_id)
+        response = jsonify({'session_id': session_id,
+                            'session_secret': session_secret})
+        flask.session['session_id'] = session_id
+        flask.session['session_secret'] = session_secret
     else:
         response = jsonify({'err': 'Authentication failed'})
         response.status_code = 401
     return response
 
 
-def validate_session(user: str, secret: str) -> str:
+def validate_session(user: int, secret: str) -> str:
     """
     Used to validate a session.
 
     :param user:
-    :param secret:
+    :param session_secret:
     :return: session_id if valid, empty string otherwise.
     """
     db = database.get()
     curs = db.execute('SELECT session_id FROM sessions '
-                      'WHERE user_id = ? AND secret = ?',
+                      'WHERE session_id = ? AND secret = ?',
                       (user, secret))
     previous_session = curs.fetchone()
     if previous_session:
@@ -142,39 +155,40 @@ def get_session_for_user(user: str) -> str:
     return ''
 
 
+def get_secret(session_id: int) -> str:
+    db = database.get()
+    curs = db.execute('SELECT secret FROM sessions '
+                      'WHERE session_id = ?',
+                      (session_id,))
+    session = curs.fetchone()
+    if not session:
+        raise SessionNotFound
+
+    return session['secret']
+
+
 def create_session(user: str) -> str:
     login_time = datetime.now()
     secret = str(uuid.uuid4())
-    previous_session_id = get_session_for_user(user)
     db = database.get()
     cursor = db.cursor()
-    if previous_session_id:
-        cursor.execute(
-            'UPDATE sessions '
-            'SET secret = ? , login_time = ? , last_activity = ? '
-            'WHERE session_id = ?',
-            (secret,
-             login_time,
-             login_time,
-             previous_session_id))
-    else:
-        cursor = db.cursor()
-        cursor.execute(
-            'INSERT INTO sessions'
-            '(secret, user_id, login_time, last_activity)'
-            'values (?, ?, ?, ?)',
-            (secret,
-             user,
-             login_time,
-             login_time))
+    cursor.execute(
+        'INSERT INTO sessions'
+        '(secret, user_id, login_time, last_activity)'
+        'values (?, ?, ?, ?)',
+        (secret,
+         user,
+         login_time,
+         login_time))
+    session_id = cursor.lastrowid
     db.commit()
-    return secret
+    return session_id
 
 
 @app.route('/api/login/delete', methods=['POST'])
 def delete_session():
     user_credentials = flask.request.get_json()
-    user = user_credentials['signum']
+    user = user_credentials['session_id']
     secret = user_credentials['secret']
     session_id = validate_session(user, secret)
     if not session_id:

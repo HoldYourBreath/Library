@@ -5,51 +5,54 @@ const SessionStore = types
 .model({
   secret: types.optional(types.string, ''),
   signum: types.optional(types.string, ''),
+  session_id: types.optional(types.number, -1),
   loggedIn: types.optional(types.boolean, false)
 })
 .actions(self => {
   function initSession() {
-    let signum = localStorage.getItem('signum');
+    let session_id = localStorage.getItem('session_id');
     let secret = localStorage.getItem('secret');
-    if (secret && signum) {
-      validateSession(signum, secret)
+    if (secret && session_id) {
+      validateSession(session_id, secret)
       .then(() => {
           console.log("session valid");
-          self.setSession(signum, secret);
+          self.setSession(session_id, secret);
       })
       .catch((e) => {
-        console.log("Invalid session!");
+        console.log("Invalid session!", e);
       });
     } else {
       console.log("No valid session!");
     }
   }
 
-  function setSession(signum, secret) {
-    self.signum = signum;
+  function setSession(user, session_id, secret) {
+    console.log('setSession', user, session_id, secret);
+    self.session_id = session_id;
+    self.signum = user;
     self.secret = secret;
     self.loggedIn = true;
-    localStorage.setItem('signum', signum);
+    localStorage.setItem('signum', user);
+    localStorage.setItem('session_id', session_id);
     localStorage.setItem('secret', secret);
   }
   
-  function validateUserSession(signum, password, cb) {
-    createSession(signum, password)
+  function validateUserSession(user, password, cb) {
+    createSession(user, password)
     .then((res) => {
-      self.setSession(res.signum, res.secret);
+      self.setSession(user, res.session_id, res.secret);
       cb({
-        signum: res.signum,
+        session_id: res.session_id,
         secret: res.secret
       });
     })
     .catch((e) => {
-      console.log(e);
       console.log("Failed to create session!");
     });
   }
   
   function deleteSession() {
-    deleteSessionApi(self.signum, self.secret)
+    deleteSessionApi(self.session_id, self.secret)
     .then(() => {
       self.clearSession();
     });
@@ -57,9 +60,9 @@ const SessionStore = types
 
   function clearSession() {
     self.loggedIn = false;
-    self.signum = '';
+    self.session_id = -1;
     self.secret = '';
-    localStorage.removeItem('signum');
+    localStorage.removeItem('session_id');
     localStorage.removeItem('secret');
   }
 

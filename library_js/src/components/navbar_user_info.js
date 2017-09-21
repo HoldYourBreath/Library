@@ -12,6 +12,7 @@ class NavbarUserInfo extends React.Component {
   }
 
   render() {
+    console.log('NavbarUserInfo', this.props.sessionStore.secret)
     if (!this.props.sessionStore.secret) {
       return (
         <ul className="nav navbar-nav navbar-right">

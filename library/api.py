@@ -93,6 +93,11 @@ def put_book(book_id):
     elif 'room_id' not in book:
         return 'No room_id present', 400
 
+    try:
+        int(book['room_id'])
+    except ValueError:
+        return 'room_id is not a number', 400
+
     # Defaul parameters
     defaults = {'title': '',
                 'authors': [],

@@ -72,7 +72,7 @@ class SessionApiTestCase(ServerTestCase):
         """
         self.ldap_stub.return_value = False
         rv = self.app.post('/api/login',
-                           data=json.dumps({'signum': self.TEST_SIGNUM,
+                           data=json.dumps({'user': self.TEST_SIGNUM,
                                             'password': 'nameofmykat'}),
                            content_type='application/json')
         response = codecs.decode(rv.data)
@@ -96,7 +96,7 @@ class SessionApiTestCase(ServerTestCase):
         """
         rv = self.app.post('/api/login/validate',
                            data=json.dumps(
-                               {'signum': self.TEST_SIGNUM,
+                               {'session_id': self.TEST_SIGNUM,
                                 'secret': 'this_is_an_invalid_secret_string'}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 401)
@@ -106,10 +106,10 @@ class SessionApiTestCase(ServerTestCase):
         Validate a session.
         :return:
         """
-        secret = self.create_session()
+        user_session = self.create_session()
         rv = self.app.post('/api/login/validate',
-                           data=json.dumps({'signum': self.TEST_SIGNUM,
-                                            'secret': secret}),
+                           data=json.dumps({'session_id': user_session.id,
+                                            'secret': user_session.secret}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 200)
 
@@ -121,15 +121,15 @@ class SessionApiTestCase(ServerTestCase):
 
         :return:
         """
-        secret = self.create_session()
+        user_session = self.create_session()
         rv = self.app.post('/api/login/delete',
-                           data=json.dumps({'signum': self.TEST_SIGNUM,
+                           data=json.dumps({'session_id': user_session.id,
                                             'secret': 'Incorrect_secret!!'}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 401)
         rv = self.app.post('/api/login/delete',
-                           data=json.dumps({'signum': self.TEST_SIGNUM,
-                                            'secret': secret}),
+                           data=json.dumps({'session_id': user_session.id,
+                                            'secret': user_session.secret}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 200)
 
@@ -148,22 +148,23 @@ class SessionApiTestCase(ServerTestCase):
         self.assertEqual(rv.status_code, 401)
 
     def _login_decorator(self, route):
-        # Test with no prevous login at all
+        # Test with no previous login at all
         rv = self.app.get(route)
         self.assertEqual(rv.status_code, 401)
 
         # Test with unexisting login
         with self.app.session_transaction() as sess:
-            sess['signum'] = self.TEST_SIGNUM
-            sess['secret'] = 'wrong_one'
+            sess['session_id'] = 1234
+            sess['session_secret'] = 'wrong_one'
 
         rv = self.app.get(route)
         self.assertEqual(rv.status_code, 401)
 
         # Test with existing login
-        secret = self.create_session()
+        user_session = self.create_session()
         with self.app.session_transaction() as sess:
-            sess['secret'] = secret
+            sess['session_id'] = user_session.id
+            sess['session_secret'] = user_session.secret
 
         rv = self.app.get(route)
         self.assertEqual(rv.status_code, 200)

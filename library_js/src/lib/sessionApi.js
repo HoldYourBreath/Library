@@ -1,13 +1,14 @@
 const request = require('superagent');
 
-const validateSession = function(signum, secret) {
+const validateSession = function(session_id, secret) {
   return new Promise((resolve, reject) => {
     request
       .post(`${window.__appUrl}/api/login/validate`)
-      .send({signum: signum, secret: secret})
+      .send({session_id: session_id, secret: secret})
       .type('application/json')
       .end((err, res) => {
         if(err) {
+            console.log(err, res)
           reject();
         } else {
           resolve();
@@ -16,13 +17,13 @@ const validateSession = function(signum, secret) {
   });
 }
 
-const deleteSessionApi = function(signum, secret) {
+const deleteSessionApi = function(session_id, secret) {
   return new Promise((resolve, reject) => {
     let url = `${window.__appUrl}/api/login/delete`;
     request
       .post(url)
       .send({
-        signum: signum,
+        session_id: session_id,
         secret: secret
       })
       .type('application/json')
@@ -34,14 +35,13 @@ const deleteSessionApi = function(signum, secret) {
       });
   });
 }
-const createSession = function(signum, password) {
-  console.log("createSession");
+const createSession = function(user, password) {
   return new Promise((resolve, reject) => {
     let url = `${window.__appUrl}/api/login`;
     request
     .post(url)
     .send({
-      signum: signum,
+      user: user,
       password: password
     })
     .type('application/json')
@@ -51,8 +51,8 @@ const createSession = function(signum, password) {
     })
     .end((err, res) => {
       resolve({
-        signum: signum,
-        secret: res.body.secret
+        session_id: res.body.session_id,
+        secret: res.body.session_secret
       });
     });
   });
