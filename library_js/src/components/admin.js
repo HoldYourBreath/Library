@@ -1,4 +1,7 @@
 import React from 'react';
+import sessionStore from '../stores/Session';
+import { Redirect } from 'react-router'
+import { observer } from 'mobx-react';
 import {InputGroup,
 	    Glyphicon,
         Button,
@@ -189,6 +192,9 @@ class Sites extends React.Component {
 
 class AdminPage extends React.Component {
   render() {
+    if (!sessionStore.loggedIn) {
+      return <Redirect to="/login" push={false} />      
+    }
     return (
       <div>
         <h1>Sites and rooms</h1>
@@ -200,4 +206,4 @@ class AdminPage extends React.Component {
   }
 }
 
-export default AdminPage;
+export default observer(AdminPage);

@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ShowThumbnail from './ShowThumbnail';
+import sessionStore from '../stores/Session';
 import { observer } from 'mobx-react';
 import rootStore from '../stores/RootStore';
+import { Redirect } from 'react-router'
 import {FormGroup,
         Button, 
         Col,
@@ -9,11 +11,12 @@ import {FormGroup,
         Form,
         FormControl, 
         ControlLabel} from 'react-bootstrap';
+
         
 const request = require('superagent');
 const FontAwesome = require('react-fontawesome');
 
-class AddBook extends Component {
+class AddBook extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,10 +34,6 @@ class AddBook extends Component {
       publication_date: '',
       thumbnail: ''
     };
-  }
-
-  componentWillMount() {
-    this.setState({room_id: this.props.selectedRoom});
   }
 
   onFormInput(e) {
@@ -124,6 +123,9 @@ class AddBook extends Component {
         rooms.push({name: `${site.name}-${room.name}`, id: room.id})
       )
     );
+    if (!sessionStore.loggedIn) {
+      return <Redirect to="/login" push={false} />      
+    }
     return (
       <div>
         <h1>Add book</h1>
