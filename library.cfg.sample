@@ -1,3 +1,6 @@
+[General]
+admin=
+
 [flask]
 secret_key=INSERT_VERY_SECRET_KEY
 
