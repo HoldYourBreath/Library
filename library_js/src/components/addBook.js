@@ -70,6 +70,7 @@ class AddBook extends React.Component {
         delete state.num_pages;
         delete state.errorMsg;
         this.setState(state);
+        document.getElementById("tag").focus();
       });
   }
 
@@ -142,6 +143,7 @@ class AddBook extends React.Component {
                   onChange={this.onIsbnChange.bind(this)}
                   type="text"
                   autoComplete="off"
+                  autoFocus="true"
                   placeholder=""/>
               </Col>
               <Col sm={1}>
