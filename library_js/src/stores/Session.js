@@ -5,18 +5,20 @@ const SessionStore = types
 .model({
   secret: types.optional(types.string, ''),
   signum: types.optional(types.string, ''),
-  session_id: types.optional(types.number, -1),
+  session_id: types.optional(types.string, ''),
   loggedIn: types.optional(types.boolean, false)
 })
 .actions(self => {
   function initSession() {
+    console.log('init session');
+    let user = localStorage.getItem('user');
     let session_id = localStorage.getItem('session_id');
     let secret = localStorage.getItem('secret');
     if (secret && session_id) {
       validateSession(session_id, secret)
       .then(() => {
           console.log("session valid");
-          self.setSession(session_id, secret);
+          self.setSession(user, session_id, secret);
       })
       .catch((e) => {
         console.log("Invalid session!", e);
@@ -31,7 +33,7 @@ const SessionStore = types
     self.signum = user;
     self.secret = secret;
     self.loggedIn = true;
-    localStorage.setItem('signum', user);
+    localStorage.setItem('user', user);
     localStorage.setItem('session_id', session_id);
     localStorage.setItem('secret', secret);
   }
