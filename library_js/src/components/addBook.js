@@ -92,6 +92,29 @@ class AddBook extends React.Component {
   submitBook() {
     let url = `${window.__appUrl}/api/books/${this.state.tag}`;
     request
+      .get(url)
+      .then((res) => {
+          // HTTP 200 response, book exists
+          this.setState({
+            infoMsg: null,
+            errorMsg: `Book ${this.state.tag} already exists`
+          });
+        },
+        (res) => {
+          // Error response
+          if (res.status == 404) {
+            this.addBook();
+          }
+          else {
+            this.setState({errorMsg: `Unable to fetch data for book: ${res.response.text}`});
+          }
+        }
+      );
+  }
+
+  addBook() {
+    let url = `${window.__appUrl}/api/books/${this.state.tag}`;
+    request
       .put(url)
       .send(this.state)
       .type('application/json')
