@@ -27,7 +27,6 @@ const SessionStore = types
   }
 
   function setSession(user, session_id, secret) {
-    console.log('setSession', user, session_id, secret);
     self.session_id = session_id;
     self.signum = user;
     self.secret = secret;
