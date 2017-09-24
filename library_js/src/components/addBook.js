@@ -103,7 +103,7 @@ class AddBook extends React.Component {
         if (!err) {
           this.setState({
               errorMsg: null,
-              infoMsg: `New book with tag ${res.body.tag} added!`,
+              infoMsg: `New book with tag ${res.body.id} added!`,
             });
         }
       });
