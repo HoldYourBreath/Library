@@ -77,8 +77,6 @@ class AddBook extends React.Component {
   reset(e) {
     this.setState({
         loadingBookData: false,
-        errorMsg: null,
-        infoMsg: null,
         thumbnail: null,
         isbn: '',
         title: '',
@@ -105,7 +103,11 @@ class AddBook extends React.Component {
           this.setState({
               errorMsg: null,
               infoMsg: `New book with tag ${res.body.id} added!`,
-            });
+          });
+          let isbn = document.getElementById("isbn");
+          isbn.focus();
+          isbn.scrollIntoView();
+          this.reset();
         }
       });
   }
