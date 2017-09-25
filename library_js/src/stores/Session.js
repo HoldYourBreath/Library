@@ -29,7 +29,7 @@ const SessionStore = types
   }
 
   function setSession(user, session_id, secret) {
-    self.session_id = session_id;
+    self.session_id = parseInt(session_id, 10);
     self.signum = user;
     self.secret = secret;
     self.loggedIn = true;
@@ -41,7 +41,7 @@ const SessionStore = types
   function validateUserSession(user, password, cb) {
     createSession(user, password)
     .then((res) => {
-      self.setSession(user, parseInt(res.session_id), res.secret);
+      self.setSession(user, parseInt(res.session_id, 10), res.secret);
       cb({
         session_id: res.session_id,
         secret: res.secret

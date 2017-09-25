@@ -47,7 +47,7 @@ class AddBook extends React.Component {
     }
   }
   getBookData(isbn) {
-    let url = `${window.__appUrl}/api/books/goodreads/${isbn}`;
+    let url = `${window.API_URL}/api/books/goodreads/${isbn}`;
     this.setState({loadingBookData: true});
     request
       .get(url)
@@ -90,7 +90,7 @@ class AddBook extends React.Component {
   }
 
   submitBook() {
-    let url = `${window.__appUrl}/api/books/${this.state.tag}`;
+    let url = `${window.API_URL}/api/books/${this.state.tag}`;
     request
       .get(url)
       .then((res) => {
@@ -102,7 +102,7 @@ class AddBook extends React.Component {
         },
         (res) => {
           // Error response
-          if (res.status == 404) {
+          if (res.status === 404) {
             this.addBook();
           }
           else {
@@ -113,7 +113,7 @@ class AddBook extends React.Component {
   }
 
   addBook() {
-    let url = `${window.__appUrl}/api/books/${this.state.tag}`;
+    let url = `${window.API_URL}/api/books/${this.state.tag}`;
     request
       .put(url)
       .send(this.state)
