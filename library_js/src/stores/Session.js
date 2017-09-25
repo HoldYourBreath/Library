@@ -5,7 +5,7 @@ const SessionStore = types
 .model({
   secret: types.optional(types.string, ''),
   signum: types.optional(types.string, ''),
-  session_id: types.optional(types.string, ''),
+  session_id: types.optional(types.number, -1),
   loggedIn: types.optional(types.boolean, false)
 })
 .actions(self => {
@@ -41,7 +41,7 @@ const SessionStore = types
   function validateUserSession(user, password, cb) {
     createSession(user, password)
     .then((res) => {
-      self.setSession(user, res.session_id, res.secret);
+      self.setSession(user, parseInt(res.session_id), res.secret);
       cb({
         session_id: res.session_id,
         secret: res.secret
