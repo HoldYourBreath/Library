@@ -15,10 +15,6 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-const request = require('superagent');
-
-window.__appUrl = "";
-
 
 class App extends React.Component {
   constructor(props) {

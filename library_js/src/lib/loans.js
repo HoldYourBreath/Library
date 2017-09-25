@@ -3,7 +3,7 @@ const request = require('superagent');
 const newLoan = function(userId, bookId) {
     return new Promise((resolve, reject) => {
       request
-        .post(`${window.__appUrl}/api/loans`)
+        .post(`${window.API_URL}/api/loans`)
         .send({user_id: userId, book_id: bookId})
         .end((err, res) => {
           if (err) {

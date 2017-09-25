@@ -25,6 +25,7 @@ const shouldUseRelativeAssetPaths = publicPath === './';
 const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
+env.stringified.API_URL = JSON.stringify("");
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.

@@ -4,7 +4,7 @@ const request = require('superagent');
 const renameSite = function(siteId, newName) {
   return new Promise((resolve, reject) => {
     request
-      .put(`${window.__appUrl}/api/sites/${siteId}`)
+      .put(`${window.API_URL}/api/sites/${siteId}`)
       .send({name: newName})
       .type('application/json')
       .end((err, res) => {
@@ -20,7 +20,7 @@ const renameSite = function(siteId, newName) {
 const getRooms = function() {
   return new Promise((resolve, reject) => {
     request
-      .get(`${window.__appUrl}/api/rooms`)
+      .get(`${window.API_URL}/api/rooms`)
       .type('application/json')
       .end((err, res) => {
         if (err) {
@@ -35,7 +35,7 @@ const getRooms = function() {
 const getLocations = () => {
   return new Promise((resolve, reject) => {
     request
-      .get(`${window.__appUrl}/api/sites`)
+      .get(`${window.API_URL}/api/sites`)
       .type('application/json')
       .end((err, res) => {
         if (err) {
@@ -50,7 +50,7 @@ const getLocations = () => {
 const addSite = (siteName) => {
   return new Promise((resolve, reject) => {
     request
-      .post(`${window.__appUrl}/api/sites`)
+      .post(`${window.API_URL}/api/sites`)
       .send({name: siteName})
       .type('application/json')
       .end((err, res) => {
@@ -66,7 +66,7 @@ const addSite = (siteName) => {
 const addRoom = (siteId, siteName) => {
   return new Promise((resolve, reject) => {
     request
-	  .post(`${window.__appUrl}/api/sites/${siteId}/rooms`)
+	  .post(`${window.API_URL}/api/sites/${siteId}/rooms`)
 	  .send({name: siteName})
 	  .type('application/json')
 	  .end((err, res) => {
@@ -82,7 +82,7 @@ const addRoom = (siteId, siteName) => {
 const removeRoom = (siteId, roomId) => {
   return new Promise((resolve, reject) => {
     request
-	  .delete(`${window.__appUrl}/api/sites/${siteId}/rooms/${roomId}`)
+	  .delete(`${window.API_URL}/api/sites/${siteId}/rooms/${roomId}`)
 	  .type('application/json')
 	  .end((err, res) => {
 		  if (err) {
@@ -97,7 +97,7 @@ const removeRoom = (siteId, roomId) => {
 const renameRoom = (siteId, roomId, newName) => {
   return new Promise((resolve, reject) => {
     request
-      .put(`${window.__appUrl}/api/sites/${siteId}/rooms/${roomId}`)
+      .put(`${window.API_URL}/api/sites/${siteId}/rooms/${roomId}`)
       .send({name: newName})
       .type('application/json')
       .end((err, res) => {

@@ -10,6 +10,9 @@ import '../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
 import 'react-table/react-table.css'
 
+// eslint-disable-next-line no-undef
+window.API_URL = API_URL;
+
 ReactDOM.render(
   <BrowserRouter>
     <App/>

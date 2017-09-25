@@ -3,7 +3,7 @@ const request = require('superagent');
 const validateSession = function(session_id, secret) {
   return new Promise((resolve, reject) => {
     request
-      .post(`${window.__appUrl}/api/login/validate`)
+      .post(`${window.API_URL}/api/login/validate`)
       .send({session_id: session_id, secret: secret})
       .type('application/json')
       .end((err, res) => {
@@ -19,7 +19,7 @@ const validateSession = function(session_id, secret) {
 
 const deleteSessionApi = function(session_id, secret) {
   return new Promise((resolve, reject) => {
-    let url = `${window.__appUrl}/api/login/delete`;
+    let url = `${window.API_URL}/api/login/delete`;
     request
       .post(url)
       .send({
@@ -37,7 +37,7 @@ const deleteSessionApi = function(session_id, secret) {
 }
 const createSession = function(user, password) {
   return new Promise((resolve, reject) => {
-    let url = `${window.__appUrl}/api/login`;
+    let url = `${window.API_URL}/api/login`;
     request
     .post(url)
     .send({
