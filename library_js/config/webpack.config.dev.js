@@ -21,7 +21,7 @@ const publicPath = '/';
 const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
-env.stringified.API_URL = JSON.stringify("http://127.0.0.1:5000");
+env.stringified.API_URL = JSON.stringify("");
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
