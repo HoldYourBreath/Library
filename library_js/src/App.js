@@ -1,12 +1,11 @@
 import React from 'react';
-import {getLocations} from './lib/sites';
 import sessionStore from './stores/Session';
-import rootStore from './stores/RootStore';
+import locationStore from './stores/LocationStore';
 import ListBooks from './components/ListBooks';
 import LoanBook from './components/loan';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
-import AdminPage from './components/admin';
+import AdminPage from './components/Admin/';
 import SettingsPage from './components/settings';
 import NavbarUserInfo from './components/navbar_user_info';
 import './App.css';
@@ -20,7 +19,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sites: [],
       redirectTo: ''
     };
   }
@@ -34,17 +32,12 @@ class App extends React.Component {
   }
 
   updateLocations() {
-    getLocations()
-      .then((locations) => {
-        this.setState({sites: locations});
-        console.log(locations);
-    });
+
   }
 
   componentWillMount() {
     sessionStore.initSession();
-    rootStore.initStore();
-    this.updateLocations();
+    locationStore.initStore();
   }
 
   logInBegun() {
@@ -54,19 +47,19 @@ class App extends React.Component {
   render() {
     return (
           <div>
-          <nav className="navbar navbar-default">
-            <div className="container-fluid">
-              <div className="navbar-header">
-                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                  <span className="sr-only">Toggle navigation</span>
-                  <span className="icon-bar"/>
-                  <span className="icon-bar"/>
-                  <span className="icon-bar"/>
+          <nav className='navbar navbar-default'>
+            <div className='container-fluid'>
+              <div className='navbar-header'>
+                <button type='button' className='navbar-toggle collapsed' data-toggle='collapse' data-target='#bs-example-navbar-collapse-1' aria-expanded='false'>
+                  <span className='sr-only'>Toggle navigation</span>
+                  <span className='icon-bar'/>
+                  <span className='icon-bar'/>
+                  <span className='icon-bar'/>
                 </button>
-                <a className="navbar-brand" href='/brand'>Brand</a>
+                <a className='navbar-brand' href='/brand'>Brand</a>
               </div>
-              <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul className="nav navbar-nav">
+              <div className='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
+                <ul className='nav navbar-nav'>
                   <li>
                     <Link to='/books'>Books</Link>
                   </li>
@@ -88,18 +81,13 @@ class App extends React.Component {
             <Route path={'/loan'} component={LoanBook}/>
             <Route
               path={'/add_book'}
-              component={() => (<AddBook
-                                  sites={this.state.sites} />)}/>
+              component={AddBook}/>
             <Route 
               path={'/admin'}
-              component={() => (<AdminPage 
-                                  locationUpdate={this.updateLocations.bind(this)}
-                                  sites={this.state.sites} />)}/>
+              component={AdminPage}/>
             <Route
               path={'/settings'}
-              component={() => (<SettingsPage
-                                  locationUpdate={this.updateLocations.bind(this)}
-                                  sites={this.state.sites} />)}/>
+              component={SettingsPage}/>
             <Route 
               path={'/login'}
               component={() => (

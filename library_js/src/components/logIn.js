@@ -7,7 +7,7 @@ import {FormGroup,
         FormControl, 
         ControlLabel} from 'react-bootstrap';
 import { Redirect } from 'react-router';
-const request = require('superagent');
+
 
 class LogIn extends Component {
     constructor(props) {

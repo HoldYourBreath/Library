@@ -2,7 +2,7 @@ import React from 'react';
 import ShowThumbnail from './ShowThumbnail';
 import sessionStore from '../stores/Session';
 import { observer } from 'mobx-react';
-import rootStore from '../stores/RootStore';
+import locationStore from '../stores/LocationStore';
 import { Redirect } from 'react-router'
 import {FormGroup,
         Button, 
@@ -137,18 +137,12 @@ class AddBook extends React.Component {
 
   onRoomChange(e) {
     this.setState({room_id: e.target.value});
-    rootStore.selectRoom(e.target.value);
+    locationStore.selectRoom(e.target.value);
   }
 
   render() {
     const ErrAlert = this.state.errorMsg ? <Alert bsStyle="danger"><strong>{this.state.errorMsg}</strong></Alert> : null;
     const InfoAlert = this.state.infoMsg ? <Alert bsStyle="success"><strong>{this.state.infoMsg}</strong></Alert> : null;
-    let rooms = []
-    this.props.sites.map((site) =>
-      site.rooms.map((room) =>
-        rooms.push({name: `${site.name}-${room.name}`, id: room.id})
-      )
-    );
     if (!sessionStore.loggedIn) {
       return <Redirect to="/login" push={false} />      
     }
@@ -208,14 +202,14 @@ class AddBook extends React.Component {
               <Col sm={7}>
                 <FormControl 
                   componentClass="select"
-		              defaultValue={rootStore.selectedRoom}
+                  defaultValue={locationStore.selectedRoom}
                   onChange={this.onRoomChange.bind(this)}
                   placeholder="select">
                     <option />
-                    {rooms.map((room) => {
+                      {locationStore.rooms.map((room) => {
                         return <option
-                                 key={room.id}
-                                 value={room.id}>{room.name}</option>
+                                 key={room.roomId}
+                                 value={room.roomId}>{room.roomName}</option>
                       })
                     }
                 </FormControl>
