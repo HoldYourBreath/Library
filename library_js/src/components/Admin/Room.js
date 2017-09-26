@@ -16,8 +16,8 @@ class Room extends React.Component {
     super(props);
     this.state = {
       newRoomName: props.room.name,
-        edit: false,
-        errorMsg: null
+      edit: false,
+      errorMsg: null
     }
   }
   

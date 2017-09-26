@@ -62,8 +62,10 @@ class AddBook extends React.Component {
         if (err) {
           return;
         }
-        this.setState({loadingBookData: false});
-        this.setState({errorMsg: null});
+        this.setState({
+          loadingBookData: false,
+          errorMsg: null
+        });
         let state = Object.assign({}, res.body);
         state.pages = state.num_pages;
         state.isbn = isbn;

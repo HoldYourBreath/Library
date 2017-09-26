@@ -1,5 +1,6 @@
 import React from 'react';
 import BookList from './BookList/';
+import LocationSelector from './LocationSelector';
 const request = require('superagent');
 
 
@@ -7,10 +8,22 @@ class ListBooks extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        books: []
+        books: [],
+        siteIdFilter: 0,
+        roomIdFilter: 0
       };
     }
 
+    onRoomFilterChange(e) {
+      this.setState({
+        roomIdFilter: parseInt(e.target.value, 10)
+      });
+    }
+    onSiteFilterChange(e) {
+      this.setState({
+        siteIdFilter:  parseInt(e.target.value, 10)
+      });
+    }
     componentWillMount() {
       request
         .get(`${window.API_URL}/api/books`)
@@ -22,9 +35,18 @@ class ListBooks extends React.Component {
     }
 
     render() {
-      console.log(this.props);
+      let currentBooks = this.state.books;
+      if (this.state.roomIdFilter) {
+        currentBooks = currentBooks.filter(b => b.room_id === this.state.roomIdFilter);
+      }
       return (
-        <BookList books={this.state.books}/>
+        <div>
+          <LocationSelector
+            onRoomChange={this.onRoomFilterChange.bind(this)}
+            onSiteChange={this.onSiteFilterChange.bind(this)}/>
+          <BookList 
+            books={currentBooks}/>
+        </div>
       )
     }
 }

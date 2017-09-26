@@ -10,7 +10,6 @@ class TableRow extends React.Component {
       };
     };
     render() {
-        console.log(this.props);
         return (
           <tr>
             <td><OnLoanStatus status={this.props.bookData.loaned}/></td>
