@@ -11,7 +11,7 @@ const RootStore = types
     console.log('FetchRooms');
   }
   function selectRoom(roomId, save=true) {
-    self.selectedRoom = parseInt(roomId);
+    self.selectedRoom = parseInt(roomId, 10);
     if (save) {
       localStorage.setItem('selectedRoom', roomId);
     }

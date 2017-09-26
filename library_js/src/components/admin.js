@@ -112,10 +112,10 @@ class Site extends React.Component {
       <div className="panel panel-default">
 	    <div className="panel-heading">{this.props.site.name}</div>
 	    <ul className="list-group">
-          {this.props.site.rooms.map((room) => {
+          {this.props.site.rooms.map((room,i) => {
 			return <Room 
 			  		   site_id={this.props.site.id}
-               key={this.props.site.id}
+               key={i}
 			         room={room}
 			         locationUpdate={this.props.locationUpdate} />
           })}

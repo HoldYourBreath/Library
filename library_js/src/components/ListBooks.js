@@ -1,5 +1,5 @@
 import React from 'react';
-import Books from './books';
+import BookList from './BookList/';
 const request = require('superagent');
 
 
@@ -13,7 +13,7 @@ class ListBooks extends React.Component {
 
     componentWillMount() {
       request
-        .get(`${window.__appUrl}/api/books`)
+        .get(`${window.API_URL}/api/books`)
         .type('application/json')
         .end((err, res) => {
           let currentBooks = res ? res.body : [];
@@ -24,7 +24,7 @@ class ListBooks extends React.Component {
     render() {
       console.log(this.props);
       return (
-        <Books books={this.state.books}/>
+        <BookList books={this.state.books}/>
       )
     }
 }

@@ -46,7 +46,7 @@ class LoanBook extends React.Component {
 
   getBookData(bookId) {
       this.setState({loadingBookData: true});
-      let url = `${window.__appUrl}/api/books/${bookId}`;
+      let url = `${window.API_URL}/api/books/${bookId}`;
       request
         .get(url)
         .type('application/json')
@@ -68,7 +68,7 @@ class LoanBook extends React.Component {
 
   getUserData(userId) {
     this.setState({loadingUserData: true});
-    let url = `${window.__appUrl}/api/user/${userId}`;
+    let url = `${window.API_URL}/api/user/${userId}`;
     request
       .get(url)
       .type('application/json')
