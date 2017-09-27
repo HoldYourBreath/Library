@@ -43,6 +43,10 @@ def list_books():
         wheres.append(' WHERE sites.site_name LIKE ?')
         query_params.append('%' + flask.request.args['site'] + '%')
 
+    if 'site_id' in flask.request.args:
+        wheres.append(' WHERE sites.site_id = ?')
+        query_params.append(flask.request.args['site_id'])
+
     if 'loaned' in flask.request.args:
         loaned = flask.request.args['loaned'].lower()
         if 'true' in loaned:
