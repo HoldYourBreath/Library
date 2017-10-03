@@ -21,8 +21,13 @@ def run(args):
         print('Faking authentication')
         session.AUTHENTICATE = False
     app.config['DEBUG'] = True
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=3001)
 
 
 if __name__ == "__main__":
+    import sys
+    import os
+    script_path = os.path.join(os.path.dirname(__file__), '..')
+    app_path = os.path.abspath(script_path)
+    sys.path.append(app_path)
     run()
