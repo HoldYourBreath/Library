@@ -9,3 +9,4 @@ library.cfg
 htmlcov/
 env/
 *.swo
+scripts/uwsgi.ini

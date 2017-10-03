@@ -1,0 +1,12 @@
+[uwsgi]
+socket = /tmp/library.sock
+wsgi-file = <ROOT>/library/server.py
+plugin = python3
+callable = app
+chdir = <ROOT>
+virtualenv = <PATH_TO_PYTHONENV>
+processes = 4
+threads = 2
+stats = 127.0.0.1:9191
+uid = www-data
+gid = www-data
