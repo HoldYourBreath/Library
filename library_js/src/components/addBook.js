@@ -39,6 +39,11 @@ class AddBook extends React.Component {
   onFormInput(e) {
     this.setState({[e.target.id]: e.target.value});
   }
+  onTagKeyPress(e) {
+    if (e.key == 'Enter') {
+        this.submitBook();
+    }
+  }
   onIsbnChange(e) {
     this.setState({[e.target.id]: e.target.value});
     let isbn = e.target.value;
@@ -154,6 +159,21 @@ class AddBook extends React.Component {
           {ErrAlert}
           {InfoAlert}
           <Form horizontal>
+            <FormGroup>
+              <Col smOffset={2} sm={1}>
+                <Button
+                  disabled={!this.state.isbn || !this.state.tag}
+                  onClick={this.submitBook.bind(this)}>
+                  Submit book
+                </Button>
+              </Col>
+              <Col smOffset={2} sm={1}>
+                <Button
+                  onClick={this.reset.bind(this)}>
+                  Reset
+                </Button>
+              </Col>
+            </FormGroup>
             <FormGroup controlId="isbn">
               <Col componentClass={ControlLabel} sm={2}>
                 ISBN-13
@@ -162,6 +182,7 @@ class AddBook extends React.Component {
                 <FormControl
                   value={this.state.isbn}
                   onChange={this.onIsbnChange.bind(this)}
+                  disabled={this.state.loadingBookData}
                   type="text"
                   autoComplete="off"
                   autoFocus="true"
@@ -179,6 +200,7 @@ class AddBook extends React.Component {
                 <FormControl
                   value={this.state.tag}
                   onChange={this.onFormInput.bind(this)}
+                  onKeyPress={this.onTagKeyPress.bind(this)}
                   type="text"
                   autoComplete="off"
                   placeholder=""/>
@@ -283,21 +305,6 @@ class AddBook extends React.Component {
               </Col>
               <Col sm={6}>
                 <ShowThumbnail thumbnailUrl={this.state.thumbnail}/>
-              </Col>
-            </FormGroup>
-            <FormGroup>
-              <Col smOffset={2} sm={1}>
-                <Button
-                  disabled={!this.state.isbn || !this.state.tag}
-                  onClick={this.submitBook.bind(this)}>
-                  Submit book
-                </Button>
-              </Col>
-              <Col smOffset={2} sm={1}>
-                <Button
-                  onClick={this.reset.bind(this)}>
-                  Reset
-                </Button>
               </Col>
             </FormGroup>
           </Form>
