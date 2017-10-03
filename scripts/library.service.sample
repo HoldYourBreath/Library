@@ -1,0 +1,10 @@
+[Unit]
+Description=uWSGI instance to serve tech library
+After=network.target
+
+[Service]
+WorkingDirectory=<PROJECT_ROOT>
+ExecStart=/usr/bin/uwsgi --ini uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
