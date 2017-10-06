@@ -6,7 +6,8 @@ const LocationStore = types
 .model({
   rooms: types.optional(types.array(Room), []),
   sites: types.optional(types.array(Site), []),
-  selectedRoom: types.optional(types.number, 0)
+  selectedRoom: types.optional(types.number, 0),
+  selectedSite: types.optional(types.number, 0)
 })
 .views(self => ({
 }))
@@ -71,8 +72,18 @@ const LocationStore = types
       localStorage.setItem('selectedRoom', roomId);
     }
   }
+  function selectSite(siteId, save=true) {
+    self.selectedSite = parseInt(siteId, 10);
+    if (save) {
+      localStorage.setItem('selectedSite', siteId);
+    }
+  }
   function initStore() {
     let selectedRoom = localStorage.getItem('selectedRoom');
+    let selectedSite = localStorage.getItem('selectedSite');
+    if (selectedSite) {
+      self.selectSite(selectedSite);
+    }
     self.fetchRooms();
     if (selectedRoom) {
       self.selectRoom(selectedRoom);
@@ -81,7 +92,7 @@ const LocationStore = types
   return { 
     fetchRooms, initStore, postRoomRename, applyRenameRoom, 
     selectRoom, applySites, applyRooms, 
-    applyNewSite, postNewSite
+    applyNewSite, postNewSite, selectSite
   };
 });
 

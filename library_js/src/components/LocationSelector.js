@@ -1,5 +1,6 @@
 import React from 'react';
 import locationStore from '../stores/LocationStore';
+import { observer } from 'mobx-react';
 import {
   Form,
   Col,
@@ -13,7 +14,11 @@ class LocationSelector extends React.Component {
     super(props);
     this.state = {};
   }
+  onRoomSelect(e) {
+    locationStore.selectRoom(parseInt(e.target.value, 10));
+  }
   render() {
+    console.log(locationStore.selectedSite);
     return (
       <Form horizontal>
         <FormGroup controlId='locationFilter'>
@@ -23,12 +28,13 @@ class LocationSelector extends React.Component {
           <Col sm={3}>
             <FormControl 
               componentClass='select'
-              onChange={this.props.onRoomChange.bind(this)}
+              value={localStorage.selectedRoom}
+              onChange={this.onRoomSelect.bind(this)}
               placeholder='select'>
                 <option key={0} value={0}/>
-                  {locationStore.rooms.map((room) => {
+                  {locationStore.rooms.map((room, i) => {
                     return <option
-                              key={room.roomId}
+                              key={i}
                               value={room.roomId}>
                               {room.roomName}
                             </option>
@@ -41,12 +47,13 @@ class LocationSelector extends React.Component {
           <Col sm={3}>
             <FormControl 
               componentClass='select'
-              onChange={this.props.onSiteChange.bind(this)}
+              value={localStorage.selectedSite}
+              onChange={this.props.onSiteSelect.bind(this)}
               placeholder='select'>
                 <option key={0} value={0}/>
-                  {locationStore.sites.map((site) => {
+                  {locationStore.sites.map((site, i) => {
                     return <option
-                              key={site.siteId}
+                              key={i}
                               value={site.siteId}>
                               {site.siteName}
                             </option>
@@ -59,4 +66,4 @@ class LocationSelector extends React.Component {
   }
 }
 
-export default LocationSelector;
+export default observer(LocationSelector);
