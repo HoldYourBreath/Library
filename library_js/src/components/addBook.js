@@ -11,8 +11,6 @@ import {FormGroup,
         Form,
         FormControl, 
         ControlLabel} from 'react-bootstrap';
-
-        
 const request = require('superagent');
 const FontAwesome = require('react-fontawesome');
 
@@ -40,7 +38,7 @@ class AddBook extends React.Component {
     this.setState({[e.target.id]: e.target.value});
   }
   onTagKeyPress(e) {
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
         this.submitBook();
     }
   }

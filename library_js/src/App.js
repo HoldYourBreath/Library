@@ -2,7 +2,8 @@ import React from 'react';
 import sessionStore from './stores/Session';
 import locationStore from './stores/LocationStore';
 import ListBooks from './components/ListBooks';
-import LoanBook from './components/loan';
+import LoanBook from './components/LoanBook';
+import CheckInBook from './components/CheckInBook';
 import LogIn from './components/logIn';
 import AddBook from './components/addBook';
 import AdminPage from './components/Admin/';
@@ -64,7 +65,10 @@ class App extends React.Component {
                     <Link to='/books'>Books</Link>
                   </li>
                   <li>
-                    <Link to='/loan'>Loan Book</Link>
+                    <Link to='/loan'>Loan</Link>
+                  </li>
+                  <li>
+                    <Link to='/return'>Return</Link>
                   </li>
                 </ul>
                 <NavbarUserInfo
@@ -79,6 +83,7 @@ class App extends React.Component {
                 rooms={this.state.sites}
               />)}/>
             <Route path={'/loan'} component={LoanBook}/>
+            <Route path={'/return'} component={CheckInBook}/>
             <Route
               path={'/add_book'}
               component={AddBook}/>

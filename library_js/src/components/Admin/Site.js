@@ -22,7 +22,7 @@ class Site extends React.Component {
   } else {
     addRoom(this.props.site.siteId, this.state.newRoomName)
       .then(() => {
-        this.props.locationUpdate();
+        locationStore.applyNewSite();
       });
     }
   }

@@ -16,6 +16,7 @@ class TableRow extends React.Component {
             <td>{this.props.bookData.authors}</td>
             <td>{this.props.bookData.title}</td>
             <td>{this.props.bookData.isbn}</td>
+            <td>{this.props.bookData.id}</td>
           </tr>
         )
       }
