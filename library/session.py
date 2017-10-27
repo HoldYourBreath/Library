@@ -17,7 +17,9 @@ class SessionNotFound(Exception):
 
 
 def is_admin(user):
+    app.logger.debug('test if user ({}) has admin rights'.format(user))
     if user == config.get('General', 'admin'):
+        app.logger.debug('User listed as admin in config')
         return True
 
     db = database.get()
@@ -25,8 +27,10 @@ def is_admin(user):
                       (user,))
     admins = curs.fetchall()
     if len(admins):
+        app.logger.debug('User listed as admin in database')
         return True
 
+    app.logger.debug('User not admin')
     return False
 
 

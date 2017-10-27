@@ -10,3 +10,4 @@ htmlcov/
 env/
 *.swo
 scripts/uwsgi.ini
+log/

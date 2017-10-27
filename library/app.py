@@ -1,4 +1,5 @@
 import os
+import logging
 import flask
 
 from library.config import config
@@ -16,6 +17,24 @@ app.secret_key = config.get('flask', 'secret_key')
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'library.db'),
 ))
+
+# Add logger
+script_path = os.path.join(os.path.dirname(__file__), '..')
+app_path = os.path.abspath(script_path)
+log_path = os.path.join(app_path, 'log')
+if not os.path.exists(log_path):
+    os.makedirs(log_path)
+
+fh = logging.FileHandler(os.path.join(log_path, 'library.log'))
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+))
+
+app.logger.addHandler(fh)
+app.logger.setLevel(logging.DEBUG)
+app.logger.info('Flask app up and running')
 
 
 @app.before_first_request
