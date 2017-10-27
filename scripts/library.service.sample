@@ -5,6 +5,10 @@ After=network.target
 [Service]
 WorkingDirectory=<PROJECT_ROOT>
 ExecStart=/usr/bin/uwsgi --ini uwsgi.ini
+ExecStop=/bin/kill -INT $MAINPID
+Restart=always
+StandardError=syslog
+KillSignal=SIGQUIT
 
 [Install]
 WantedBy=multi-user.target
