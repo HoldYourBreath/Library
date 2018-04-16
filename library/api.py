@@ -5,6 +5,7 @@ import library.database as database
 import library.loan as loan
 import library.session as session
 from library.app import app
+from library.books import Book, BookError
 
 
 class BookNotFound(Exception):
@@ -83,78 +84,37 @@ def list_books():
 @session.admin_required
 def put_book(book_id):
     '''
-    Add or update new book
+    Add new or update existing book
 
     This method will add a new book with a certein book_id
     or simply updating existing book with if it already exists
     '''
-
-    book = flask.request.get_json()
-
-    # Check some prerequesite
-    if 'isbn' not in book:
-        return 'No ISBN present', 400
-    elif 'room_id' not in book:
-        return 'No room_id present', 400
+    book_request = flask.request.get_json()
 
     try:
-        int(book['room_id'])
-    except ValueError:
-        return 'room_id is not a number', 400
+        book = Book(book_id, **book_request)
+    except BookError as e:
+        return e.msg, 400
 
-    # Defaul parameters
-    defaults = {'title': '',
-                'authors': [],
-                'description': '',
-                'thumbnail': '',
-                'pages': 0,
-                'publisher': '',
-                'format': '',
-                'publication_date': ''}
+    authors = []
+    if 'authors' in book_request:
+        authors = book_request['authors']
 
-    # Check if parameters are missing and if so, assign default
-    for key, value in defaults.items():
-        if key not in book:
-            book[key] = value
-
-    # Check integer parameter constraints
     try:
-        int(book['isbn'])
-        int(book['pages'])
-    except ValueError:
-        return 'Non number in parameter where number is expected', 400
+        if book.exists():
+            # Update existing book
+            book.update()
+            book.update_authors(authors)
+        else:
+            # Create a new book
+            book.add()
+            book.add_authors(authors)
 
-    params = (int(book['isbn']),
-              int(book['room_id']),
-              book['title'],
-              book['pages'],
-              book['publisher'],
-              book['format'],
-              book['publication_date'],
-              book['description'],
-              book['thumbnail'])
+        return jsonify(book.marshal())
+    except BookError as e:
+        return e.msg, 400
 
-    db = database.get()
-    if _book_exist(book_id):
-        # Update existing book
-        db.execute('UPDATE books '
-                   'SET isbn = ?, room_id = ?, title = ?, pages = ?, '
-                   'publisher = ?, format = ?, publication_date = ?, '
-                   'description = ?, thumbnail = ? '
-                   'WHERE book_id=?',
-                   params + (book_id,))
-        _update_authors(book_id, book['authors'])
-    else:
-        # Create a new book
-        db.execute('INSERT INTO books'
-                   '(book_id, isbn, room_id, title, pages, publisher, format,'
-                   'publication_date, description, thumbnail)'
-                   'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                   (book_id,) + params)
-        _add_authors(book_id, book['authors'])
-
-    db.commit()
-    return jsonify(_get_book(book_id))
+    return jsonify(book.marshal())
 
 
 @app.route('/api/books/<int:book_id>', methods=['GET'])

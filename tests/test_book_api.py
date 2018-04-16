@@ -4,7 +4,6 @@ import copy
 import codecs
 
 from .test_server import ServerTestCase
-import library.database as database
 
 book1 = {'id': 10,
          'isbn': 1234,
@@ -80,7 +79,7 @@ class BookTestCase(ServerTestCase):
         self.remove_admin('admin')
         ServerTestCase.tearDown(self)
 
-    def test_book_get(self):
+    def test_books_get(self):
         rv = self.app.get('/api/books')
         self.assertEqual(rv.status_code, 200)
 
@@ -187,8 +186,7 @@ class BookTestCase(ServerTestCase):
                 'publisher': '',
                 'publication_date': '',
                 'description': '',
-                'thumbnail': '',
-                'loaned': False}
+                'thumbnail': ''}
 
         rv = self.app.put('/api/books/1',
                           data=json.dumps({'isbn': 1, 'room_id': 1}),
