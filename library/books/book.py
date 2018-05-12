@@ -6,6 +6,10 @@ class BookError(Exception):
         self.msg = message
 
 
+class BookNotFound(Exception):
+    pass
+
+
 class Book:
     def __init__(self, book_id, **kwargs):
         self.book_id = book_id
@@ -19,10 +23,30 @@ class Book:
         self.publisher = ''
         self.format = ''
         self.publication_date = ''
+        self.loaned = False
 
         for parameter in vars(self):
             if parameter in kwargs:
                 setattr(self, parameter, kwargs[parameter])
+
+    @staticmethod
+    def get(book_id):
+        db = database.get()
+        curs = db.execute('SELECT * FROM books '
+                          'LEFT JOIN loans USING (book_id) '
+                          'WHERE loans.return_date IS NULL AND '
+                          'books.book_id = ?',
+                          (book_id,))
+
+        book = curs.fetchall()
+        if len(book) == 0:
+            raise BookNotFound
+
+        book = dict(book[0])
+        del book['book_id']
+        book['loaned'] = 'loan_id' in book.keys() and \
+            book['loan_id'] is not None
+        return Book(book_id, **book)
 
     def exists(self):
         db = database.get()

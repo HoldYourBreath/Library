@@ -5,11 +5,7 @@ import library.database as database
 import library.loan as loan
 import library.session as session
 from library.app import app
-from library.books import Book, BookError
-
-
-class BookNotFound(Exception):
-    pass
+from library.books import Book, BookError, BookNotFound
 
 
 @app.route('/api/books', methods=['GET'])
@@ -120,26 +116,12 @@ def put_book(book_id):
 @app.route('/api/books/<int:book_id>', methods=['GET'])
 def get_single_book(book_id):
     try:
-        return jsonify(_get_book(book_id))
+        return jsonify(Book.get(book_id).marshal())
     except BookNotFound:
         response = jsonify(
             {"msg": "Book with id {} not found".format(book_id)})
         response.status_code = 404
         return response
-
-
-def _get_book(book_id):
-    db = database.get()
-    curs = db.execute('SELECT * FROM books '
-                      'LEFT JOIN loans USING (book_id) '
-                      'WHERE loans.return_date IS NULL AND books.book_id = ?',
-                      (book_id,))
-
-    book = curs.fetchall()
-    if len(book) == 0:
-        raise BookNotFound
-
-    return _get_books(book)[0]
 
 
 def _get_books(rows):

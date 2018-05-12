@@ -186,7 +186,8 @@ class BookTestCase(ServerTestCase):
                 'publisher': '',
                 'publication_date': '',
                 'description': '',
-                'thumbnail': ''}
+                'thumbnail': '',
+                'loaned': False}
 
         rv = self.app.put('/api/books/1',
                           data=json.dumps({'isbn': 1, 'room_id': 1}),
@@ -464,6 +465,15 @@ class BookTestCase(ServerTestCase):
 
     def _compare_book(self, lv, rv):
         # Test that lv and rv has the same size
+        lvs = set(lv.keys())
+        rvs = set(rv.keys())
+        diff = rvs - lvs
+        if diff:
+            print(diff)
+        diff = lvs - rvs
+        if diff:
+            print(diff)
+
         self.assertEqual(len(lv.keys()), len(rv.keys()))
 
         # Compare rv and lv
