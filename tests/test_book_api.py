@@ -288,6 +288,48 @@ class BookTestCase(ServerTestCase):
         self.assertEqual(len(json.loads(response)), 1)
         self._compare_book(json.loads(response)[0], book3)
 
+    def test_get_returned_book(self):
+        self._put_book(book1)
+        self.app.put('/api/books/{}/loan'.format(book1['id']),
+                     data=json.dumps({'user_id': 'test_user'}),
+                     content_type='application/json')
+        self.app.delete('/api/books/{}/loan'.format(book1['id']))
+        rv = self.app.get('/api/books/{}'.format(book1['id']))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), book1)
+
+    def test_get_multiple_returned_book(self):
+        self._put_book(book1)
+        self.app.put('/api/books/{}/loan'.format(book1['id']),
+                     data=json.dumps({'user_id': 'test_user'}),
+                     content_type='application/json')
+        self.app.delete('/api/books/{}/loan'.format(book1['id']))
+        self.app.put('/api/books/{}/loan'.format(book1['id']),
+                     data=json.dumps({'user_id': 'test_user'}),
+                     content_type='application/json')
+        self.app.delete('/api/books/{}/loan'.format(book1['id']))
+        self.app.put('/api/books/{}/loan'.format(book1['id']),
+                     data=json.dumps({'user_id': 'test_user'}),
+                     content_type='application/json')
+        self.app.delete('/api/books/{}/loan'.format(book1['id']))
+        rv = self.app.get('/api/books/{}'.format(book1['id']))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+        self._compare_book(json.loads(response), book1)
+
+        # Loan book again and make sure it's marked as loaned
+        self.app.put('/api/books/{}/loan'.format(book1['id']),
+                     data=json.dumps({'user_id': 'test_user'}),
+                     content_type='application/json')
+        rv = self.app.get('/api/books/{}'.format(book1['id']))
+        self.assertEqual(rv.status_code, 200)
+        response = codecs.decode(rv.data)
+
+        loaned_book = copy.copy(book1)
+        loaned_book['loaned'] = True
+        self._compare_book(json.loads(response), loaned_book)
+
     def test_filter_out_loaned(self):
         loaned_book = copy.copy(book1)
         loaned_book['loaned'] = True

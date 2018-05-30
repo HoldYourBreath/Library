@@ -34,8 +34,8 @@ class Book:
         db = database.get()
         curs = db.execute('SELECT * FROM books '
                           'LEFT JOIN loans USING (book_id) '
-                          'WHERE loans.return_date IS NULL AND '
-                          'books.book_id = ?',
+                          'WHERE books.book_id = ? '
+                          'ORDER BY loans.loan_date DESC',
                           (book_id,))
 
         book = curs.fetchall()
@@ -44,8 +44,8 @@ class Book:
 
         book = dict(book[0])
         del book['book_id']
-        book['loaned'] = 'loan_id' in book.keys() and \
-            book['loan_id'] is not None
+        book['loaned'] = book['loan_id'] is not None and \
+            book['return_date'] is None
         return Book(book_id, **book)
 
     def exists(self):

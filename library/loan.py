@@ -93,7 +93,7 @@ def add(book_id, user_id):
                      'VALUES (?, ?, ?)',
                      (book_id,
                       user_id,
-                      int(loan_date.timestamp())))
+                      loan_date.timestamp()))
     except IntegrityError:
         # No book with that id
         raise LoanNotAllowed
@@ -117,7 +117,7 @@ def remove(loan_id):
     curs.execute('UPDATE loans '
                  'SET return_date = ? '
                  'WHERE loan_id = ? ',
-                 (int(return_date.timestamp()),
+                 (return_date.timestamp(),
                   loan_id))
     db_instance.commit()
     return get(loan_id)
