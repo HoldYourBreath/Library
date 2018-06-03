@@ -96,8 +96,9 @@ class BookTestCase(ServerTestCase):
         self._compare_book(json.loads(response), books[0])
 
         rv = self.app.get('/api/books')
-        response = codecs.decode(rv.data)
-        self._compare_book(json.loads(response)[0], books[0])
+        response = json.loads(codecs.decode(rv.data))
+        self.assertEqual(len(response), 1)
+        self._compare_book(response[0], books[0])
 
     def test_delete_room_books_in_room(self):
         room_name = 'Reading'

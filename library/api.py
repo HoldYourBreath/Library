@@ -5,7 +5,7 @@ import library.database as database
 import library.loan as loan
 import library.session as session
 from library.app import app
-from library.books import Book, BookError, BookNotFound
+from library.books import Books, Book, BookError, BookNotFound
 
 
 @app.route('/api/books', methods=['GET'])
@@ -16,64 +16,8 @@ def list_books():
     List all available books. Query params can be used to search
     for different books
     '''
-    db = database.get()
-    wheres = []
-    query_params = []
 
-    if 'isbn' in flask.request.args:
-        wheres.append(' WHERE books.isbn = ?')
-        query_params.append(flask.request.args['isbn'])
-
-    if 'title' in flask.request.args:
-        wheres.append(' WHERE books.title LIKE ?')
-        query_params.append('%' + flask.request.args['title'] + '%')
-
-    if 'description' in flask.request.args:
-        wheres.append(' WHERE books.description LIKE ?')
-        query_params.append('%' + flask.request.args['description'] + '%')
-
-    if 'room_id' in flask.request.args:
-        wheres.append(' WHERE books.room_id = ?')
-        query_params.append(flask.request.args['room_id'])
-
-    if 'site' in flask.request.args:
-        wheres.append(' WHERE sites.site_name LIKE ?')
-        query_params.append('%' + flask.request.args['site'] + '%')
-
-    if 'site_id' in flask.request.args:
-        wheres.append(' WHERE sites.site_id = ?')
-        query_params.append(flask.request.args['site_id'])
-
-    if 'loaned' in flask.request.args:
-        loaned = flask.request.args['loaned'].lower()
-        if 'true' in loaned:
-            wheres.append(' WHERE loans.loan_id IS NOT NULL')
-        elif 'false' in loaned:
-            wheres.append(' WHERE loans.loan_id IS NULL')
-
-    if 'room' in flask.request.args:
-        wheres.append(' WHERE rooms.room_name LIKE ?')
-        query_params.append('%' + flask.request.args['room'] + '%')
-
-    where_conditions = ''
-    if len(wheres) > 0:
-        for where in wheres:
-            where_conditions += where.replace('WHERE', 'AND')
-
-    query = 'SELECT * FROM books ' \
-            'LEFT JOIN loans USING (book_id) ' \
-            'LEFT JOIN rooms USING (room_id) ' \
-            'LEFT JOIN sites USING (site_id) ' \
-            'WHERE loans.return_date IS NULL ' \
-            '{} GROUP BY isbn ORDER BY book_id '
-
-    query = query.format(where_conditions)
-
-    curs = db.execute(query, tuple(query_params))
-
-    books = _get_books(curs.fetchall())
-
-    return jsonify(books)
+    return jsonify(Books.get(flask.request.args).marshal())
 
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])

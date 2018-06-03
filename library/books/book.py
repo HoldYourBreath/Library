@@ -29,6 +29,10 @@ class Book:
             if parameter in kwargs:
                 setattr(self, parameter, kwargs[parameter])
 
+        self.loaned = 'loan_id' in kwargs and \
+            kwargs['loan_id'] is not None and \
+            kwargs['return_date'] is None
+
     @staticmethod
     def get(book_id):
         db = database.get()
@@ -46,7 +50,9 @@ class Book:
         del book['book_id']
         book['loaned'] = book['loan_id'] is not None and \
             book['return_date'] is None
-        return Book(book_id, **book)
+        book = Book(book_id, **book)
+        book.authors = book.get_authors()
+        return book
 
     def exists(self):
         db = database.get()
@@ -97,7 +103,6 @@ class Book:
 
     def marshal(self):
         json_book = vars(self)
-        json_book['authors'] = self.get_authors()
 
         # Rename book_id to id
         book_id = json_book['book_id']
