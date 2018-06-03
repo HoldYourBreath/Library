@@ -36,10 +36,11 @@ class Book:
     @staticmethod
     def get(book_id):
         db = database.get()
-        curs = db.execute('SELECT * FROM books '
+        curs = db.execute('SELECT *, MAX(loans.loan_date) '
+                          'FROM books '
                           'LEFT JOIN loans USING (book_id) '
                           'WHERE books.book_id = ? '
-                          'ORDER BY loans.loan_date DESC',
+                          'GROUP BY book_id',
                           (book_id,))
 
         book = curs.fetchall()
