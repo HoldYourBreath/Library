@@ -4,19 +4,25 @@ drop table if exists loans;
 drop table if exists rooms;
 drop table if exists sites;
 drop table if exists admins;
+drop table if exists book_instances;
 drop table if exists books;
 
-create table books (
-    book_id INTEGER primary key,
-    isbn INTEGER not null,
+create table book_descriptors (
+    isbn INTEGER primary key,
     title TEXT,
     description TEXT,
     publication_date TEXT,
     pages INTEGER,
     format TEXT,
     publisher TEXT,
+    thumbnail BLOB
+);
+
+create table books (
+    book_id INTEGER primary key,
+    isbn INTEGER not null,
     room_id INTEGER not null,
-    thumbnail BLOB,
+    FOREIGN KEY(isbn) REFERENCES book_descriptors(isbn),
     FOREIGN KEY(room_id) REFERENCES rooms(room_id)
 );
 

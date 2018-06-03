@@ -4,7 +4,6 @@ from library.books.book import Book
 
 class Books:
     def __init__(self):
-
         self.books = []
 
     def marshal(self):
@@ -33,15 +32,15 @@ class Books:
         query_params = []
 
         if 'isbn' in search_params:
-            wheres.append(' WHERE books.isbn = ?')
+            wheres.append(' WHERE book_descriptors.isbn = ?')
             query_params.append(search_params['isbn'])
 
         if 'title' in search_params:
-            wheres.append(' WHERE books.title LIKE ?')
+            wheres.append(' WHERE book_descriptors.title LIKE ?')
             query_params.append('%' + search_params['title'] + '%')
 
         if 'description' in search_params:
-            wheres.append(' WHERE books.description LIKE ?')
+            wheres.append(' WHERE book_descriptors.description LIKE ?')
             query_params.append('%' + search_params['description'] + '%')
 
         if 'room_id' in search_params:
@@ -72,9 +71,10 @@ class Books:
             for where in wheres:
                 where_conditions += where.replace('WHERE', 'AND')
 
-        query = 'SELECT *, COUNT(book_id) AS num_books ' \
-                'FROM books ' \
+        query = 'SELECT *, COUNT(book_id) ' \
+                'AS num_books FROM books ' \
                 'LEFT JOIN loans USING (book_id) ' \
+                'LEFT JOIN book_descriptors USING (isbn) ' \
                 'LEFT JOIN rooms USING (room_id) ' \
                 'LEFT JOIN sites USING (site_id) ' \
                 'WHERE loans.return_date IS NULL ' \

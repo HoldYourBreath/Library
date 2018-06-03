@@ -38,6 +38,7 @@ class Book:
         db = database.get()
         curs = db.execute('SELECT *, MAX(loans.loan_date) '
                           'FROM books '
+                          'LEFT JOIN book_descriptors USING (isbn) '
                           'LEFT JOIN loans USING (book_id) '
                           'WHERE books.book_id = ? '
                           'GROUP BY book_id',
@@ -68,23 +69,31 @@ class Book:
 
     def add(self):
         self.validate()
+        self.check_isbn()
         db = database.get()
         db.execute('INSERT INTO books'
-                   '(book_id, isbn, room_id, title, pages, publisher, format,'
-                   'publication_date, description, thumbnail)'
-                   'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                   (self.book_id,) + self._get_params())
+                   '(book_id, isbn, room_id) '
+                   'VALUES (?, ?, ?)',
+                   (self.book_id, self.isbn, self.room_id))
         db.commit()
 
     def update(self):
         self.validate()
+        self.check_isbn()
         db = database.get()
         db.execute('UPDATE books '
-                   'SET isbn = ?, room_id = ?, title = ?, pages = ?, '
+                   'SET room_id = ?',
+                   (self.room_id,))
+        db.commit()
+
+    def update_isbn(self):
+        db = database.get()
+        db.execute('UPDATE book_descriptors '
+                   'SET isbn = ?, title = ?, pages = ?, '
                    'publisher = ?, format = ?, publication_date = ?, '
                    'description = ?, thumbnail = ? '
                    'WHERE book_id=?',
-                   self._get_params() + (self.book_id,))
+                   self._get_params())
         db.commit()
 
     def add_authors(self, authors):
@@ -125,7 +134,6 @@ class Book:
 
     def _get_params(self):
         return (self.isbn,
-                self.room_id,
                 self.title,
                 self.pages,
                 self.publisher,
@@ -133,6 +141,32 @@ class Book:
                 self.publication_date,
                 self.description,
                 self.thumbnail)
+
+    def check_isbn(self):
+        db = database.get()
+        curs = db.execute('SELECT * FROM book_descriptors WHERE isbn = ?',
+                          (self.isbn,))
+
+        descriptors = curs.fetchall()
+        if len(descriptors) == 0:
+            # Add ISBN
+            db.execute('INSERT INTO book_descriptors'
+                       '(isbn, title, pages, publisher, format,'
+                       'publication_date, description, thumbnail)'
+                       'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                       self._get_params())
+            db.commit()
+        else:
+            # Check if ISBN needs update
+            descriptor = dict(descriptors[0])
+            book_params = vars(self)
+            equal = True
+            for key in descriptor.keys():
+                if descriptor[key] != book_params[key]:
+                    equal = False
+                    break
+            if not equal:
+                self.update_isbn()
 
     def validate(self):
         # Check some prerequesite
