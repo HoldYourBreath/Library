@@ -72,7 +72,8 @@ class Books:
             for where in wheres:
                 where_conditions += where.replace('WHERE', 'AND')
 
-        query = 'SELECT * FROM books ' \
+        query = 'SELECT *, COUNT(book_id) AS num_books ' \
+                'FROM books ' \
                 'LEFT JOIN loans USING (book_id) ' \
                 'LEFT JOIN rooms USING (room_id) ' \
                 'LEFT JOIN sites USING (site_id) ' \
