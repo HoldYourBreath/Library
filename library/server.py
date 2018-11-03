@@ -7,6 +7,7 @@ import library.goodreads_interface
 import library.user_lookup
 import library.api_loan
 import library.api_location
+import library.api_book
 import library.session as session
 
 

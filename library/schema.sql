@@ -28,9 +28,9 @@ create table books (
 
 create table authors (
     author_id INTEGER primary key autoincrement,
-    book_id INTEGER not null,
+    isbn INTEGER not null,
     name TEXT not null,
-    FOREIGN KEY(book_id) REFERENCES books(book_id)
+    FOREIGN KEY(isbn) REFERENCES book_descriptors(isbn)
 );
 
 create table sites (

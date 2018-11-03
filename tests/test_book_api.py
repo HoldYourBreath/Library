@@ -3,82 +3,11 @@ import json
 import copy
 import codecs
 
-from .test_server import ServerTestCase
-
-book1 = {'id': 10,
-         'isbn': 1234,
-         'title': 'The book',
-         'authors': ['Bob Author'],
-         'pages': 500,
-         'room_id': 2,
-         'format': 'Slippery back',
-         'publisher': 'Crazy dude publishing',
-         'publication_date': '1820 01 02',
-         'description': 'a book',
-         'thumbnail': 'a thumbnail',
-         'loaned': False}
-
-book2 = {'id': 20,
-         'isbn': 1235,
-         'title': 'Great book',
-         'authors': ['Jane Author'],
-         'pages': 123,
-         'room_id': 2,
-         'format': 'Sturdy thing',
-         'publisher': 'Sane gal publishing',
-         'publication_date': '2016 12 31',
-         'description': 'Another book',
-         'thumbnail': 'another thumbnail',
-         'loaned': False}
-
-book3 = {'id': 30,
-         'isbn': 1236,
-         'title': 'Great Songs',
-         'authors': ['Jane Author'],
-         'pages': 100,
-         'room_id': 3,
-         'format': 'Sturdy thing',
-         'publisher': 'Sane gal publishing',
-         'publication_date': '2000 01 01',
-         'description':
-         'A very nice book about songs! All the best artists',
-         'thumbnail': 'another thumbnail',
-         'loaned': False}
-
-book4 = {'id': 40,
-         'isbn': 1237,
-         'title': 'Great Poems',
-         'authors': ['Jane Author'],
-         'pages': 3,
-         'room_id': 6,
-         'format': 'Sturdy thing',
-         'publisher': 'Sane gal publishing',
-         'publication_date': '1999 12 31',
-         'description':
-         'A very nice book about poems! All the best poets',
-         'thumbnail': 'another thumbnail',
-         'loaned': False}
+from .books.basic_book import BasicBookTestCase
+from .books.example_books import book1, book2, book3, book4
 
 
-class BookTestCase(ServerTestCase):
-
-    def setUp(self):
-        ServerTestCase.setUp(self)
-        # Create some rooms
-        self.add_admin('admin')
-        self.create_session(user='admin', update_session=True)
-
-        site_id = self.add_site('happy place')
-        self.add_room(site_id, 'happy room')
-
-        site_id = self.add_site('testing')
-        for name in '3456':
-            self.add_room(site_id, name)
-
-    def tearDown(self):
-        self.remove_admin('admin')
-        ServerTestCase.tearDown(self)
-
+class BookTestCase(BasicBookTestCase):
     def test_books_get(self):
         rv = self.app.get('/api/books')
         self.assertEqual(rv.status_code, 200)
@@ -486,15 +415,6 @@ class BookTestCase(ServerTestCase):
         rv = self.app.delete('/api/books/{}/loan'.format(book_id))
         self.assertEqual(rv.status_code, 404)
 
-    def _put_book(self, book):
-        book_id = book['id']
-        temp_book = copy.copy(book)
-        del temp_book['id']
-        rv = self.app.put('/api/books/{}'.format(book_id),
-                          data=json.dumps(temp_book),
-                          content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
-
     def _get_loans(self):
         rv = self.app.get('/api/loans',
                           content_type='application/json')
@@ -522,6 +442,7 @@ class BookTestCase(ServerTestCase):
         # Compare rv and lv
         for key in rv.keys():
             self.assertEqual(lv[key], rv[key])
+
 
 
 if __name__ == '__main__':

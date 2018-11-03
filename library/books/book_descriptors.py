@@ -1,8 +1,8 @@
 import library.database as database
-from library.books.book import Book
+from library.books.book_descriptor import BookDescriptor
 
 
-class Books:
+class BookDescriptors:
     def __init__(self):
         self.books = []
 
@@ -12,15 +12,15 @@ class Books:
     @staticmethod
     def get(search_params={}):
         db = database.get()
-        (query, query_params) = Books._get_query(search_params)
+        (query, query_params) = BookDescriptors._get_query(search_params)
 
         curs = db.execute(query, tuple(query_params))
-        books = Books()
+        books = BookDescriptors()
         for book in curs.fetchall():
             book = dict(book)
             book_id = book['book_id']
             del book['book_id']
-            book = Book(book_id, **book)
+            book = BookDescriptor(book_id, **book)
             book.authors = book.get_authors()
             books.books.append(book)
 

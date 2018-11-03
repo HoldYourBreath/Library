@@ -59,6 +59,7 @@ def put_book(book_id):
 
 @app.route('/api/books/<int:book_id>', methods=['GET'])
 def get_single_book(book_id):
+    print('getting book')
     try:
         return jsonify(Book.get(book_id).marshal())
     except BookNotFound:
