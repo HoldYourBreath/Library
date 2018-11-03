@@ -5,7 +5,6 @@ import unittest
 import tempfile
 import configparser
 import codecs
-from ldap3.core.exceptions import LDAPBindError
 
 # Local modules
 import library.server as server
@@ -20,6 +19,7 @@ class ServerTestCase(unittest.TestCase):
     """
     """
     TEST_SIGNUM = "book_reader"
+    ADMIN = "admin"
 
     def setUp(self):
         # Set up a temporary database
@@ -33,11 +33,10 @@ class ServerTestCase(unittest.TestCase):
         config.config = configparser.ConfigParser()
 
         # Add some initial sites
-        self.add_admin('admin')
-        self.create_session(user='admin', update_session=True)
+        self.add_admin(self.ADMIN)
+        self.create_session(user=self.ADMIN, update_session=True)
         site_id = self.add_site('DefaultSite')
         self.add_room(site_id, 'DefaltRoom')
-        self.remove_admin('admin')
         self.delete_session()
 
     def add_book(self, book):
@@ -80,6 +79,7 @@ class ServerTestCase(unittest.TestCase):
         self.assertEqual(rv.status_code, 403)
 
     def tearDown(self):
+        self.remove_admin(self.ADMIN)
         os.close(self.db_fd)
         os.unlink(server.app.config['DATABASE'])
 

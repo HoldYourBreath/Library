@@ -6,25 +6,18 @@ class BookDescriptor(BasicBook):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.validate()
-        self.loaned = False
-
-        self.loaned = 'loan_id' in kwargs and \
-            kwargs['loan_id'] is not None and \
-            kwargs['return_date'] is None
 
     @staticmethod
     def get(isbn):
         db = database.get()
-        curs = db.execute('SELECT * FROM books WHERE isbn = ?' (isbn,))
+        curs = db.execute('SELECT * FROM book_descriptors '
+                          'WHERE isbn = ?', (isbn,))
 
         book = curs.fetchall()
         if len(book) == 0:
             raise BookNotFound
 
         book = dict(book[0])
-        del book['book_id']
-        book['loaned'] = book['loan_id'] is not None and \
-            book['return_date'] is None
         book = BookDescriptor(**book)
         book.authors = book.get_authors()
         return book

@@ -10,7 +10,6 @@ class BookNotFound(Exception):
 class BasicBook:
     def __init__(self, **kwargs):
         self.isbn = None
-        self.room_id = None
         self.title = ''
         self.authors = []
         self.description = ''

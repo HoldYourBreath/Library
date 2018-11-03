@@ -10,8 +10,7 @@ class BasicBookTestCase(ServerTestCase):
     def setUp(self):
         super().setUp()
         # Create some rooms
-        self.add_admin('admin')
-        self.create_session(user='admin', update_session=True)
+        self.create_session(user=self.ADMIN, update_session=True)
 
         site_id = self.add_site('happy place')
         self.add_room(site_id, 'happy room')
@@ -19,6 +18,8 @@ class BasicBookTestCase(ServerTestCase):
         site_id = self.add_site('testing')
         for name in '3456':
             self.add_room(site_id, name)
+
+        self.delete_session()
 
     def tearDown(self):
         self.remove_admin('admin')
@@ -41,9 +42,9 @@ class BasicBookTestCase(ServerTestCase):
         for key in rv.keys():
             self.assertEqual(lv[key], rv[key])
 
-    def _put_book(self, book, url):
+    def _put_book(self, book, url, expected_code=200):
         rv = self.app.put(url,
                           data=json.dumps(book),
                           content_type='application/json')
-        self.assertEqual(rv.status_code, 200)
+        self.assertEqual(rv.status_code, expected_code)
         return rv

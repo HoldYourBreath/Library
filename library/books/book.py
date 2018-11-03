@@ -5,29 +5,29 @@ from library.books.book_descriptor import BookDescriptor
 
 class Book(BookDescriptor):
     def __init__(self, book_id, **kwargs):
+        self.room_id = None
         super().__init__(**kwargs)
         self.book_id = book_id
-        self.loaned = False
 
     @staticmethod
     def get(book_id):
         db = database.get()
-        curs = db.execute('SELECT *, MAX(loans.loan_date) '
-                          'FROM books '
-                          'LEFT JOIN book_descriptors USING (isbn) '
-                          'LEFT JOIN loans USING (book_id) '
-                          'WHERE books.book_id = ? '
-                          'GROUP BY book_id',
-                          (book_id,))
+        author_query = "SELECT group_concat(name) FROM authors WHERE isbn = books.isbn"
+        curs = db.execute("SELECT *, ({}) as authors "
+                          "FROM books "
+                          "LEFT JOIN book_descriptors "
+                          "USING (isbn) "
+                          "WHERE book_id = ?".format(author_query), (book_id,))
 
         book = curs.fetchall()
         if len(book) == 0:
             raise BookNotFound
 
+        authors = book[0]['authors']
         book = dict(book[0])
+        book['authors'] = [author for author in authors.split(',')]
+
         del book['book_id']
-        book['loaned'] = book['loan_id'] is not None and \
-            book['return_date'] is None
         book = Book(book_id, **book)
         book.authors = book.get_authors()
         return book
