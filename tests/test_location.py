@@ -18,11 +18,9 @@ class SitesTestCase(ServerTestCase):
             db.execute('DELETE FROM sites')
             db.commit()
 
-        self.add_admin('admin')
         self.create_session(user='admin', update_session=True)
 
     def tearDown(self):
-        self.remove_admin('admin')
         ServerTestCase.tearDown(self)
 
     def test_get_sites(self):
