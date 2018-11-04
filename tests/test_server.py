@@ -43,7 +43,7 @@ class ServerTestCase(unittest.TestCase):
         book_id = book['id']
         temp_book = copy.copy(book)
         del temp_book['id']
-        rv = self.app.put('/api/books/{}'.format(book_id),
+        rv = self.app.put('/api/books/ebids/{}'.format(book_id),
                           data=json.dumps(temp_book),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
