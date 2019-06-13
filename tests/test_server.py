@@ -34,10 +34,8 @@ class ServerTestCase(unittest.TestCase):
 
         # Add some initial sites
         self.add_admin(self.ADMIN)
-        self.create_session(user=self.ADMIN, update_session=True)
         site_id = self.add_site('DefaultSite')
         self.add_room(site_id, 'DefaltRoom')
-        self.delete_session()
 
     def add_book(self, book):
         book_id = book['id']
@@ -49,34 +47,44 @@ class ServerTestCase(unittest.TestCase):
         self.assertEqual(rv.status_code, 200)
 
     def add_site(self, name):
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites',
                            data=json.dumps({'name': name}),
                            content_type='application/json')
 
         self.assertEqual(rv.status_code, 200)
         response = json.loads(codecs.decode(rv.data))
+        self.delete_session()
         return response['id']
 
     def add_room(self, site_id, name):
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites/{}/rooms'.format(site_id),
                            data=json.dumps({'name': name}),
                            content_type='application/json')
 
         self.assertEqual(rv.status_code, 200)
         response = json.loads(codecs.decode(rv.data))
+        self.delete_session()
         return response['id']
 
     def remove_room(self, site_id, name):
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, name))
         self.assertEqual(rv.status_code, 200)
+        self.delete_session()
 
     def remove_room_not_found(self, site_id, name):
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, name))
         self.assertEqual(rv.status_code, 404)
+        self.delete_session()
 
     def remove_room_fail(self, site_id, name):
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.delete('/api/sites/{}/rooms/{}'.format(site_id, name))
         self.assertEqual(rv.status_code, 403)
+        self.delete_session()
 
     def tearDown(self):
         self.remove_admin(self.ADMIN)

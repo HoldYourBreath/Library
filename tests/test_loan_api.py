@@ -13,12 +13,10 @@ class LoanApiTestCase(ServerTestCase):
         book = {'id': self.dummy_book_id,
                 'isbn': 1234,
                 'room_id': 1}
-        self.add_admin('admin')
         self.create_session(user='admin', update_session=True)
         self.add_book(book)
 
     def tearDown(self):
-        self.remove_admin('admin')
         ServerTestCase.tearDown(self)
 
     def test_loans(self):

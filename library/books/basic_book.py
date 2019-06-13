@@ -33,3 +33,10 @@ class BasicBook:
                 self.description,
                 self.thumbnail)
 
+
+class BasicBookDescriptor(BasicBook):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.number_of_copies = 0
+        if 'num_copies' in kwargs and kwargs['num_copies']:
+            self.number_of_copies = kwargs['num_copies']

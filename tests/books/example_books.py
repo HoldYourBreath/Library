@@ -49,4 +49,11 @@ def get_book(book, book_id=1, room_id=1):
     temp_book = copy.copy(book)
     temp_book['book_id'] = book_id
     temp_book['room_id'] = room_id
+    temp_book['loaned'] = False
+    return temp_book
+
+
+def get_descriptor(book, num_copies=1):
+    temp_book = copy.copy(book)
+    temp_book['number_of_copies'] = num_copies
     return temp_book

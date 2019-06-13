@@ -1,8 +1,9 @@
 import library.database as database
-from library.books.basic_book import BookError, BookNotFound, BasicBook
+from library.books.basic_book import BookError, BookNotFound, \
+                                     BasicBookDescriptor
 
 
-class BookDescriptor(BasicBook):
+class BookDescriptor(BasicBookDescriptor):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.validate()
@@ -10,8 +11,13 @@ class BookDescriptor(BasicBook):
     @staticmethod
     def get(isbn):
         db = database.get()
-        curs = db.execute('SELECT * FROM book_descriptors '
-                          'WHERE isbn = ?', (isbn,))
+        sub_query_books = 'SELECT isbn, COUNT(book_id) AS num_copies ' \
+                          'FROM books GROUP BY isbn'
+        query = 'SELECT book_descriptors.*, books.num_copies ' \
+                'FROM book_descriptors ' \
+                'LEFT JOIN ({}) books USING (isbn) ' \
+                'WHERE isbn = ? '.format(sub_query_books)
+        curs = db.execute(query, (isbn,))
 
         book = curs.fetchall()
         if len(book) == 0:
@@ -24,7 +30,7 @@ class BookDescriptor(BasicBook):
 
     def exists(self):
         db = database.get()
-        curs = db.execute('SELECT * FROM books WHERE isbn = ?',
+        curs = db.execute('SELECT * FROM book_descriptors WHERE isbn = ?',
                           (self.isbn,))
 
         books = curs.fetchall()
@@ -45,11 +51,14 @@ class BookDescriptor(BasicBook):
 
     def update(self):
         db = database.get()
+        params = self._get_params()[1:]  # Skip ISBN
+
         db.execute('UPDATE book_descriptors '
-                   'SET isbn = ?, title = ?, pages = ?, '
+                   'SET title = ?, pages = ?, '
                    'publisher = ?, format = ?, publication_date = ?, '
-                   'description = ?, thumbnail = ?',
-                   self._get_params())
+                   'description = ?, thumbnail = ? '
+                   'WHERE isbn = ?',
+                   params + (self.isbn,))
         self.update_authors(self.authors)
         db.commit()
 
