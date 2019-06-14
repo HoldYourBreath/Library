@@ -43,11 +43,15 @@ class BasicBookTestCase(ServerTestCase):
         for key in rv.keys():
             self.assertEqual(lv[key], rv[key])
 
-    def _put_book(self, book, url, expected_code=200):
-        self.create_session(user=self.ADMIN, update_session=True)
+    def _put_book(self, book, url, expected_code=200, create_session=True):
+        if create_session:
+            self.create_session(user=self.ADMIN, update_session=True)
+
         rv = self.app.put(url,
                           data=json.dumps(book),
                           content_type='application/json')
         self.assertEqual(rv.status_code, expected_code)
-        self.delete_session()
+        if create_session:
+            self.delete_session()
+
         return rv

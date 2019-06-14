@@ -1,6 +1,4 @@
-import unittest
 import json
-import copy
 import codecs
 
 from .test_server import ServerTestCase
@@ -58,11 +56,13 @@ class SitesTestCase(ServerTestCase):
 
         # Test that non admin user can't add site
         self.remove_admin('admin')
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites',
                            data=json.dumps({'name': 'some site'}),
                            content_type='application/json')
 
         self.assertEqual(rv.status_code, 401)
+        self.delete_session()
 
     def test_get_invalid_site(self):
         rv = self.app.get('/api/sites/{}'.format(1000))
@@ -76,6 +76,7 @@ class SitesTestCase(ServerTestCase):
 
     def test_add_site_invalid_request(self):
         # No data in request
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites')
         self.assertEqual(rv.status_code, 400)
 
@@ -84,14 +85,17 @@ class SitesTestCase(ServerTestCase):
                            data=json.dumps({'something_else': 1}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 400)
+        self.delete_session()
 
     def test_add_duplicate_site_name(self):
         """Duplicate site names should not exist"""
         self.add_site('test')
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites',
                            data=json.dumps({'name': 'test'}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 409)
+        self.delete_session()
 
     def test_get_rooms(self):
         num_rooms = 100
@@ -138,11 +142,13 @@ class SitesTestCase(ServerTestCase):
 
         # Test that non authorized user can't add rooms
         self.remove_admin('admin')
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites/{}/rooms'.format(site_id),
                            data=json.dumps({'name': 'dummy_room'}),
                            content_type='application/json')
 
         self.assertEqual(rv.status_code, 401)
+        self.delete_session()
 
     def test_get_invalid_room(self):
         # Try to get room with invalid site
@@ -164,6 +170,7 @@ class SitesTestCase(ServerTestCase):
     def test_add_room_invalid_request(self):
         site_id = self.add_site('test')
         # No data in request
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites/{}/rooms'.format(site_id))
         self.assertEqual(rv.status_code, 400)
 
@@ -172,6 +179,7 @@ class SitesTestCase(ServerTestCase):
                            data=json.dumps({'something_else': 1}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 400)
+        self.delete_session()
 
     def test_add_duplicate_room_name(self):
         room_name = 'room'
@@ -181,10 +189,12 @@ class SitesTestCase(ServerTestCase):
         self.add_room(site1, room_name)
 
         # Name duplication not allowed in the same site
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.post('/api/sites/{}/rooms'.format(site1),
                            data=json.dumps({'name': room_name}),
                            content_type='application/json')
         self.assertEqual(rv.status_code, 409)
+        self.delete_session()
 
         # Same room name can exist in muplitple sites
         self.add_room(site2, room_name)
@@ -193,9 +203,11 @@ class SitesTestCase(ServerTestCase):
         old_name = 'old'
         new_name = 'new'
         site_id = self.add_site(old_name)
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.put('/api/sites/{}'.format(site_id),
                           data=json.dumps({'name': new_name}),
                           content_type='application/json')
+        self.delete_session()
         rv = self.app.get('/api/sites/{}'.format(site_id))
         response = json.loads(codecs.decode(rv.data))
         new_site_name = response['name']
@@ -219,10 +231,12 @@ class SitesTestCase(ServerTestCase):
         new_name = 'new'
         site_id = self.add_site('test')
         room_id = self.add_room(site_id, old_name)
+        self.create_session(user=self.ADMIN, update_session=True)
         rv = self.app.put('/api/sites/{}/rooms/{}'.format(site_id, room_id),
                           data=json.dumps({'name': new_name}),
                           content_type='application/json')
         self.assertEqual(rv.status_code, 200)
+        self.delete_session()
         rv = self.app.get('/api/sites/{}/rooms/{}'.format(site_id, room_id))
         response = json.loads(codecs.decode(rv.data))
         new_site_name = response['name']

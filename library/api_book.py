@@ -141,7 +141,7 @@ def put_book(isbn):
         return e.msg, 400
 
     try:
-        if book.exists(book.book_id):
+        if book.exists():
             # Update existing book
             book.update()
         else:
