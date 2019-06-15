@@ -10,6 +10,7 @@ import library.ldap as ldap
 from library.config import config
 
 AUTHENTICATE = True
+OVERRIDE_ADMIN = False
 
 
 class SessionNotFound(Exception):
@@ -61,7 +62,7 @@ def admin_required(f):
 
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        if not validate_user(admin_required):
+        if not OVERRIDE_ADMIN and not validate_user(admin_required):
             response = jsonify({'err': 'Authentication failed'})
             response.status_code = 401
             return response

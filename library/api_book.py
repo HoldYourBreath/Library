@@ -52,7 +52,7 @@ def put_single_book(book_id):
 @app.route('/api/books/ebids/<string:book_id>', methods=['PUT'])
 @session.admin_required
 def put_single_book_string(book_id):
-    return "Need integer", 400
+    return "Indavlid book id", 400
 
 
 @app.route('/api/books/ebids/<int:book_id>/loan', methods=['GET'])

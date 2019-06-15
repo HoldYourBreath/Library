@@ -21,6 +21,9 @@ def run(args):
     if args.fake_auth:
         print('Faking authentication')
         session.AUTHENTICATE = False
+    if args.override_admin:
+        print('Overriding admin')
+        session.OVERRIDE_ADMIN = True
     app.config['DEBUG'] = True
     app.run(host='0.0.0.0', port=3001)
 
