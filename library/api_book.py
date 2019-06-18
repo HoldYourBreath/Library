@@ -36,6 +36,10 @@ def get_single_book(book_id):
 @session.admin_required
 def put_single_book(book_id):
     book_request = flask.request.get_json()
+    if not book_request:
+        return "No JSON body", 415
+
+    print("book_request", book_request)
 
     try:
         book = Book(book_id, **book_request)

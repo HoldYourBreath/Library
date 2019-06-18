@@ -95,7 +95,7 @@ class AddBook extends React.Component {
   }
 
   submitBook() {
-    let url = `${window.API_URL}/api/books/${this.state.tag}`;
+    let url = `${window.API_URL}/api/books/ebids/${this.state.tag}`;
     request
       .get(url)
       .then((res) => {
@@ -118,7 +118,7 @@ class AddBook extends React.Component {
   }
 
   addBook() {
-    let url = `${window.API_URL}/api/books/${this.state.tag}`;
+    let url = `${window.API_URL}/api/books/ebids/${this.state.tag}`;
     request
       .put(url)
       .send(this.state)

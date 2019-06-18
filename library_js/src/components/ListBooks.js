@@ -30,6 +30,7 @@ class ListBooks extends React.Component {
       .type('application/json')
       .end((err, res) => {
         let currentBooks = res ? res.body : [];
+        console.log("response", res);
         this.setState({
           loadingBooks: false,
           books: currentBooks});
@@ -43,10 +44,6 @@ class ListBooks extends React.Component {
 
     render() {
       let currentBooks = this.state.books;
-      if (locationStore.selectedRoom) {
-        currentBooks = currentBooks.filter(b => b.room_id === locationStore.selectedRoom);
-      }
-
       return (
         <div>
           <LocationSelector
